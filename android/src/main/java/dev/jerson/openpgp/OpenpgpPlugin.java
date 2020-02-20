@@ -1,5 +1,7 @@
 package dev.jerson.openpgp;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import java.util.HashMap;

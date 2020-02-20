@@ -38,6 +38,7 @@
       
   } else if ([@"generate" isEqualToString:call.method]) {
       
+      NSLog(@"%@",[call arguments]);
       [self generate:[call arguments][@"options"] result:result];
       
   } else {
@@ -90,11 +91,7 @@
     if(error!=nil){
         result(error);
     }else{
-        if(output){
-            result(@"1");
-        }else{
-            result(NULL);
-        }
+        result([NSNumber numberWithBool:output]);
     }
 }
 
@@ -155,11 +152,11 @@
     if(map[@"hash"]){
         [options setHash:map[@"hash"]];
     }
-    if(map[@"RSABits"]){
-        [options setRsaBits:[map[@"RSABits"] longValue]];
+    if(map[@"rsaBits"]){
+        [options setRsaBits:[map[@"rsaBits"] floatValue]];
     }
     if(map[@"compressionLevel"]){
-        [options setCompressionLevel:[map[@"compressionLevel"] longValue]];
+        [options setCompressionLevel:[map[@"compressionLevel"] floatValue]];
     }
     return options;
 }
