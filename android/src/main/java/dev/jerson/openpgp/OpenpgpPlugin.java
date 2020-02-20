@@ -235,7 +235,10 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
         try {
             Options options = this.getOptions(mapOptions);
             KeyPair keyPair = instance.generate(options);
-            promise.success(keyPair);
+            HashMap<String,Object> result = new HashMap<>();
+            result.put("publicKey",keyPair.getPublicKey());
+            result.put("privateKey",keyPair.getPrivateKey());
+            promise.success(result);
         } catch (Exception e) {
             promise.error("error", e.getMessage(), e);
         }

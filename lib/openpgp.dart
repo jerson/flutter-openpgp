@@ -5,10 +5,10 @@ import 'package:openpgp/key_options.dart';
 import 'package:openpgp/key_pair.dart';
 import 'package:openpgp/options.dart';
 
-class Openpgp {
+class OpenPGP {
   static const MethodChannel _channel = const MethodChannel('openpgp');
 
-  static Future<String> decrypt(String message, privateKey, passphrase) async {
+  static Future<String> decrypt(String message,String privateKey,String passphrase) async {
     return await _channel.invokeMethod('decrypt', {
       "message": message,
       "privateKey": privateKey,
@@ -16,7 +16,7 @@ class Openpgp {
     });
   }
 
-  static Future<String> encrypt(String message, publicKey) async {
+  static Future<String> encrypt(String message,String publicKey) async {
     return await _channel.invokeMethod('encrypt', {
       "message": message,
       "publicKey": publicKey,
@@ -24,7 +24,7 @@ class Openpgp {
   }
 
   static Future<String> sign(
-      String message, publicKey, privateKey, passphrase) async {
+      String message,String publicKey,String privateKey,String passphrase) async {
     return await _channel.invokeMethod('sign', {
       "message": message,
       "publicKey": privateKey,
@@ -33,7 +33,7 @@ class Openpgp {
     });
   }
 
-  static Future<String> verify(String signature, message, publicKey) async {
+  static Future<bool> verify(String signature,String message,String publicKey) async {
     return await _channel.invokeMethod('verify', {
       "signature": signature,
       "message": message,
@@ -41,7 +41,8 @@ class Openpgp {
     });
   }
 
-  static Future<String> decryptSymmetric(String message, passphrase, {KeyOptions options}) async {
+  static Future<String> decryptSymmetric(String message,String passphrase,
+      {KeyOptions options}) async {
     return await _channel.invokeMethod('decryptSymmetric', {
       "message": message,
       "passphrase": passphrase,
@@ -49,7 +50,8 @@ class Openpgp {
     });
   }
 
-  static Future<String> encryptSymmetric(String message, passphrase, {KeyOptions options}) async {
+  static Future<String> encryptSymmetric(String message,String passphrase,
+      {KeyOptions options}) async {
     return await _channel.invokeMethod('encryptSymmetric', {
       "message": message,
       "passphrase": passphrase,
@@ -57,29 +59,38 @@ class Openpgp {
     });
   }
 
-  static Future<KeyPair> generate(Options options) async {
-    return await _channel.invokeMethod('generate', {
+  static Future<KeyPair> generate({Options options}) async {
+    var result = await _channel.invokeMethod('generate', {
       "options": _getOptionsMap(options),
     });
+
+    return KeyPair(
+      privateKey: result["privateKey"],
+      publicKey: result["publicKey"],
+    );
   }
-  
-  static _getOptionsMap(Options options){
-    return options!=null ? {
-      "email": options.email,
-      "name": options.name,
-      "comment": options.comment,
-      "passphrase": options.passphrase,
-      "keyOptions": _getKeyOptionsMap(options.keyOptions),
-    } : {};
+
+  static _getOptionsMap(Options options) {
+    return options != null
+        ? {
+            "email": options.email,
+            "name": options.name,
+            "comment": options.comment,
+            "passphrase": options.passphrase,
+            "keyOptions": _getKeyOptionsMap(options.keyOptions),
+          }
+        : {};
   }
-  
-  static _getKeyOptionsMap(KeyOptions options){
-    return options!=null ? {
-      "cipher": options.cipher.toString(),
-      "compression": options.compression.toString(),
-      "compressionLevel": options.compressionLevel,
-      "hash": options.hash.toString(),
-      "rsaBits": options.rsaBits,
-    } : {};
+
+  static _getKeyOptionsMap(KeyOptions options) {
+    return options != null
+        ? {
+            "cipher": options.cipher.toString(),
+            "compression": options.compression.toString(),
+            "compressionLevel": options.compressionLevel,
+            "hash": options.hash.toString(),
+            "rsaBits": options.rsaBits,
+          }
+        : {};
   }
 }
