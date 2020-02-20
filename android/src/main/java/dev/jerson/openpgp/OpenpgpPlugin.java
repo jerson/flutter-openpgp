@@ -2,6 +2,8 @@ package dev.jerson.openpgp;
 
 import androidx.annotation.NonNull;
 
+import java.util.HashMap;
+
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -86,7 +88,7 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
                 decryptSymmetric(
                         (String) call.argument("message"),
                         (String) call.argument("passphrase"),
-                        call,
+                        (HashMap<String,Object>) call.argument("options"),
                         result
                 );
                 break;
@@ -94,13 +96,13 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
                 encryptSymmetric(
                         (String) call.argument("message"),
                         (String) call.argument("passphrase"),
-                        call,
+                        (HashMap<String,Object>) call.argument("options"),
                         result
                 );
                 break;
             case "generate":
                 generate(
-                        call,
+                        (HashMap<String,Object>) call.argument("options"),
                         result
                 );
                 break;
@@ -156,50 +158,50 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
         }
     }
 
-    private KeyOptions getKeyOptions(MethodCall map) {
+    private KeyOptions getKeyOptions(HashMap<String,Object> map) {
         KeyOptions options = new KeyOptions();
 
         if (map == null) {
             return options;
         }
-        if (map.hasArgument("cipher")) {
-            options.setCipher((String) map.argument("cipher"));
+        if (map.containsKey("cipher")) {
+            options.setCipher((String) map.get("cipher"));
         }
-        if (map.hasArgument("compression")) {
-            options.setCompression((String) map.argument("compression"));
+        if (map.containsKey("compression")) {
+            options.setCompression((String) map.get("compression"));
         }
-        if (map.hasArgument("hash")) {
-            options.setHash((String) map.argument("hash"));
+        if (map.containsKey("hash")) {
+            options.setHash((String) map.get("hash"));
         }
-        if (map.hasArgument("RSABits")) {
-            options.setRSABits((Integer) map.argument("rsaBits"));
+        if (map.containsKey("rsaBits")) {
+            options.setRSABits((Integer) map.get("rsaBits"));
         }
-        if (map.hasArgument("compressionLevel")) {
-            options.setCompressionLevel((Integer) map.argument("compressionLevel"));
+        if (map.containsKey("compressionLevel")) {
+            options.setCompressionLevel((Integer) map.get("compressionLevel"));
         }
         return options;
     }
 
-    private Options getOptions(MethodCall map) {
+    private Options getOptions(HashMap<String,Object> map) {
         Options options = new Options();
 
         if (map == null) {
             return options;
         }
-        if (map.hasArgument("comment")) {
-            options.setComment((String) map.argument("comment"));
+        if (map.containsKey("comment")) {
+            options.setComment((String) map.get("comment"));
         }
-        if (map.hasArgument("email")) {
-            options.setEmail((String) map.argument("email"));
+        if (map.containsKey("email")) {
+            options.setEmail((String) map.get("email"));
         }
-        if (map.hasArgument("name")) {
-            options.setName((String) map.argument("name"));
+        if (map.containsKey("name")) {
+            options.setName((String) map.get("name"));
         }
-        if (map.hasArgument("passphrase")) {
-            options.setPassphrase((String) map.argument("passphrase"));
+        if (map.containsKey("passphrase")) {
+            options.setPassphrase((String) map.get("passphrase"));
         }
-        if (map.hasArgument("keyOptions")) {
-            MethodCall keyOptions = map.argument("keyOptions");
+        if (map.containsKey("keyOptions")) {
+            HashMap<String,Object> keyOptions = (HashMap<String,Object>) map.get("keyOptions");
             if (keyOptions != null) {
                 options.setKeyOptions(this.getKeyOptions(keyOptions));
             }
@@ -208,7 +210,7 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
         return options;
     }
 
-    private void decryptSymmetric(String message, String passphrase, MethodCall mapOptions, Result promise) {
+    private void decryptSymmetric(String message, String passphrase, HashMap<String,Object> mapOptions, Result promise) {
 
         try {
             KeyOptions options = this.getKeyOptions(mapOptions);
@@ -219,7 +221,7 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
         }
     }
 
-    private void encryptSymmetric(String message, String passphrase, MethodCall mapOptions, Result promise) {
+    private void encryptSymmetric(String message, String passphrase, HashMap<String,Object> mapOptions, Result promise) {
         try {
             KeyOptions options = this.getKeyOptions(mapOptions);
             String result = instance.encryptSymmetric(message, passphrase, options);
@@ -229,7 +231,7 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
         }
     }
 
-    private void generate(MethodCall mapOptions, Result promise) {
+    private void generate(HashMap<String,Object> mapOptions, Result promise) {
         try {
             Options options = this.getOptions(mapOptions);
             KeyPair keyPair = instance.generate(options);

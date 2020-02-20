@@ -27,14 +27,14 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       platformVersion = await Openpgp.encryptSymmetric(
-        "eee",
+        "hey hey",
         "123456",
-        KeyOptions(
+        options: KeyOptions(
           cipher: Cypher.aes256,
-          compressionLevel: 0,
-          compression: Compression.zlib,
+          compressionLevel: 1,
+          compression: Compression.none,
           hash: Hash.sha512,
-          rsaBits: 4096,
+          rsaBits: 2048,
         ),
       );
     } on PlatformException {
@@ -56,7 +56,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: const Text('OpenPGP example app'),
         ),
         body: Center(
           child: Text('Running on: $_platformVersion\n'),
