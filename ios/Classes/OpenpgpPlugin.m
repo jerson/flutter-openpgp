@@ -45,94 +45,123 @@
 }
 
 - (void)encrypt:(NSString *)message publicKey: (NSString *)publicKey result:(FlutterResult)result {
-    
-     NSError *error;
-     NSString * output = [OpenpgpNewFastOpenPGP() encrypt:message publicKey:publicKey error:&error];
-    
-     if(error!=nil){
-         result(error);
-     }else{
-         result(output);
-     }
+    @try {
+         NSError *error;
+         NSString * output = [OpenpgpNewFastOpenPGP() encrypt:message publicKey:publicKey error:&error];
+        
+         if(error!=nil){
+             result(error);
+         }else{
+             result(output);
+         }
+    }
+    @catch (NSException * e) {
+       result(e);
+    }
 }
 
 - (void)decrypt:(NSString *)message privateKey: (NSString *)privateKey passphrase: (NSString *)passphrase result:(FlutterResult)result {
-    
-     NSError *error;
-     NSString * output = [OpenpgpNewFastOpenPGP() decrypt:message privateKey:privateKey passphrase:passphrase error:&error];
-     
-     if(error!=nil){
-         result(error);
-     }else{
-         result(output);
-     }
+    @try {
+        NSError *error;
+        NSString * output = [OpenpgpNewFastOpenPGP() decrypt:message privateKey:privateKey passphrase:passphrase error:&error];
+        
+        if(error!=nil){
+            result(error);
+        }else{
+            result(output);
+        }
+    }
+    @catch (NSException * e) {
+       result(e);
+    }
 }
 
 - (void)sign:(NSString *)message publicKey: (NSString *)publicKey privateKey: (NSString *)privateKey passphrase: (NSString *)passphrase result:(FlutterResult)result {
-    
-     NSError *error;
-     NSString * output = [OpenpgpNewFastOpenPGP() sign:message publicKey:publicKey privateKey:privateKey passphrase:passphrase error:&error];
-     
-     if(error!=nil){
-         result(error);
-     }else{
-         result(output);
-     }
+    @try {
+        NSError *error;
+        NSString * output = [OpenpgpNewFastOpenPGP() sign:message publicKey:publicKey privateKey:privateKey passphrase:passphrase error:&error];
+        
+        if(error!=nil){
+            result(error);
+        }else{
+            result(output);
+        }
+    }
+    @catch (NSException * e) {
+       result(e);
+    }
 }
 
 - (void)verify:(NSString *)signature message: (NSString *)message publicKey: (NSString *)publicKey result:(FlutterResult)result {
-    
-    NSError *error;
-    BOOL ret0_;
-    BOOL output = [OpenpgpNewFastOpenPGP() verify:signature message:message publicKey:publicKey ret0_:&ret0_ error:&error];
-    
-    if(error!=nil){
-        result(error);
-    }else{
-        result([NSNumber numberWithBool:output]);
+    @try {
+        NSError *error;
+        BOOL ret0_;
+        BOOL output = [OpenpgpNewFastOpenPGP() verify:signature message:message publicKey:publicKey ret0_:&ret0_ error:&error];
+        
+        if(error!=nil){
+            result(error);
+        }else{
+            result([NSNumber numberWithBool:output]);
+        }
+    }
+    @catch (NSException * e) {
+       result(e);
     }
 }
 
 - (void)decryptSymmetric:(NSString *)message passphrase: (NSString *)passphrase options:(NSDictionary *)map result:(FlutterResult)result {
-    
-    OpenpgpKeyOptions *options = [self getKeyOptions:map];
-    NSError *error;
-    NSString * output = [OpenpgpNewFastOpenPGP() decryptSymmetric:message passphrase:passphrase options:options error:&error];
-    
-    if(error!=nil){
-        result(error);
-    }else{
-        result(output);
+    @try {
+        OpenpgpKeyOptions *options = [self getKeyOptions:map];
+        NSError *error;
+        NSString * output = [OpenpgpNewFastOpenPGP() decryptSymmetric:message passphrase:passphrase options:options error:&error];
+        
+        if(error!=nil){
+            result(error);
+        }else{
+            result(output);
+        }
+    }
+    @catch (NSException * e) {
+       result(e);
     }
 }
 
 - (void)encryptSymmetric:(NSString *)message passphrase: (NSString *)passphrase options:(NSDictionary *)map result:(FlutterResult)result {
-    
-    OpenpgpKeyOptions *options = [self getKeyOptions:map];
-    NSError *error;
-    NSString * output = [OpenpgpNewFastOpenPGP() encryptSymmetric:message passphrase:passphrase options:options error:&error];
-    
-    if(error!=nil){
-        result(error);
-    }else{
-        result(output);
+    @try {
+        OpenpgpKeyOptions *options = [self getKeyOptions:map];
+        NSError *error;
+        NSString * output = [OpenpgpNewFastOpenPGP() encryptSymmetric:message passphrase:passphrase options:options error:&error];
+        
+        if(error!=nil){
+            result(error);
+        }else{
+            result(output);
+        }
+    }
+    @catch (NSException * e) {
+       result(e);
     }
 }
 
 - (void)generate:(NSDictionary *)map result:(FlutterResult)result {
-    
-    OpenpgpOptions * options = [self getOptions:map];
-    NSError *error;
-    OpenpgpKeyPair * output = [OpenpgpNewFastOpenPGP() generate:options error:&error];
-    
-    if(error!=nil){
-        result(error);
-    }else{
-        result(@{
-                  @"publicKey":output.publicKey,
-                  @"privateKey":output.privateKey,
-                });
+    @try {
+        OpenpgpOptions * options = [self getOptions:map];
+        NSError *error;
+        OpenpgpKeyPair * output = [OpenpgpNewFastOpenPGP() generate:options error:&error];
+        
+        if(error!=nil){
+            result(error);
+        }else{
+            result(@{
+                      @"publicKey":output.publicKey,
+                      @"privateKey":output.privateKey,
+                    });
+        }
     }
+    @catch (NSException * e) {
+       result(e);
+    }
+    
 }
 
 - (OpenpgpKeyOptions *)getKeyOptions:(NSDictionary *)map
