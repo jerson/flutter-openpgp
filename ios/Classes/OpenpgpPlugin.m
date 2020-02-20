@@ -50,13 +50,13 @@
          NSString * output = [OpenpgpNewFastOpenPGP() encrypt:message publicKey:publicKey error:&error];
         
          if(error!=nil){
-             result(error);
+             result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]);
          }else{
              result(output);
          }
     }
     @catch (NSException * e) {
-       result(e);
+       result([FlutterError errorWithCode:e.name message:e.reason details:nil]);
     }
 }
 
@@ -66,13 +66,13 @@
         NSString * output = [OpenpgpNewFastOpenPGP() decrypt:message privateKey:privateKey passphrase:passphrase error:&error];
         
         if(error!=nil){
-            result(error);
+            result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]);
         }else{
             result(output);
         }
     }
     @catch (NSException * e) {
-       result(e);
+       result([FlutterError errorWithCode:e.name message:e.reason details:nil]);
     }
 }
 
@@ -82,13 +82,13 @@
         NSString * output = [OpenpgpNewFastOpenPGP() sign:message publicKey:publicKey privateKey:privateKey passphrase:passphrase error:&error];
         
         if(error!=nil){
-            result(error);
+            result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]);
         }else{
             result(output);
         }
     }
     @catch (NSException * e) {
-       result(e);
+       result([FlutterError errorWithCode:e.name message:e.reason details:nil]);
     }
 }
 
@@ -99,13 +99,13 @@
         BOOL output = [OpenpgpNewFastOpenPGP() verify:signature message:message publicKey:publicKey ret0_:&ret0_ error:&error];
         
         if(error!=nil){
-            result(error);
+            result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]);
         }else{
             result([NSNumber numberWithBool:output]);
         }
     }
     @catch (NSException * e) {
-       result(e);
+       result([FlutterError errorWithCode:e.name message:e.reason details:nil]);
     }
 }
 
@@ -116,13 +116,13 @@
         NSString * output = [OpenpgpNewFastOpenPGP() decryptSymmetric:message passphrase:passphrase options:options error:&error];
         
         if(error!=nil){
-            result(error);
+            result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]);
         }else{
             result(output);
         }
     }
     @catch (NSException * e) {
-       result(e);
+       result([FlutterError errorWithCode:e.name message:e.reason details:nil]);
     }
 }
 
@@ -133,13 +133,13 @@
         NSString * output = [OpenpgpNewFastOpenPGP() encryptSymmetric:message passphrase:passphrase options:options error:&error];
         
         if(error!=nil){
-            result(error);
+            result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]);
         }else{
             result(output);
         }
     }
     @catch (NSException * e) {
-       result(e);
+       result([FlutterError errorWithCode:e.name message:e.reason details:nil]);
     }
 }
 
@@ -150,7 +150,7 @@
         OpenpgpKeyPair * output = [OpenpgpNewFastOpenPGP() generate:options error:&error];
         
         if(error!=nil){
-            result(error);
+            result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]);
         }else{
             result(@{
                       @"publicKey":output.publicKey,
@@ -159,7 +159,7 @@
         }
     }
     @catch (NSException * e) {
-       result(e);
+       result([FlutterError errorWithCode:e.name message:e.reason details:nil]);
     }
     
 }
