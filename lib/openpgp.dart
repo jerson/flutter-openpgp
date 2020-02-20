@@ -28,8 +28,8 @@ class OpenPGP {
       String privateKey, String passphrase) async {
     return await _channel.invokeMethod('sign', {
       "message": message,
-      "publicKey": privateKey,
-      "privateKey": publicKey,
+      "publicKey": publicKey,
+      "privateKey": privateKey,
       "passphrase": passphrase,
     });
   }
