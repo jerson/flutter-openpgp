@@ -81,13 +81,7 @@ class OpenPGP {
             "passphrase": options.passphrase ?? "",
             "keyOptions": _getKeyOptionsMap(options.keyOptions),
           }
-        : {
-            "email": "",
-            "name": "",
-            "comment": "",
-            "passphrase": "",
-            "keyOptions": _getKeyOptionsMap(null),
-          };
+        : {};
   }
 
   static _getKeyOptionsMap(KeyOptions options) {
@@ -99,13 +93,7 @@ class OpenPGP {
             "hash": _toStringHash(options.hash),
             "rsaBits": options.rsaBits ?? 2048,
           }
-        : {
-            "cipher": _toStringCypher(Cypher.aes128),
-            "compression": _toStringCompression(Compression.none),
-            "compressionLevel": 0,
-            "hash": _toStringHash(Hash.sha256),
-            "rsaBits": 2048,
-          };
+        : {};
   }
 
   static String _toStringCypher(Cypher input) {
