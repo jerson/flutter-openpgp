@@ -1,0 +1,28 @@
+PODS:
+  - FastOpenpgp (0.4.0)
+  - Flutter (1.0.0)
+  - openpgp (0.0.1):
+    - FastOpenpgp
+    - Flutter
+
+DEPENDENCIES:
+  - FastOpenpgp (from `/Users/gerson.pardo/Desktop/openpgp/ios/native`)
+  - Flutter (from `Flutter`)
+  - openpgp (from `.symlinks/plugins/openpgp/ios`)
+
+EXTERNAL SOURCES:
+  FastOpenpgp:
+    :path: "/Users/gerson.pardo/Desktop/openpgp/ios/native"
+  Flutter:
+    :path: Flutter
+  openpgp:
+    :path: ".symlinks/plugins/openpgp/ios"
+
+SPEC CHECKSUMS:
+  FastOpenpgp: 68216bd31b963b7bfb8810b921975381318d2a26
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  openpgp: ec6ff7558a8ea481b5267f5464f887226e077485
+
+PODFILE CHECKSUM: 82dd5fca9fa2fa28ee5f5277dcb192bf9e14f57c
+
+COCOAPODS: 1.8.4
