@@ -37,8 +37,6 @@
       [self encryptSymmetric:[call arguments][@"message"] passphrase:[call arguments][@"passphrase"] options:[call arguments][@"options"] result:result];
       
   } else if ([@"generate" isEqualToString:call.method]) {
-      
-      NSLog(@"%@",[call arguments]);
       [self generate:[call arguments][@"options"] result:result];
       
   } else {

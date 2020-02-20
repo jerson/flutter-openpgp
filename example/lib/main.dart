@@ -38,6 +38,10 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     initKeyPair();
+
+    encryptController.text = "sample";
+    encryptSymmetricController.text = "sample";
+    signController.text = "sample";
   }
 
   Future<void> initKeyPair() async {
