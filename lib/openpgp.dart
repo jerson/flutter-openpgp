@@ -77,7 +77,7 @@ class OpenPGP {
         ? {
             "email": options.email ?? "",
             "name": options.name ?? "",
-            "comment": options.comment,
+            "comment": options.comment ?? "",
             "passphrase": options.passphrase ?? "",
             "keyOptions": _getKeyOptionsMap(options.keyOptions),
           }
