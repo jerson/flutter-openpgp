@@ -6,13 +6,13 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
-  - FastOpenpgp (from `/Users/gerson.pardo/Desktop/openpgp/ios/native`)
+  - FastOpenpgp (from `/Users/gerson.pardo/Proyectos/personal/flutter-openpgp/ios/native`)
   - Flutter (from `Flutter`)
   - openpgp (from `.symlinks/plugins/openpgp/ios`)
 
 EXTERNAL SOURCES:
   FastOpenpgp:
-    :path: "/Users/gerson.pardo/Desktop/openpgp/ios/native"
+    :path: "/Users/gerson.pardo/Proyectos/personal/flutter-openpgp/ios/native"
   Flutter:
     :path: Flutter
   openpgp:

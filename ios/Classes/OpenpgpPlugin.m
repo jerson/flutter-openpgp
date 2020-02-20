@@ -14,31 +14,31 @@
    
   if ([@"encrypt" isEqualToString:call.method]) {
       
-      [self encrypt:[call valueForKey:@"message"] publicKey:[call valueForKey:@"publicKey"] result:result];
+      [self encrypt:[call arguments][@"message"] publicKey:[call arguments][@"publicKey"] result:result];
       
   } else if ([@"decrypt" isEqualToString:call.method]) {
       
-      [self decrypt:[call valueForKey:@"message"] privateKey:[call valueForKey:@"privateKey"] passphrase:[call valueForKey:@"passphrase"] result:result];
+      [self decrypt:[call arguments][@"message"] privateKey:[call arguments][@"privateKey"] passphrase:[call arguments][@"passphrase"] result:result];
       
   } else if ([@"sign" isEqualToString:call.method]) {
       
-      [self sign:[call valueForKey:@"message"] publicKey:[call valueForKey:@"publicKey"] privateKey:[call valueForKey:@"privateKey"] passphrase:[call valueForKey:@"passphrase"] result:result];
+      [self sign:[call arguments][@"message"] publicKey:[call arguments][@"publicKey"] privateKey:[call arguments][@"privateKey"] passphrase:[call arguments][@"passphrase"] result:result];
       
   } else if ([@"verify" isEqualToString:call.method]) {
       
-      [self verify:[call valueForKey:@"signature"] message:[call valueForKey:@"message"] publicKey:[call valueForKey:@"publicKey"] result:result];
+      [self verify:[call arguments][@"signature"] message:[call arguments][@"message"] publicKey:[call arguments][@"publicKey"] result:result];
       
   } else if ([@"decryptSymmetric" isEqualToString:call.method]) {
       
-      [self decryptSymmetric:[call valueForKey:@"message"] passphrase:[call valueForKey:@"passphrase"] options:nil result:result];
+      [self decryptSymmetric:[call arguments][@"message"] passphrase:[call arguments][@"passphrase"] options:[call arguments][@"options"] result:result];
       
   } else if ([@"encryptSymmetric" isEqualToString:call.method]) {
       
-      [self encryptSymmetric:[call valueForKey:@"message"] passphrase:[call valueForKey:@"passphrase"] options:nil result:result];
+      [self encryptSymmetric:[call arguments][@"message"] passphrase:[call arguments][@"passphrase"] options:[call arguments][@"options"] result:result];
       
   } else if ([@"generate" isEqualToString:call.method]) {
       
-      [self generate:nil result:result];
+      [self generate:[call arguments][@"options"] result:result];
       
   } else {
     result(FlutterMethodNotImplemented);
