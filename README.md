@@ -15,7 +15,7 @@ var keyPair = await OpenPGP.generate(
         name: 'test',
         comment: 'test',
         email: 'test@test.com',
-        passphrase: passphrase,
+        passphrase: "123456",
         keyOptions: KeyOptions(
             rsaBits: 2048,
             cipher: Cypher.aes128,
