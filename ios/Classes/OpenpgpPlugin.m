@@ -1,5 +1,10 @@
 #import "OpenpgpPlugin.h"
-#import "Openpgp/Openpgp.h"
+
+#if __has_include(<Openpgp/Openpgp.h>)
+#import <Openpgp/Openpgp.h>
+#else
+@import Openpgp;
+#endif
 
 @implementation OpenpgpPlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {

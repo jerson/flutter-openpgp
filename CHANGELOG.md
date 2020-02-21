@@ -1,3 +1,7 @@
+## 0.3.0
+
+- Fixed ios include
+
 ## 0.2.0
 
 - Updated description
