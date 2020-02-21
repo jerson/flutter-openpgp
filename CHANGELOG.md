@@ -1,3 +1,7 @@
+## 0.4.0
+
+- Updated binary packages
+  
 ## 0.3.0
 
 - Fixed ios include
