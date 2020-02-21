@@ -14,10 +14,12 @@ Pod::Spec.new do |s|
   s.author           = { 'Gerson Alexander Pardo Gamez' => 'jeral17@gmail.com' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
+  s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'FastOpenpgp'
   s.platform = :ios, '8.0'
-
+  s.preserve_paths = 'Openpgp.framework'
+  s.xcconfig = { 'OTHER_LDFLAGS' => '-framework Openpgp' }
+  s.vendored_frameworks = 'Openpgp.framework'
   # Flutter.framework does not contain a i386 slice. Only x86_64 simulators are supported.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'VALID_ARCHS[sdk=iphonesimulator*]' => 'x86_64' }
   s.swift_version = '5.0'

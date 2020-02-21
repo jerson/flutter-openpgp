@@ -1,4 +1,3 @@
-
 class KeyPair {
   final String publicKey;
   final String privateKey;

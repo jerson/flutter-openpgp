@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:openpgp/key_options.dart';
 import 'package:openpgp/key_pair.dart';
 import 'package:openpgp/openpgp.dart';

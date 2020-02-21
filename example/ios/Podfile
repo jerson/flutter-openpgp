@@ -72,9 +72,6 @@ target 'Runner' do
     symlink = File.join('.symlinks', 'plugins', name)
     File.symlink(path, symlink)
     pod name, :path => File.join(symlink, 'ios')
-    if symlink="openpgp"
-      pod 'FastOpenpgp', :path => File.join(path, 'ios/native')
-    end
   end
 end
 
