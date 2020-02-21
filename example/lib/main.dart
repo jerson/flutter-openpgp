@@ -85,177 +85,198 @@ class _MyAppState extends State<MyApp> {
             Container(
               padding: const EdgeInsets.all(20),
               child: Card(
-                child: Column(
-                  children: <Widget>[
-                    TextField(
-                      decoration: InputDecoration(labelText: "Message"),
-                      controller: encryptController,
-                    ),
-                    RaisedButton(
-                      child: Text("Encrypt"),
-                      onPressed: () async {
-                        var encrypted = await OpenPGP.encrypt(
-                          encryptController.text,
-                          _defaultKeyPair.publicKey,
-                        );
-                        setState(() {
-                          _encrypted = encrypted;
-                        });
-                      },
-                    ),
-                    Text(_encrypted)
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: <Widget>[
+                      TextField(
+                        decoration: InputDecoration(labelText: "Message"),
+                        controller: encryptController,
+                      ),
+                      RaisedButton(
+                        child: Text("Encrypt"),
+                        onPressed: () async {
+                          var encrypted = await OpenPGP.encrypt(
+                            encryptController.text,
+                            _defaultKeyPair.publicKey,
+                          );
+                          setState(() {
+                            _encrypted = encrypted;
+                          });
+                        },
+                      ),
+                      SelectableText(_encrypted)
+                    ],
+                  ),
                 ),
               ),
             ),
             Container(
               padding: const EdgeInsets.all(20),
               child: Card(
-                child: Column(
-                  children: <Widget>[
-                    RaisedButton(
-                      child: Text("Decrypt"),
-                      onPressed: () async {
-                        var decrypted = await OpenPGP.decrypt(
-                          _encrypted,
-                          _defaultKeyPair.privateKey,
-                          passphrase,
-                        );
-                        setState(() {
-                          _decrypted = decrypted;
-                        });
-                      },
-                    ),
-                    Text(_decrypted)
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: <Widget>[
+                      RaisedButton(
+                        child: Text("Decrypt"),
+                        onPressed: () async {
+                          var decrypted = await OpenPGP.decrypt(
+                            _encrypted,
+                            _defaultKeyPair.privateKey,
+                            passphrase,
+                          );
+                          setState(() {
+                            _decrypted = decrypted;
+                          });
+                        },
+                      ),
+                      SelectableText(_decrypted)
+                    ],
+                  ),
                 ),
               ),
             ),
             Container(
               padding: const EdgeInsets.all(20),
               child: Card(
-                child: Column(
-                  children: <Widget>[
-                    TextField(
-                      decoration: InputDecoration(labelText: "Message"),
-                      controller: signController,
-                    ),
-                    RaisedButton(
-                      child: Text("Sign"),
-                      onPressed: () async {
-                        var signed = await OpenPGP.sign(
-                          signController.text,
-                          _defaultKeyPair.publicKey,
-                          _defaultKeyPair.privateKey,
-                          passphrase,
-                        );
-                        setState(() {
-                          _signed = signed;
-                        });
-                      },
-                    ),
-                    Text(_signed)
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: <Widget>[
+                      TextField(
+                        decoration: InputDecoration(labelText: "Message"),
+                        controller: signController,
+                      ),
+                      RaisedButton(
+                        child: Text("Sign"),
+                        onPressed: () async {
+                          var signed = await OpenPGP.sign(
+                            signController.text,
+                            _defaultKeyPair.publicKey,
+                            _defaultKeyPair.privateKey,
+                            passphrase,
+                          );
+                          setState(() {
+                            _signed = signed;
+                          });
+                        },
+                      ),
+                      SelectableText(_signed)
+                    ],
+                  ),
                 ),
               ),
             ),
             Container(
               padding: const EdgeInsets.all(20),
               child: Card(
-                child: Column(
-                  children: <Widget>[
-                    RaisedButton(
-                      child: Text("Verify"),
-                      onPressed: () async {
-                        var verified = await OpenPGP.verify(
-                          _signed,
-                          signController.text,
-                          _defaultKeyPair.publicKey,
-                        );
-                        setState(() {
-                          _verified = verified;
-                        });
-                      },
-                    ),
-                    Text(_verified ? "VALID" : "INVALID")
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: <Widget>[
+                      RaisedButton(
+                        child: Text("Verify"),
+                        onPressed: () async {
+                          var verified = await OpenPGP.verify(
+                            _signed,
+                            signController.text,
+                            _defaultKeyPair.publicKey,
+                          );
+                          setState(() {
+                            _verified = verified;
+                          });
+                        },
+                      ),
+                      SelectableText(_verified ? "VALID" : "INVALID")
+                    ],
+                  ),
                 ),
               ),
             ),
             Container(
               padding: const EdgeInsets.all(20),
               child: Card(
-                child: Column(
-                  children: <Widget>[
-                    TextField(
-                      decoration: InputDecoration(labelText: "Message"),
-                      controller: encryptSymmetricController,
-                    ),
-                    RaisedButton(
-                      child: Text("Encrypt Symmetric"),
-                      onPressed: () async {
-                        var encrypted = await OpenPGP.encryptSymmetric(
-                          encryptSymmetricController.text,
-                          passphrase,
-                        );
-                        setState(() {
-                          _encryptedSymmetric = encrypted;
-                        });
-                      },
-                    ),
-                    Text(_encryptedSymmetric)
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: <Widget>[
+                      TextField(
+                        decoration: InputDecoration(labelText: "Message"),
+                        controller: encryptSymmetricController,
+                      ),
+                      RaisedButton(
+                        child: Text("Encrypt Symmetric"),
+                        onPressed: () async {
+                          var encrypted = await OpenPGP.encryptSymmetric(
+                            encryptSymmetricController.text,
+                            passphrase,
+                          );
+                          setState(() {
+                            _encryptedSymmetric = encrypted;
+                          });
+                        },
+                      ),
+                      SelectableText(_encryptedSymmetric)
+                    ],
+                  ),
                 ),
               ),
             ),
             Container(
               padding: const EdgeInsets.all(20),
               child: Card(
-                child: Column(
-                  children: <Widget>[
-                    RaisedButton(
-                      child: Text("Decrypt Symmetric"),
-                      onPressed: () async {
-                        var decrypted = await OpenPGP.decryptSymmetric(
-                          _encryptedSymmetric,
-                          passphrase,
-                        );
-                        setState(() {
-                          _decryptedSymmetric = decrypted;
-                        });
-                      },
-                    ),
-                    Text(_decryptedSymmetric)
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: <Widget>[
+                      RaisedButton(
+                        child: Text("Decrypt Symmetric"),
+                        onPressed: () async {
+                          var decrypted = await OpenPGP.decryptSymmetric(
+                            _encryptedSymmetric,
+                            passphrase,
+                          );
+                          setState(() {
+                            _decryptedSymmetric = decrypted;
+                          });
+                        },
+                      ),
+                      SelectableText(_decryptedSymmetric)
+                    ],
+                  ),
                 ),
               ),
             ),
             Container(
               padding: const EdgeInsets.all(20),
               child: Card(
-                child: Column(
-                  children: <Widget>[
-                    RaisedButton(
-                      child: Text("Generate"),
-                      onPressed: () async {
-                        var keyPair = await OpenPGP.generate(
-                          options: Options(
-                            name: 'test',
-                            email: 'test@test.com',
-                            passphrase: 'test',
-                            keyOptions: KeyOptions(
-                              rsaBits: 1024,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: <Widget>[
+                      RaisedButton(
+                        child: Text("Generate"),
+                        onPressed: () async {
+                          var keyPair = await OpenPGP.generate(
+                            options: Options(
+                              name: 'test',
+                              email: 'test@test.com',
+                              passphrase: 'test',
+                              keyOptions: KeyOptions(
+                                rsaBits: 1024,
+                              ),
                             ),
-                          ),
-                        );
-                        setState(() {
-                          _keyPair = keyPair;
-                        });
-                      },
-                    ),
-                    Text(_keyPair.publicKey),
-                    Text(_keyPair.privateKey)
-                  ],
+                          );
+                          setState(() {
+                            _keyPair = keyPair;
+                          });
+                        },
+                      ),
+                      SelectableText(_keyPair.publicKey),
+                      SelectableText(_keyPair.privateKey)
+                    ],
+                  ),
                 ),
               ),
             ),
