@@ -1,3 +1,7 @@
+## 0.7.0
+
+- Single instance for ios
+
 ## 0.6.0
 
 - Now run on background on ios
