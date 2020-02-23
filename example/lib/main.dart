@@ -263,7 +263,7 @@ class _MyAppState extends State<MyApp> {
                               email: 'test@test.com',
                               passphrase: 'test',
                               keyOptions: KeyOptions(
-                                rsaBits: 1024,
+                                rsaBits: 4096,
                               ),
                             ),
                           );

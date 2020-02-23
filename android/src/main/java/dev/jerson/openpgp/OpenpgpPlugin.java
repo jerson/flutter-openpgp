@@ -1,5 +1,7 @@
 package dev.jerson.openpgp;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -28,12 +30,14 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
     /// when the Flutter Engine is detached from the Activity
     private MethodChannel channel;
     private FastOpenPGP instance;
+    private Handler handler;
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
         instance = Openpgp.newFastOpenPGP();
         channel = new MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "openpgp");
         channel.setMethodCallHandler(this);
+        handler = new Handler(Looper.getMainLooper());
     }
 
     // This static function is optional and equivalent to onAttachedToEngine. It supports the old
@@ -120,47 +124,88 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
         channel.setMethodCallHandler(null);
     }
 
+    private void success(final Result promise, final Object result) {
+        Runnable local = new Runnable() {
+            @Override
+            public void run() {
+                promise.success(result);
+            }
+        };
 
-    private void decrypt(String message, String privateKey, String passphrase, Result promise) {
-        try {
-            String result = instance.decrypt(message, privateKey, passphrase);
-            promise.success(result);
-        } catch (Exception e) {
-            promise.error("error", e.getMessage(), e);
-        }
+        handler.post(local);
+    }
+
+    private void error(final Result promise, final String errorCode, final String errorMessage, final Object errorDetails) {
+        Runnable local = new Runnable() {
+            @Override
+            public void run() {
+                promise.error(errorCode, errorMessage, errorDetails);
+            }
+        };
+
+        handler.post(local);
+    }
+
+    private void decrypt(final String message, final String privateKey, final String passphrase, final Result promise) {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    String result = instance.decrypt(message, privateKey, passphrase);
+                    success(promise,result);
+                } catch (Exception e) {
+                    error(promise,"error", e.getMessage(), null);
+                }
+            }
+        }).start();
     }
 
 
-    private void encrypt(String message, String publicKey, Result promise) {
-        try {
-            String result = instance.encrypt(message, publicKey);
-            promise.success(result);
-        } catch (Exception e) {
-            promise.error("error", e.getMessage(), e);
-        }
+    private void encrypt(final String message, final String publicKey, final Result promise) {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    String result = instance.encrypt(message, publicKey);
+                    success(promise,result);
+                } catch (Exception e) {
+                    error(promise,"error", e.getMessage(), null);
+                }
+            }
+        }).start();
     }
 
 
-    private void sign(String message, String publicKey, String privateKey, String passphrase, Result promise) {
-        try {
-            String result = instance.sign(message, publicKey, privateKey, passphrase);
-            promise.success(result);
-        } catch (Exception e) {
-            promise.error("error", e.getMessage(), e);
-        }
+    private void sign(final String message, final String publicKey, final String privateKey, final String passphrase, final Result promise) {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    String result = instance.sign(message, publicKey, privateKey, passphrase);
+                    success(promise,result);
+                } catch (Exception e) {
+                    error(promise,"error", e.getMessage(), null);
+                }
+            }
+        }).start();
     }
 
 
-    private void verify(String signature, String message, String publicKey, Result promise) {
-        try {
-            Boolean result = instance.verify(signature, message, publicKey);
-            promise.success(result);
-        } catch (Exception e) {
-            promise.error("error", e.getMessage(), e);
-        }
+    private void verify(final String signature, final String message, final String publicKey, final Result promise) {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    Boolean result = instance.verify(signature, message, publicKey);
+                    success(promise,result);
+                } catch (Exception e) {
+                    error(promise,"error", e.getMessage(), null);
+                }
+            }
+        }).start();
     }
 
     private KeyOptions getKeyOptions(HashMap<String,Object> map) {
+        new Thread(new Runnable() {
+            public void run() {
+            }
+        }).start();
         KeyOptions options = new KeyOptions();
 
         if (map == null) {
@@ -185,6 +230,10 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     private Options getOptions(HashMap<String,Object> map) {
+        new Thread(new Runnable() {
+            public void run() {
+            }
+        }).start();
         Options options = new Options();
 
         if (map == null) {
@@ -212,37 +261,48 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
         return options;
     }
 
-    private void decryptSymmetric(String message, String passphrase, HashMap<String,Object> mapOptions, Result promise) {
-
-        try {
-            KeyOptions options = this.getKeyOptions(mapOptions);
-            String result = instance.decryptSymmetric(message, passphrase, options);
-            promise.success(result);
-        } catch (Exception e) {
-            promise.error("error", e.getMessage(), e);
-        }
+    private void decryptSymmetric(final String message, final String passphrase, final HashMap<String,Object> mapOptions, final Result promise) {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    KeyOptions options = getKeyOptions(mapOptions);
+                    String result = instance.decryptSymmetric(message, passphrase, options);
+                    success(promise,result);
+                } catch (Exception e) {
+                    error(promise,"error", e.getMessage(), null);
+                }
+            }
+        }).start();
     }
 
-    private void encryptSymmetric(String message, String passphrase, HashMap<String,Object> mapOptions, Result promise) {
-        try {
-            KeyOptions options = this.getKeyOptions(mapOptions);
-            String result = instance.encryptSymmetric(message, passphrase, options);
-            promise.success(result);
-        } catch (Exception e) {
-            promise.error("error", e.getMessage(), e);
-        }
+    private void encryptSymmetric(final String message, final String passphrase, final HashMap<String,Object> mapOptions, final Result promise) {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    KeyOptions options = getKeyOptions(mapOptions);
+                    String result = instance.encryptSymmetric(message, passphrase, options);
+                    success(promise,result);
+                } catch (Exception e) {
+                    error(promise,"error", e.getMessage(), null);
+                }
+            }
+        }).start();
     }
 
-    private void generate(HashMap<String,Object> mapOptions, Result promise) {
-        try {
-            Options options = this.getOptions(mapOptions);
-            KeyPair keyPair = instance.generate(options);
-            HashMap<String,Object> result = new HashMap<>();
-            result.put("publicKey",keyPair.getPublicKey());
-            result.put("privateKey",keyPair.getPrivateKey());
-            promise.success(result);
-        } catch (Exception e) {
-            promise.error("error", e.getMessage(), e);
-        }
+    private void generate(final HashMap<String,Object> mapOptions, final Result promise) {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    Options options = getOptions(mapOptions);
+                    KeyPair keyPair = instance.generate(options);
+                    HashMap<String,Object> result = new HashMap<>();
+                    result.put("publicKey",keyPair.getPublicKey());
+                    result.put("privateKey",keyPair.getPrivateKey());
+                    success(promise,result);
+                } catch (Exception e) {
+                    error(promise,"error", e.getMessage(), null);
+                }
+            }
+        }).start();
     }
 }
