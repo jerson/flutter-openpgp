@@ -1,3 +1,7 @@
+## 0.6.0
+
+- Now run on background on ios
+
 ## 0.5.0
 
 - Now run on background on android
@@ -5,7 +9,7 @@
 ## 0.4.0
 
 - Updated binary packages
-  
+
 ## 0.3.0
 
 - Fixed ios include

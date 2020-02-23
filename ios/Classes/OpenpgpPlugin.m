@@ -6,12 +6,17 @@
 @import Openpgp;
 #endif
 
-@implementation OpenpgpPlugin
+@implementation OpenpgpPlugin{
+    dispatch_queue_t queue;
+}
+
+
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
   FlutterMethodChannel* channel = [FlutterMethodChannel
       methodChannelWithName:@"openpgp"
             binaryMessenger:[registrar messenger]];
   OpenpgpPlugin* instance = [[OpenpgpPlugin alloc] init];
+  [instance setup];
   [registrar addMethodCallDelegate:instance channel:channel];
 }
 
@@ -49,123 +54,171 @@
   }
 }
 
+- (void)setup
+{
+    queue = dispatch_queue_create("fast-openpgp", DISPATCH_QUEUE_SERIAL);
+}
+
 - (void)encrypt:(NSString *)message publicKey: (NSString *)publicKey result:(FlutterResult)result {
-    @try {
-         NSError *error;
-         NSString * output = [OpenpgpNewFastOpenPGP() encrypt:message publicKey:publicKey error:&error];
-        
-         if(error!=nil){
-             result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]);
-         }else{
-             result(output);
-         }
-    }
-    @catch (NSException * e) {
-       result([FlutterError errorWithCode:e.name message:e.reason details:nil]);
-    }
+    dispatch_async(queue, ^(void){
+        @try {
+             NSError *error;
+             NSString * output = [OpenpgpNewFastOpenPGP() encrypt:message publicKey:publicKey error:&error];
+            
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+                if(error!=nil){
+                    result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]);
+                }else{
+                    result(output);
+                }
+            });
+        }
+        @catch (NSException * e) {
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+                result([FlutterError errorWithCode:e.name message:e.reason details:nil]);
+            });
+        }
+    });
 }
 
 - (void)decrypt:(NSString *)message privateKey: (NSString *)privateKey passphrase: (NSString *)passphrase result:(FlutterResult)result {
-    @try {
-        NSError *error;
-        NSString * output = [OpenpgpNewFastOpenPGP() decrypt:message privateKey:privateKey passphrase:passphrase error:&error];
-        
-        if(error!=nil){
-            result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]);
-        }else{
-            result(output);
+    dispatch_async(queue, ^(void){
+        @try {
+            NSError *error;
+            NSString * output = [OpenpgpNewFastOpenPGP() decrypt:message privateKey:privateKey passphrase:passphrase error:&error];
+
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+                if(error!=nil){
+                    result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]);
+                }else{
+                    result(output);
+                }
+            });
         }
-    }
-    @catch (NSException * e) {
-       result([FlutterError errorWithCode:e.name message:e.reason details:nil]);
-    }
+        @catch (NSException * e) {
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+                result([FlutterError errorWithCode:e.name message:e.reason details:nil]);
+            });
+        }
+    });
 }
 
 - (void)sign:(NSString *)message publicKey: (NSString *)publicKey privateKey: (NSString *)privateKey passphrase: (NSString *)passphrase result:(FlutterResult)result {
-    @try {
-        NSError *error;
-        NSString * output = [OpenpgpNewFastOpenPGP() sign:message publicKey:publicKey privateKey:privateKey passphrase:passphrase error:&error];
-        
-        if(error!=nil){
-            result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]);
-        }else{
-            result(output);
+    dispatch_async(queue, ^(void){
+        @try {
+            NSError *error;
+            NSString * output = [OpenpgpNewFastOpenPGP() sign:message publicKey:publicKey privateKey:privateKey passphrase:passphrase error:&error];
+
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+                if(error!=nil){
+                    result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]);
+                }else{
+                    result(output);
+                }
+            });
         }
-    }
-    @catch (NSException * e) {
-       result([FlutterError errorWithCode:e.name message:e.reason details:nil]);
-    }
+        @catch (NSException * e) {
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+                result([FlutterError errorWithCode:e.name message:e.reason details:nil]);
+            });
+        }
+    });
 }
 
 - (void)verify:(NSString *)signature message: (NSString *)message publicKey: (NSString *)publicKey result:(FlutterResult)result {
-    @try {
-        NSError *error;
-        BOOL ret0_;
-        BOOL output = [OpenpgpNewFastOpenPGP() verify:signature message:message publicKey:publicKey ret0_:&ret0_ error:&error];
-        
-        if(error!=nil){
-            result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]);
-        }else{
-            result([NSNumber numberWithBool:output]);
+    dispatch_async(queue, ^(void){
+        @try {
+            NSError *error;
+            BOOL ret0_;
+            BOOL output = [OpenpgpNewFastOpenPGP() verify:signature message:message publicKey:publicKey ret0_:&ret0_ error:&error];
+
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+                if(error!=nil){
+                    result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]);
+                }else{
+                    result([NSNumber numberWithBool:output]);
+                }
+            });
         }
-    }
-    @catch (NSException * e) {
-       result([FlutterError errorWithCode:e.name message:e.reason details:nil]);
-    }
+        @catch (NSException * e) {
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+                result([FlutterError errorWithCode:e.name message:e.reason details:nil]);
+            });
+        }
+    });
 }
 
 - (void)decryptSymmetric:(NSString *)message passphrase: (NSString *)passphrase options:(NSDictionary *)map result:(FlutterResult)result {
-    @try {
-        OpenpgpKeyOptions *options = [self getKeyOptions:map];
-        NSError *error;
-        NSString * output = [OpenpgpNewFastOpenPGP() decryptSymmetric:message passphrase:passphrase options:options error:&error];
-        
-        if(error!=nil){
-            result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]);
-        }else{
-            result(output);
+    dispatch_async(queue, ^(void){
+        @try {
+            OpenpgpKeyOptions *options = [self getKeyOptions:map];
+            NSError *error;
+            NSString * output = [OpenpgpNewFastOpenPGP() decryptSymmetric:message passphrase:passphrase options:options error:&error];
+
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+                if(error!=nil){
+                    result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]);
+                }else{
+                    result(output);
+                }
+            });
         }
-    }
-    @catch (NSException * e) {
-       result([FlutterError errorWithCode:e.name message:e.reason details:nil]);
-    }
+        @catch (NSException * e) {
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+                result([FlutterError errorWithCode:e.name message:e.reason details:nil]);
+            });
+        }
+    });
 }
 
 - (void)encryptSymmetric:(NSString *)message passphrase: (NSString *)passphrase options:(NSDictionary *)map result:(FlutterResult)result {
-    @try {
-        OpenpgpKeyOptions *options = [self getKeyOptions:map];
-        NSError *error;
-        NSString * output = [OpenpgpNewFastOpenPGP() encryptSymmetric:message passphrase:passphrase options:options error:&error];
-        
-        if(error!=nil){
-            result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]);
-        }else{
-            result(output);
+    dispatch_async(queue, ^(void){
+        @try {
+            OpenpgpKeyOptions *options = [self getKeyOptions:map];
+            NSError *error;
+            NSString * output = [OpenpgpNewFastOpenPGP() encryptSymmetric:message passphrase:passphrase options:options error:&error];
+
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+                if(error!=nil){
+                    result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]);
+                }else{
+                    result(output);
+                }
+            });
         }
-    }
-    @catch (NSException * e) {
-       result([FlutterError errorWithCode:e.name message:e.reason details:nil]);
-    }
+        @catch (NSException * e) {
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+                result([FlutterError errorWithCode:e.name message:e.reason details:nil]);
+            });
+        }
+    });
 }
 
 - (void)generate:(NSDictionary *)map result:(FlutterResult)result {
-    @try {
-        OpenpgpOptions * options = [self getOptions:map];
-        NSError *error;
-        OpenpgpKeyPair * output = [OpenpgpNewFastOpenPGP() generate:options error:&error];
-        
-        if(error!=nil){
-            result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]);
-        }else{
-            result(@{
-                      @"publicKey":output.publicKey,
-                      @"privateKey":output.privateKey,
-                    });
-        }
-    }
-    @catch (NSException * e) {
-       result([FlutterError errorWithCode:e.name message:e.reason details:nil]);
-    }
+    
+    dispatch_async(queue, ^(void){
+            @try {
+                OpenpgpOptions * options = [self getOptions:map];
+                NSError *error;
+                OpenpgpKeyPair * output = [OpenpgpNewFastOpenPGP() generate:options error:&error];
+
+                dispatch_async(dispatch_get_main_queue(), ^(void){
+                    if(error!=nil){
+                        result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]);
+                    }else{
+                        result(@{
+                                  @"publicKey":output.publicKey,
+                                  @"privateKey":output.privateKey,
+                                });
+                    }
+                });
+            }
+            @catch (NSException * e) {
+                dispatch_async(dispatch_get_main_queue(), ^(void){
+                    result([FlutterError errorWithCode:e.name message:e.reason details:nil]);
+                });
+            }
+    });
     
 }
 
