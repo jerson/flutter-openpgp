@@ -35,7 +35,21 @@ flutter:
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
-
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: fonts/Roboto/Roboto-Thin.ttf
+          weight: 100
+        - asset: fonts/Roboto/Roboto-Light.ttf
+          weight: 300
+        - asset: fonts/Roboto/Roboto-Regular.ttf
+          weight: 400
+        - asset: fonts/Roboto/Roboto-Medium.ttf
+          weight: 500
+        - asset: fonts/Roboto/Roboto-Bold.ttf
+          weight: 700
+        - asset: fonts/Roboto/Roboto-Black.ttf
+          weight: 900
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
