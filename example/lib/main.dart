@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:openpgp/key_options.dart';
 import 'package:openpgp/key_pair.dart';
@@ -8,7 +10,13 @@ import 'package:openpgp/options.dart';
 
 const passphrase = 'test';
 
-void main() => runApp(MyApp());
+void main() {
+  if (!kIsWeb && (Platform.isLinux || Platform.isWindows)) {
+    debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
+  }
+
+  runApp(new MyApp());
+}
 
 class MyApp extends StatefulWidget {
   @override
