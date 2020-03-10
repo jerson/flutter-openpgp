@@ -202,10 +202,6 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     private KeyOptions getKeyOptions(HashMap<String,Object> map) {
-        new Thread(new Runnable() {
-            public void run() {
-            }
-        }).start();
         KeyOptions options = new KeyOptions();
 
         if (map == null) {
@@ -230,10 +226,6 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     private Options getOptions(HashMap<String,Object> map) {
-        new Thread(new Runnable() {
-            public void run() {
-            }
-        }).start();
         Options options = new Options();
 
         if (map == null) {
