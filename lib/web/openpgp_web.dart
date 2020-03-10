@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:openpgp/web/js/go.dart';
 import 'package:openpgp/web/js/promise.dart';
-import 'package:openpgp/web/js/rsa.dart';
+import 'package:openpgp/web/js/openpgp.dart';
 import 'package:openpgp/web/js/wasm.dart';
 
 import 'package:flutter/services.dart';
@@ -14,7 +14,7 @@ class OpenpgpPlugin {
 
   static void registerWith(Registrar registrar) {
     final MethodChannel channel =
-        MethodChannel('rsa', const StandardMethodCodec(), registrar.messenger);
+        MethodChannel('openpgp', const StandardMethodCodec(), registrar.messenger);
     final OpenpgpPlugin instance = OpenpgpPlugin();
     channel.setMethodCallHandler(instance.handleMethodCall);
   }
