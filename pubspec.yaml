@@ -10,6 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+  js: ^0.6.0
 
 dev_dependencies:
   flutter_test:
@@ -30,6 +33,13 @@ flutter:
         package: dev.jerson.openpgp
         pluginClass: OpenpgpPlugin
       ios:
+        pluginClass: OpenpgpPlugin
+      web:
+        pluginClass: OpenpgpPlugin
+        fileName: web/openpgp_web.dart
+      linux:
+        pluginClass: OpenpgpPlugin
+      macos:
         pluginClass: OpenpgpPlugin
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
