@@ -70,7 +70,7 @@ class OpenpgpPlugin {
         return await verify(
           call.arguments['signature'],
           call.arguments['message'],
-          call.arguments['passphrase'],
+          call.arguments['publicKey'],
         );
       case 'decryptSymmetric':
         return await decryptSymmetric(
