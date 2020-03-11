@@ -8,8 +8,8 @@ import 'package:openpgp/options.dart';
 class OpenPGP {
   static const MethodChannel _channel = const MethodChannel('openpgp');
 
-  static Future<String> decrypt(
-      String message, String privateKey, String passphrase) async {
+  static Future<String> decrypt(String message, String privateKey,
+      String passphrase) async {
     return await _channel.invokeMethod('decrypt', {
       "message": message,
       "privateKey": privateKey,
@@ -34,8 +34,8 @@ class OpenPGP {
     });
   }
 
-  static Future<bool> verify(
-      String signature, String message, String publicKey) async {
+  static Future<bool> verify(String signature, String message,
+      String publicKey) async {
     return await _channel.invokeMethod('verify', {
       "signature": signature,
       "message": message,
@@ -73,27 +73,51 @@ class OpenPGP {
   }
 
   static _getOptionsMap(Options options) {
-    return options != null
-        ? {
-            "email": options.email ?? "",
-            "name": options.name ?? "",
-            "comment": options.comment ?? "",
-            "passphrase": options.passphrase ?? "",
-            "keyOptions": _getKeyOptionsMap(options.keyOptions),
-          }
-        : {};
+    var result = {};
+    if (options == null) {
+      return result;
+    }
+    if (options.email != null) {
+      result["email"] = options.email;
+    }
+    if (options.name != null) {
+      result["name"] = options.name;
+    }
+    if (options.comment != null) {
+      result["comment"] = options.comment;
+    }
+    if (options.passphrase != null) {
+      result["passphrase"] = options.passphrase;
+    }
+    if (options.keyOptions != null) {
+      result["keyOptions"] = _getKeyOptionsMap(options.keyOptions);
+    }
+
+    return result;
   }
 
   static _getKeyOptionsMap(KeyOptions options) {
-    return options != null
-        ? {
-            "cipher": _toStringCypher(options.cipher),
-            "compression": _toStringCompression(options.compression),
-            "compressionLevel": options.compressionLevel ?? 0,
-            "hash": _toStringHash(options.hash),
-            "rsaBits": options.rsaBits ?? 2048,
-          }
-        : {};
+    var result = {};
+    if (options == null) {
+      return result;
+    }
+
+    if (options.cipher != null) {
+      result["cipher"] = _toStringCypher(options.cipher);
+    }
+    if (options.compression != null) {
+      result["compression"] = _toStringCompression(options.compression);
+    }
+    if (options.compressionLevel != null) {
+      result["compressionLevel"] = options.compressionLevel;
+    }
+    if (options.hash != null) {
+      result["hash"] = _toStringHash(options.hash);
+    }
+    if (options.rsaBits != null) {
+      result["rsaBits"] = options.rsaBits;
+    }
+    return result;
   }
 
   static String _toStringCypher(Cypher input) {

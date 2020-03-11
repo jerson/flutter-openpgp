@@ -14,7 +14,7 @@ class OpenpgpPlugin {
 
   static void registerWith(Registrar registrar) {
     final MethodChannel channel =
-        MethodChannel('openpgp', const StandardMethodCodec(), registrar.messenger);
+    MethodChannel('openpgp', const StandardMethodCodec(), registrar.messenger);
     final OpenpgpPlugin instance = OpenpgpPlugin();
     channel.setMethodCallHandler(instance.handleMethodCall);
   }
@@ -24,7 +24,8 @@ class OpenpgpPlugin {
       return true;
     }
 
-    var data = await rootBundle.load('packages/openpgp/web/assets/openpgp.wasm');
+    var data = await rootBundle.load(
+        'packages/openpgp/web/assets/openpgp.wasm');
     var go = new Go();
 
     var result = await promiseToFutureInterop(WebAssembly.instantiate(
@@ -47,76 +48,45 @@ class OpenpgpPlugin {
     await loadInstance();
 
     switch (call.method) {
-      case 'decryptOAEP':
-        return await decryptOAEP(
+      case 'decrypt':
+        return await decrypt(
           call.arguments['message'],
-          call.arguments['label'],
-          call.arguments['hashName'],
-          call.arguments['pkcs12'],
+          call.arguments['privateKey'],
           call.arguments['passphrase'],
         );
-      case 'decryptPKCS1v15':
-        return await decryptPKCS1v15(
+      case 'encrypt':
+        return await encrypt(
           call.arguments['message'],
-          call.arguments['pkcs12'],
+          call.arguments['publicKey'],
+        );
+      case 'sign':
+        return await sign(
+          call.arguments['message'],
+          call.arguments['publicKey'],
+          call.arguments['privateKey'],
           call.arguments['passphrase'],
         );
-      case 'encryptOAEP':
-        return await encryptOAEP(
-          call.arguments['message'],
-          call.arguments['label'],
-          call.arguments['hashName'],
-          call.arguments['pkcs12'],
-          call.arguments['passphrase'],
-        );
-      case 'encryptPKCS1v15':
-        return await encryptPKCS1v15(
-          call.arguments['message'],
-          call.arguments['pkcs12'],
-          call.arguments['passphrase'],
-        );
-      case 'signPSS':
-        return await signPSS(
-          call.arguments['message'],
-          call.arguments['hashName'],
-          call.arguments['pkcs12'],
-          call.arguments['passphrase'],
-        );
-      case 'signPKCS1v15':
-        return await signPKCS1v15(
-          call.arguments['message'],
-          call.arguments['hashName'],
-          call.arguments['pkcs12'],
-          call.arguments['passphrase'],
-        );
-      case 'verifyPSS':
-        return await verifyPSS(
+      case 'verify':
+        return await verify(
           call.arguments['signature'],
           call.arguments['message'],
-          call.arguments['hashName'],
-          call.arguments['pkcs12'],
           call.arguments['passphrase'],
         );
-      case 'verifyPKCS1v15':
-        return await verifyPKCS1v15(
-          call.arguments['signature'],
+      case 'decryptSymmetric':
+        return await decryptSymmetric(
           call.arguments['message'],
-          call.arguments['hashName'],
-          call.arguments['pkcs12'],
           call.arguments['passphrase'],
+          call.arguments['options'],
         );
-      case 'hash':
-        return await hash(
+      case 'encryptSymmetric':
+        return await encryptSymmetric(
           call.arguments['message'],
-          call.arguments['name'],
-        );
-      case 'base64':
-        return await base64(
-          call.arguments['message'],
+          call.arguments['passphrase'],
+          call.arguments['options'],
         );
       case 'generate':
         return await generate(
-          call.arguments['bits'],
+          call.arguments['options'],
         );
       default:
         throw PlatformException(
@@ -126,143 +96,90 @@ class OpenpgpPlugin {
     }
   }
 
-  Future<String> decryptOAEP(String message, String label, String hashName,
-      String pkcs12, String passphrase) async {
+  Future<String> decrypt(String message, String privateKey,
+      String passphrase) async {
     var completer = new Completer<String>();
-    OpenPGPDecryptOAEP(message, label, hashName, pkcs12, passphrase,
+    OpenPGPDecrypt(message, privateKey, passphrase,
         allowInterop((String error, String result) {
-      if (error != null && error != "") {
-        completer.completeError(error);
-        return;
-      }
-      completer.complete(result);
-    }));
+          if (error != null && error != "") {
+            completer.completeError(error);
+            return;
+          }
+          completer.complete(result);
+        }));
     return completer.future;
   }
 
-  Future<String> decryptPKCS1v15(
-      String message, String pkcs12, String passphrase) async {
+  Future<String> encrypt(String message, String publicKey) async {
     var completer = new Completer<String>();
-    OpenPGPDecryptPKCS1v15(message, pkcs12, passphrase,
+    OpenPGPEncrypt(message, publicKey,
         allowInterop((String error, String result) {
-      if (error != null && error != "") {
-        completer.completeError(error);
-        return;
-      }
-      completer.complete(result);
-    }));
+          if (error != null && error != "") {
+            completer.completeError(error);
+            return;
+          }
+          completer.complete(result);
+        }));
     return completer.future;
   }
 
-  Future<String> encryptOAEP(String message, String label, String hashName,
-      String pkcs12, String passphrase) async {
+  Future<String> sign(String message, String publicKey, String privateKey,
+      String passphrase) async {
     var completer = new Completer<String>();
-    OpenPGPEncryptOAEP(message, label, hashName, pkcs12, passphrase,
+    OpenPGPSign(message, publicKey, privateKey, passphrase,
         allowInterop((String error, String result) {
-      if (error != null && error != "") {
-        completer.completeError(error);
-        return;
-      }
-      completer.complete(result);
-    }));
+          if (error != null && error != "") {
+            completer.completeError(error);
+            return;
+          }
+          completer.complete(result);
+        }));
     return completer.future;
   }
 
-  Future<String> encryptPKCS1v15(
-      String message, String pkcs12, String passphrase) async {
-    var completer = new Completer<String>();
-    OpenPGPEncryptPKCS1v15(message, pkcs12, passphrase,
-        allowInterop((String error, String result) {
-      if (error != null && error != "") {
-        completer.completeError(error);
-        return;
-      }
-      completer.complete(result);
-    }));
-    return completer.future;
-  }
-
-  Future<String> signPSS(
-      String message, String hashName, String pkcs12, String passphrase) async {
-    var completer = new Completer<String>();
-    OpenPGPSignPSS(message, hashName, pkcs12, passphrase,
-        allowInterop((String error, String result) {
-      if (error != null && error != "") {
-        completer.completeError(error);
-        return;
-      }
-      completer.complete(result);
-    }));
-    return completer.future;
-  }
-
-  Future<String> signPKCS1v15(
-      String message, String hashName, String pkcs12, String passphrase) async {
-    var completer = new Completer<String>();
-    OpenPGPSignPKCS1v15(message, hashName, pkcs12, passphrase,
-        allowInterop((String error, String result) {
-      if (error != null && error != "") {
-        completer.completeError(error);
-        return;
-      }
-      completer.complete(result);
-    }));
-    return completer.future;
-  }
-
-  Future<bool> verifyPSS(String signature, String message, String hashName,
-      String pkcs12, String passphrase) async {
+  Future<bool> verify(String signature, String message,
+      String publicKey) async {
     var completer = new Completer<bool>();
-    OpenPGPVerifyPSS(signature, message, hashName, pkcs12, passphrase,
+    OpenPGPVerify(signature, message, publicKey,
         allowInterop((String error, bool result) {
-      if (error != null && error != "") {
-        completer.completeError(error);
-        return;
-      }
-      completer.complete(result);
-    }));
+          if (error != null && error != "") {
+            completer.completeError(error);
+            return;
+          }
+          completer.complete(result);
+        }));
     return completer.future;
   }
 
-  Future<bool> verifyPKCS1v15(String signature, String message, String hashName,
-      String pkcs12, String passphrase) async {
-    var completer = new Completer<bool>();
-    OpenPGPVerifyPKCS1v15(signature, message, hashName, pkcs12, passphrase,
-        allowInterop((String error, bool result) {
-      if (error != null && error != "") {
-        completer.completeError(error);
-        return;
-      }
-      completer.complete(result);
-    }));
-    return completer.future;
-  }
-
-  Future<String> hash(String message, String name) async {
+  Future<String> decryptSymmetric(String message, String passphrase,
+      String options) async {
     var completer = new Completer<String>();
-    OpenPGPHash(message, name, allowInterop((String error, String result) {
-      if (error != null && error != "") {
-        completer.completeError(error);
-        return;
-      }
-      completer.complete(result);
-    }));
+    OpenPGPDecryptSymmetric(message, passphrase, options,
+        allowInterop((String error, String result) {
+          if (error != null && error != "") {
+            completer.completeError(error);
+            return;
+          }
+          completer.complete(result);
+        }));
     return completer.future;
   }
 
-  Future<String> base64(String message) async {
+  Future<String> encryptSymmetric(String message, String passphrase,
+      String options) async {
     var completer = new Completer<String>();
-    OpenPGPBase64(message, allowInterop((String error, String result) {
-      if (error != null && error != "") {
-        completer.completeError(error);
-        return;
-      }
-      completer.complete(result);
-    }));
+    OpenPGPEncryptSymmetric(message, passphrase, options,
+        allowInterop((String error, String result) {
+          if (error != null && error != "") {
+            completer.completeError(error);
+            return;
+          }
+          completer.complete(result);
+        }));
     return completer.future;
   }
 
-  Future<dynamic> generate(int bits) async {
+  Future<dynamic> generate(String options) async {
     var completer = new Completer<dynamic>();
     OpenPGPGenerate(bits, allowInterop((String error, KeyPairObject result) {
       if (error != null && error != "") {
