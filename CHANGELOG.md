@@ -1,3 +1,7 @@
+## 0.8.0
+
+- Web support
+
 ## 0.7.0
 
 - Single instance for ios
