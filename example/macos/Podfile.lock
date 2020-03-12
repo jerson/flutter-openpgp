@@ -1,6 +1,6 @@
 PODS:
   - FlutterMacOS (1.0.0)
-  - openpgp (0.0.1):
+  - openpgp (0.1.0):
     - FlutterMacOS
 
 DEPENDENCIES:
@@ -15,7 +15,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   FlutterMacOS: 15bea8a44d2fa024068daa0140371c020b4b6ff9
-  openpgp: d48ccaf28cbf80daa24ff9db156d4cbf2061a4dc
+  openpgp: 6c426387916539aaf92a9b528d71a194308cee73
 
 PODFILE CHECKSUM: d8ba9b3e9e93c62c74a660b46c6fcb09f03991a7
 
