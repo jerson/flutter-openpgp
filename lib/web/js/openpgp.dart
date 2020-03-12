@@ -30,17 +30,17 @@ external OpenPGPVerify(String signature,
 @JS()
 external OpenPGPDecryptSymmetric(String message,
     String passphrase,
-    dynamic options,
+    Map options,
     Function(String error, String result) callback,);
 
 @JS()
 external OpenPGPEncryptSymmetric(String message,
     String passphrase,
-    dynamic options,
+    Map options,
     Function(String error, String result) callback,);
 
 @JS()
-external OpenPGPGenerate(dynamic options,
+external OpenPGPGenerate(Map options,
     Function(String error, KeyPairObject result) callback,);
 
 @JS()

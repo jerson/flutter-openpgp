@@ -70,7 +70,7 @@ class OpenpgpPlugin {
         return await verify(
           call.arguments['signature'],
           call.arguments['message'],
-          call.arguments['passphrase'],
+          call.arguments['publicKey'],
         );
       case 'decryptSymmetric':
         return await decryptSymmetric(
@@ -152,7 +152,7 @@ class OpenpgpPlugin {
   }
 
   Future<String> decryptSymmetric(String message, String passphrase,
-      String options) async {
+      dynamic options) async {
     var completer = new Completer<String>();
     OpenPGPDecryptSymmetric(message, passphrase, options,
         allowInterop((String error, String result) {
@@ -166,7 +166,7 @@ class OpenpgpPlugin {
   }
 
   Future<String> encryptSymmetric(String message, String passphrase,
-      String options) async {
+      dynamic options) async {
     var completer = new Completer<String>();
     OpenPGPEncryptSymmetric(message, passphrase, options,
         allowInterop((String error, String result) {
@@ -179,9 +179,9 @@ class OpenpgpPlugin {
     return completer.future;
   }
 
-  Future<dynamic> generate(String options) async {
+  Future<dynamic> generate(dynamic options) async {
     var completer = new Completer<dynamic>();
-    OpenPGPGenerate(bits, allowInterop((String error, KeyPairObject result) {
+    OpenPGPGenerate(options, allowInterop((String error, KeyPairObject result) {
       if (error != null && error != "") {
         completer.completeError(error);
         return;
