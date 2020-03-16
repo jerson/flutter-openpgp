@@ -46,7 +46,7 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
         channel.setMethodCallHandler(this);
     }
 
-    public void initialize(){
+    private void initialize(){
         instance = Openpgp.newFastOpenPGP();
         handler = new Handler(Looper.getMainLooper());
     }
