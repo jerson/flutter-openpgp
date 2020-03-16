@@ -1,3 +1,7 @@
+## 0.8.1
+
+- Implemented registerWith for android 
+
 ## 0.8.0
 
 - Web support
