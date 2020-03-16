@@ -31,6 +31,21 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
     private FastOpenPGP instance;
     private Handler handler;
 
+    // @irasekh3 - A private static function to properly instantiate OpenpgpPlugin
+    //             if created as part of the the registration with 'registerWith'
+    private static OpenpgpPlugin openpgpPluginFactory() {
+        OpenpgpPlugin opp = new OpenpgpPlugin();
+        if (opp.instance == null) {
+            opp.instance = Openpgp.newFastOpenPGP();
+        }
+
+        if (opp.handler == null) {
+            opp.handler = new Handler(Looper.getMainLooper());
+        }
+
+        return opp;
+    }
+
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
         setInstance(Openpgp.newFastOpenPGP());
@@ -50,9 +65,7 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
     // in the same class.
     public static void registerWith(Registrar registrar) {
         final MethodChannel channel = new MethodChannel(registrar.messenger(), "openpgp");
-        OpenpgpPlugin plugin = new OpenpgpPlugin();
-        plugin.setInstance(Openpgp.newFastOpenPGP());
-        channel.setMethodCallHandler(plugin);
+        channel.setMethodCallHandler(openpgpPluginFactory());
     }
 
     @Override
