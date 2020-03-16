@@ -2,7 +2,6 @@ package dev.jerson.openpgp;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -34,7 +33,7 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-        instance = Openpgp.newFastOpenPGP();
+        setInstance(Openpgp.newFastOpenPGP());
         channel = new MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "openpgp");
         channel.setMethodCallHandler(this);
         handler = new Handler(Looper.getMainLooper());
@@ -51,7 +50,9 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
     // in the same class.
     public static void registerWith(Registrar registrar) {
         final MethodChannel channel = new MethodChannel(registrar.messenger(), "openpgp");
-        channel.setMethodCallHandler(new OpenpgpPlugin());
+        OpenpgpPlugin plugin = new OpenpgpPlugin();
+        plugin.setInstance(Openpgp.newFastOpenPGP());
+        channel.setMethodCallHandler(plugin);
     }
 
     @Override
@@ -296,5 +297,9 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
                 }
             }
         }).start();
+    }
+
+    public void setInstance(FastOpenPGP instance) {
+        this.instance = instance;
     }
 }
