@@ -33,22 +33,20 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
 
     // @irasekh3 - A private static function to properly instantiate OpenpgpPlugin
     //             if created as part of the the registration with 'registerWith'
-    private static OpenpgpPlugin openpgpPluginFactory() {
-        OpenpgpPlugin opp = new OpenpgpPlugin();
-        if (opp.instance == null) {
-            opp.instance = Openpgp.newFastOpenPGP();
+    private static OpenpgpPlugin pluginFactory() {
+        OpenpgpPlugin plugin = new OpenpgpPlugin();
+        if (plugin.instance == null) {
+            plugin.instance = Openpgp.newFastOpenPGP();
         }
-
-        if (opp.handler == null) {
-            opp.handler = new Handler(Looper.getMainLooper());
+        if (plugin.handler == null) {
+            plugin.handler = new Handler(Looper.getMainLooper());
         }
-
-        return opp;
+        return plugin;
     }
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-        setInstance(Openpgp.newFastOpenPGP());
+        instance = Openpgp.newFastOpenPGP();
         channel = new MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "openpgp");
         channel.setMethodCallHandler(this);
         handler = new Handler(Looper.getMainLooper());
@@ -65,7 +63,7 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
     // in the same class.
     public static void registerWith(Registrar registrar) {
         final MethodChannel channel = new MethodChannel(registrar.messenger(), "openpgp");
-        channel.setMethodCallHandler(openpgpPluginFactory());
+        channel.setMethodCallHandler(pluginFactory());
     }
 
     @Override
@@ -108,7 +106,7 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
                 decryptSymmetric(
                         (String) call.argument("message"),
                         (String) call.argument("passphrase"),
-                        (HashMap<String,Object>) call.argument("options"),
+                        (HashMap<String, Object>) call.argument("options"),
                         result
                 );
                 break;
@@ -116,13 +114,13 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
                 encryptSymmetric(
                         (String) call.argument("message"),
                         (String) call.argument("passphrase"),
-                        (HashMap<String,Object>) call.argument("options"),
+                        (HashMap<String, Object>) call.argument("options"),
                         result
                 );
                 break;
             case "generate":
                 generate(
-                        (HashMap<String,Object>) call.argument("options"),
+                        (HashMap<String, Object>) call.argument("options"),
                         result
                 );
                 break;
@@ -165,9 +163,9 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
             public void run() {
                 try {
                     String result = instance.decrypt(message, privateKey, passphrase);
-                    success(promise,result);
+                    success(promise, result);
                 } catch (Exception e) {
-                    error(promise,"error", e.getMessage(), null);
+                    error(promise, "error", e.getMessage(), null);
                 }
             }
         }).start();
@@ -179,9 +177,9 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
             public void run() {
                 try {
                     String result = instance.encrypt(message, publicKey);
-                    success(promise,result);
+                    success(promise, result);
                 } catch (Exception e) {
-                    error(promise,"error", e.getMessage(), null);
+                    error(promise, "error", e.getMessage(), null);
                 }
             }
         }).start();
@@ -193,9 +191,9 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
             public void run() {
                 try {
                     String result = instance.sign(message, publicKey, privateKey, passphrase);
-                    success(promise,result);
+                    success(promise, result);
                 } catch (Exception e) {
-                    error(promise,"error", e.getMessage(), null);
+                    error(promise, "error", e.getMessage(), null);
                 }
             }
         }).start();
@@ -207,15 +205,15 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
             public void run() {
                 try {
                     Boolean result = instance.verify(signature, message, publicKey);
-                    success(promise,result);
+                    success(promise, result);
                 } catch (Exception e) {
-                    error(promise,"error", e.getMessage(), null);
+                    error(promise, "error", e.getMessage(), null);
                 }
             }
         }).start();
     }
 
-    private KeyOptions getKeyOptions(HashMap<String,Object> map) {
+    private KeyOptions getKeyOptions(HashMap<String, Object> map) {
         KeyOptions options = new KeyOptions();
 
         if (map == null) {
@@ -239,7 +237,7 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
         return options;
     }
 
-    private Options getOptions(HashMap<String,Object> map) {
+    private Options getOptions(HashMap<String, Object> map) {
         Options options = new Options();
 
         if (map == null) {
@@ -258,7 +256,7 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
             options.setPassphrase((String) map.get("passphrase"));
         }
         if (map.containsKey("keyOptions")) {
-            HashMap<String,Object> keyOptions = (HashMap<String,Object>) map.get("keyOptions");
+            HashMap<String, Object> keyOptions = (HashMap<String, Object>) map.get("keyOptions");
             if (keyOptions != null) {
                 options.setKeyOptions(this.getKeyOptions(keyOptions));
             }
@@ -267,52 +265,48 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
         return options;
     }
 
-    private void decryptSymmetric(final String message, final String passphrase, final HashMap<String,Object> mapOptions, final Result promise) {
+    private void decryptSymmetric(final String message, final String passphrase, final HashMap<String, Object> mapOptions, final Result promise) {
         new Thread(new Runnable() {
             public void run() {
                 try {
                     KeyOptions options = getKeyOptions(mapOptions);
                     String result = instance.decryptSymmetric(message, passphrase, options);
-                    success(promise,result);
+                    success(promise, result);
                 } catch (Exception e) {
-                    error(promise,"error", e.getMessage(), null);
+                    error(promise, "error", e.getMessage(), null);
                 }
             }
         }).start();
     }
 
-    private void encryptSymmetric(final String message, final String passphrase, final HashMap<String,Object> mapOptions, final Result promise) {
+    private void encryptSymmetric(final String message, final String passphrase, final HashMap<String, Object> mapOptions, final Result promise) {
         new Thread(new Runnable() {
             public void run() {
                 try {
                     KeyOptions options = getKeyOptions(mapOptions);
                     String result = instance.encryptSymmetric(message, passphrase, options);
-                    success(promise,result);
+                    success(promise, result);
                 } catch (Exception e) {
-                    error(promise,"error", e.getMessage(), null);
+                    error(promise, "error", e.getMessage(), null);
                 }
             }
         }).start();
     }
 
-    private void generate(final HashMap<String,Object> mapOptions, final Result promise) {
+    private void generate(final HashMap<String, Object> mapOptions, final Result promise) {
         new Thread(new Runnable() {
             public void run() {
                 try {
                     Options options = getOptions(mapOptions);
                     KeyPair keyPair = instance.generate(options);
-                    HashMap<String,Object> result = new HashMap<>();
-                    result.put("publicKey",keyPair.getPublicKey());
-                    result.put("privateKey",keyPair.getPrivateKey());
-                    success(promise,result);
+                    HashMap<String, Object> result = new HashMap<>();
+                    result.put("publicKey", keyPair.getPublicKey());
+                    result.put("privateKey", keyPair.getPrivateKey());
+                    success(promise, result);
                 } catch (Exception e) {
-                    error(promise,"error", e.getMessage(), null);
+                    error(promise, "error", e.getMessage(), null);
                 }
             }
         }).start();
-    }
-
-    public void setInstance(FastOpenPGP instance) {
-        this.instance = instance;
     }
 }
