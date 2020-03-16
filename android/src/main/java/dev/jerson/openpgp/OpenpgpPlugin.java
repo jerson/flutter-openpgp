@@ -35,12 +35,8 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
     //             if created as part of the the registration with 'registerWith'
     private static OpenpgpPlugin pluginFactory() {
         OpenpgpPlugin plugin = new OpenpgpPlugin();
-        if (plugin.instance == null) {
-            plugin.instance = Openpgp.newFastOpenPGP();
-        }
-        if (plugin.handler == null) {
-            plugin.handler = new Handler(Looper.getMainLooper());
-        }
+        plugin.instance = Openpgp.newFastOpenPGP();
+        plugin.handler = new Handler(Looper.getMainLooper());
         return plugin;
     }
 
