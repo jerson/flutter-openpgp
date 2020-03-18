@@ -53,7 +53,7 @@ Add this lines to `proguard-rules.pro` for proguard support
 ```
 ## iOS
 
-no aditional setup required
+no additional setup required
 
 ## Web
 
@@ -84,7 +84,7 @@ ref: https://github.com/jerson/flutter-openpgp/blob/master/example/linux/app_con
 
 ## MacOS (comming soon)
 
-no aditional setup required
+no additional setup required
 
 ## Hover
 
