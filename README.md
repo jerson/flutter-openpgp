@@ -1,6 +1,6 @@
 # OpenPGP
 
-Library for use openPGP
+Library for use openPGP with support for android, ios, web and hover, more comming
 
 ## Usage
 
@@ -41,7 +41,9 @@ var decryptedSymmetric = await OpenPGP.decryptSymmetric("text encrypted","[passp
 
 ```
 
-## ProGuard
+
+## Android
+### ProGuard
 
 Add this lines to `proguard-rules.pro` for proguard support
 
@@ -49,14 +51,49 @@ Add this lines to `proguard-rules.pro` for proguard support
 -keep class go.** { *; }
 -keep class openpgp.** { *; }
 ```
+## iOS
 
-## Sample
+no aditional setup required
 
-Inside example folder
+## Web
+
+add to you `pubspec.yaml`
+
+```yaml
+  assets:
+    - packages/openpgp/web/assets/wasm_exec.js
+    - packages/openpgp/web/assets/openpgp.wasm
+```
+ref: https://github.com/jerson/flutter-openpgp/blob/master/example/pubspec.yaml
+
+
+and in you `web/index.html`
+```html
+<script src="assets/packages/openpgp/web/assets/wasm_exec.js" type="application/javascript"></script>
+```
+ref: https://github.com/jerson/flutter-openpgp/blob/master/example/web/index.html
+
+## Linux (comming soon)
+
+add to you `linux/app_configuration.mk`
+
+```make
+EXTRA_LDFLAGS=-lopenpgp
+```
+ref: https://github.com/jerson/flutter-openpgp/blob/master/example/linux/app_configuration.mk
+
+## MacOS (comming soon)
+
+no aditional setup required
+
+## Hover
+
+just update your plugins
 
 ```bash
-cd example && flutter run
+hover plugins get
 ```
+
 
 ## Native Code
 
