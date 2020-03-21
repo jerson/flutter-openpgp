@@ -2,6 +2,19 @@
 
 Library for use openPGP with support for android, ios, web and hover, more comming
 
+## Contents
+
+- [Usage](#usage)
+- [Setup](#setup)
+  - [Android](#android)
+    - [ProGuard](#proguard)
+  - [iOS](#ios)
+  - [Web](#web)
+  - [Linux](#linux)
+  - [MacOS](#macos)
+  - [Hover](#hover)
+- [Native Code](#native-code)
+
 ## Usage
 
 ```dart
@@ -41,9 +54,11 @@ var decryptedSymmetric = await OpenPGP.decryptSymmetric("text encrypted","[passp
 
 ```
 
+## Setup
 
-## Android
-### ProGuard
+### Android
+
+#### ProGuard
 
 Add this lines to `android/app/proguard-rules.pro` for proguard support
 
@@ -51,49 +66,55 @@ Add this lines to `android/app/proguard-rules.pro` for proguard support
 -keep class go.** { *; }
 -keep class openpgp.** { *; }
 ```
-## iOS
+
+### iOS
 
 no additional setup required
 
-## Web
+### Web
 
 add to you `pubspec.yaml`
 
 ```yaml
-  assets:
-    - packages/openpgp/web/assets/wasm_exec.js
-    - packages/openpgp/web/assets/openpgp.wasm
+assets:
+  - packages/openpgp/web/assets/wasm_exec.js
+  - packages/openpgp/web/assets/openpgp.wasm
 ```
+
 ref: https://github.com/jerson/flutter-openpgp/blob/master/example/pubspec.yaml
 
-
 and in you `web/index.html`
+
 ```html
-<script src="assets/packages/openpgp/web/assets/wasm_exec.js" type="application/javascript"></script>
+<script
+  src="assets/packages/openpgp/web/assets/wasm_exec.js"
+  type="application/javascript"
+></script>
 ```
+
 ref: https://github.com/jerson/flutter-openpgp/blob/master/example/web/index.html
 
-## Linux (comming soon)
+### Linux
 
-add to you `linux/app_configuration.mk`
+(comming soon) add to you `linux/app_configuration.mk`
 
 ```make
 EXTRA_LDFLAGS=-lopenpgp
 ```
+
 ref: https://github.com/jerson/flutter-openpgp/blob/master/example/linux/app_configuration.mk
 
-## MacOS (comming soon)
+### MacOS
 
-no additional setup required
+(comming soon) no additional setup required
 
-## Hover
+### Hover
 
 just update your plugins
 
 ```bash
 hover plugins get
 ```
-
 
 ## Native Code
 
