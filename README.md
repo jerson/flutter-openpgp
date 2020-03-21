@@ -13,6 +13,7 @@ Library for use openPGP with support for android, ios, web and hover, more commi
   - [Linux](#linux)
   - [MacOS](#macos)
   - [Hover](#hover)
+- [Example](#example)
 - [Native Code](#native-code)
 
 ## Usage
@@ -114,6 +115,14 @@ just update your plugins
 
 ```bash
 hover plugins get
+```
+
+## Example
+
+Inside example folder
+
+```bash
+cd example && flutter run
 ```
 
 ## Native Code
