@@ -1,5 +1,5 @@
 name: openpgp
-description: library for use OpenPGP with support for android, ios, web and linux
+description: library for use OpenPGP with support for android and ios, macOS, linux, web and hover
 version: 0.8.5
 homepage: https://github.com/jerson/flutter-openpgp
 
