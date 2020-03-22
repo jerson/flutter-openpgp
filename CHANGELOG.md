@@ -1,3 +1,7 @@
+## 0.9.0
+
+- macOS support
+
 ## 0.8.5
 
 - Linux support
@@ -8,7 +12,7 @@
 
 ## 0.8.1
 
-- Implemented registerWith for android 
+- Implemented registerWith for android
 
 ## 0.8.0
 
