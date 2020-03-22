@@ -16,7 +16,7 @@ public class OpenPGPPlugin: NSObject, FlutterPlugin {
 
     func setup() {
         queue = DispatchQueue(label: "fast-openpgp")
-        instance = OpenPGPNewFastOpenPGP()
+        instance = OpenpgpNewFastOpenPGP()
     }
 
     func result(_ result: @escaping FlutterResult, output: Any?) {
@@ -120,7 +120,7 @@ public class OpenPGPPlugin: NSObject, FlutterPlugin {
         queue?.async(execute: {
             do {
                 var error: NSError?
-                let output = try self.instance?.encryptSymmetric(message, passphrase: passphrase, options: getKeyOptions(options), error: &error)
+                let output = try self.instance?.encryptSymmetric(message, passphrase: passphrase, options: self.getKeyOptions(options), error: &error)
 
                 if error != nil {
                     self.result(result, output: FlutterError(code: String(format: "%ld", error?.code ?? 0), message: error?.description, details: nil))
@@ -133,11 +133,11 @@ public class OpenPGPPlugin: NSObject, FlutterPlugin {
         })
     }
 
-    func decryptSymmetric(message: String?, passphrase: passphrase?, options: [String: Any], result: @escaping FlutterResult) {
+    func decryptSymmetric(message: String?, passphrase: String?, options: [String: Any], result: @escaping FlutterResult) {
         queue?.async(execute: {
             do {
                 var error: NSError?
-                let output = try self.instance?.decryptSymmetric(message, passphrase: passphrase, options: getKeyOptions(options), error: &error)
+                let output = try self.instance?.decryptSymmetric(message, passphrase: passphrase, options: self.getKeyOptions(options), error: &error)
 
                 if error != nil {
                     self.result(result, output: FlutterError(code: String(format: "%ld", error?.code ?? 0), message: error?.description, details: nil))
@@ -183,7 +183,7 @@ public class OpenPGPPlugin: NSObject, FlutterPlugin {
     func generate(options: [String: Any], result: @escaping FlutterResult) {
         queue?.async(execute: {
             do {
-                let output = try self.instance?.generate(getOptions(options!))
+                let output = try self.instance?.generate(self.getOptions(options))
 
                 self.result(result, output: [
                     "publicKey": output?.publicKey,
@@ -202,19 +202,19 @@ public class OpenPGPPlugin: NSObject, FlutterPlugin {
             return options
         }
         if map?["cipher"] != nil {
-            options.cipher = map?["cipher"]
+            options.cipher = map?["cipher"] as! String
         }
         if map?["compression"] != nil {
-            options.compression = map?["compression"]
+            options.compression = map?["compression"] as! String
         }
         if map?["hash"] != nil {
-            options.hash = map?["hash"]
+            options.hash = map?["hash"] as! String
         }
         if map?["rsaBits"] != nil {
-            options.rsaBits = (map?["rsaBits"] as? NSNumber)?.floatValue ?? 0.0
+            options.rsaBits = (map?["rsaBits"] as? NSNumber)?.intValue ?? 0
         }
         if map?["compressionLevel"] != nil {
-            options.compressionLevel = (map?["compressionLevel"] as? NSNumber)?.floatValue ?? 0.0
+            options.compressionLevel = (map?["compressionLevel"] as? NSNumber)?.intValue ?? 0
         }
         return options
     }
@@ -225,19 +225,19 @@ public class OpenPGPPlugin: NSObject, FlutterPlugin {
             return options
         }
         if map?["name"] != nil {
-            options.name = map?["name"]
+            options.name = map?["name"] as! String
         }
         if map?["email"] != nil {
-            options.email = map?["email"]
+            options.email = map?["email"] as! String
         }
         if map?["comment"] != nil {
-            options.comment = map?["comment"]
+            options.comment = map?["comment"] as! String
         }
         if map?["passphrase"] != nil {
-            options.passphrase = map?["passphrase"]
+            options.passphrase = map?["passphrase"] as! String
         }
         if map?["keyOptions"] != nil {
-            options.keyOptions = getKeyOptions(map?["keyOptions"] as? [AnyHashable : Any])
+            options.keyOptions = self.getKeyOptions(map?["keyOptions"] as? [String : Any])
         }
 
         return options
