@@ -1,22 +1,24 @@
 import Cocoa
 import FlutterMacOS
-import Openpgp
 
-public class OpenPGPPlugin: NSObject, FlutterPlugin {
+import OpenpgpMobile
+
+
+public class OpenpgpPlugin: NSObject, FlutterPlugin {
 
     private var queue: DispatchQueue?
-    private var instance: OpenpgpFastOpenPGP?
+    private var instance: OpenpgpMobileFastOpenPGP?
 
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "openpgp", binaryMessenger: registrar.messenger)
-        let instance = OpenPGPPlugin()
+        let instance = OpenpgpPlugin()
         instance.setup()
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
 
     func setup() {
         queue = DispatchQueue(label: "fast-openpgp")
-        instance = OpenpgpNewFastOpenPGP()
+        instance = OpenpgpMobileNewFastOpenPGP()
     }
 
     func result(_ result: @escaping FlutterResult, output: Any?) {
@@ -196,8 +198,8 @@ public class OpenPGPPlugin: NSObject, FlutterPlugin {
         })
     }
     
-    func getKeyOptions(_ map: [String : Any]?) -> OpenpgpKeyOptions? {
-        let options = OpenpgpKeyOptions()
+    func getKeyOptions(_ map: [String : Any]?) -> OpenpgpMobileKeyOptions? {
+        let options = OpenpgpMobileKeyOptions()
         if map == nil {
             return options
         }
@@ -219,8 +221,8 @@ public class OpenPGPPlugin: NSObject, FlutterPlugin {
         return options
     }
     
-    func getOptions(_ map: [String : Any]?) -> OpenpgpOptions? {
-        let options = OpenpgpOptions()
+    func getOptions(_ map: [String : Any]?) -> OpenpgpMobileOptions? {
+        let options = OpenpgpMobileOptions()
         if map == nil {
             return options
         }

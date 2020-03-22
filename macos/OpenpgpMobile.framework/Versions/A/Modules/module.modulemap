@@ -1,0 +1,8 @@
+framework module "OpenpgpMobile" {
+	header "ref.h"
+    header "OpenpgpMobile.objc.h"
+    header "Universe.objc.h"
+    header "OpenpgpMobile.h"
+
+    export *
+}
