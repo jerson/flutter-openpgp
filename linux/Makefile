@@ -70,6 +70,7 @@ $(PLUGIN_NAME) : $(LIBRARY_OUT)
 $(LIBRARY_OUT): $(OBJ_FILES)
 	mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $^ $(LDFLAGS) -o $@
+	cp -r $(CURDIR)/openpgp.so $(OUT_DIR)/$(BUILD)/lib/libopenpgp.so
 
 -include $(DEPENDENCY_FILES)
 
