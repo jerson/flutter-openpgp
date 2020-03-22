@@ -43,24 +43,74 @@ char *WriteableChar(const std::string &str)
 KeyOptions GetKeyOptions(const EncodableMap &args)
 {
   KeyOptions options = {};
-  /* options.hash = WriteableChar(ValueOrNull(args, "hash").StringValue());
-  options.cipher = WriteableChar(ValueOrNull(args, "cipher").StringValue());
-  options.compression = WriteableChar(ValueOrNull(args, "compression").StringValue());
-  options.compressionLevel = WriteableChar(std::to_string(ValueOrNull(args, "compressionLevel").IntValue()));
-  options.rsaBits = WriteableChar(std::to_string(ValueOrNull(args, "rsaBits").IntValue()));
- */
+
+  EncodableValue hash = ValueOrNull(args, "hash");
+  if (hash.IsString())
+  {
+    options.hash = WriteableChar(hash.StringValue());
+  }
+
+  EncodableValue cipher = ValueOrNull(args, "cipher");
+  if (cipher.IsString())
+  {
+    options.cipher = WriteableChar(cipher.StringValue());
+  }
+
+  EncodableValue compression = ValueOrNull(args, "compression");
+  if (compression.IsString())
+  {
+    options.compression = WriteableChar(compression.StringValue());
+  }
+
+  EncodableValue compressionLevel = ValueOrNull(args, "compressionLevel");
+  if (compressionLevel.IsInt())
+  {
+    options.compressionLevel = WriteableChar(std::to_string(compressionLevel.IntValue()));
+  }
+
+  EncodableValue rsaBits = ValueOrNull(args, "rsaBits");
+  if (rsaBits.IsInt())
+  {
+    options.rsaBits = WriteableChar(std::to_string(rsaBits.IntValue()));
+  }
+
   return options;
 }
 
 Options GetOptions(const EncodableMap &args)
 {
   Options options = {};
-  /* options.name = WriteableChar(ValueOrNull(args, "name").StringValue());
-  options.comment = WriteableChar(ValueOrNull(args, "comment").StringValue());
-  options.email = WriteableChar(ValueOrNull(args, "email").StringValue());
-  options.passphrase = WriteableChar(ValueOrNull(args, "passphrase").StringValue());
-  options.keyOptions = GetKeyOptions(args);
-*/
+
+  EncodableValue name = ValueOrNull(args, "name");
+  if (name.IsString())
+  {
+    options.name = WriteableChar(name.StringValue());
+  }
+
+  EncodableValue comment = ValueOrNull(args, "comment");
+  if (comment.IsString())
+  {
+    options.comment = WriteableChar(comment.StringValue());
+  }
+
+  EncodableValue email = ValueOrNull(args, "email");
+  if (email.IsString())
+  {
+    options.email = WriteableChar(email.StringValue());
+  }
+
+  EncodableValue passphrase = ValueOrNull(args, "passphrase");
+  if (passphrase.IsString())
+  {
+    options.passphrase = WriteableChar(passphrase.StringValue());
+  }
+
+  EncodableValue keyOptions = ValueOrNull(args, "keyOptions");
+  if (keyOptions.IsMap())
+  {
+    options.keyOptions = GetKeyOptions(keyOptions.MapValue());
+  }
+
   return options;
 }
 
@@ -349,7 +399,7 @@ void OpenpgpPlugin::HandleMethodCall(
   {
     const EncodableMap &args = method_call.arguments()->MapValue();
     generate(
-        GetOptions(args),
+        GetOptions(ValueOrNull(args, "options").MapValue()),
         move(result));
   }
   else
