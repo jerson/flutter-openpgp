@@ -1,6 +1,6 @@
 # OpenPGP
 
-Library for use openPGP with support for android, ios, web and hover, more comming
+Library for use openPGP with support for android, ios, web, linux and hover, more comming
 
 ## Contents
 
