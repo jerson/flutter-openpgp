@@ -198,7 +198,7 @@ public class OpenpgpPlugin: NSObject, FlutterPlugin {
         })
     }
     
-    func getKeyOptions(_ map: [String : Any]?) -> OpenpgpMobileKeyOptions? {
+    func getKeyOptions(_ map: [String : Any]?) -> OpenpgpMobileKeyOptions {
         let options = OpenpgpMobileKeyOptions()
         if map == nil {
             return options
@@ -213,15 +213,15 @@ public class OpenpgpPlugin: NSObject, FlutterPlugin {
             options.hash = map?["hash"] as! String
         }
         if map?["rsaBits"] != nil {
-            options.rsaBits = (map?["rsaBits"] as? NSNumber)?.intValue ?? 0
+            options.setRSABitsFrom(String(format: "%@",  map?["rsaBits"]  as! NSNumber))
         }
         if map?["compressionLevel"] != nil {
-            options.compressionLevel = (map?["compressionLevel"] as? NSNumber)?.intValue ?? 0
+            options.setCompressionLevelFrom(String(format: "%@",  map?["compressionLevel"]  as! NSNumber))
         }
         return options
     }
     
-    func getOptions(_ map: [String : Any]?) -> OpenpgpMobileOptions? {
+    func getOptions(_ map: [String : Any]?) -> OpenpgpMobileOptions {
         let options = OpenpgpMobileOptions()
         if map == nil {
             return options
@@ -241,7 +241,7 @@ public class OpenpgpPlugin: NSObject, FlutterPlugin {
         if map?["keyOptions"] != nil {
             options.keyOptions = self.getKeyOptions(map?["keyOptions"] as? [String : Any])
         }
-
+        
         return options
     }
 
