@@ -1,3 +1,7 @@
+## 0.9.1
+
+- Fixed web support
+
 ## 0.9.0
 
 - macOS support

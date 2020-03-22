@@ -13,8 +13,8 @@ class OpenpgpPlugin {
   bool _ready = false;
 
   static void registerWith(Registrar registrar) {
-    final MethodChannel channel =
-    MethodChannel('openpgp', const StandardMethodCodec(), registrar.messenger);
+    final MethodChannel channel = MethodChannel(
+        'openpgp', const StandardMethodCodec(), registrar.messenger);
     final OpenpgpPlugin instance = OpenpgpPlugin();
     channel.setMethodCallHandler(instance.handleMethodCall);
   }
@@ -24,8 +24,8 @@ class OpenpgpPlugin {
       return true;
     }
 
-    var data = await rootBundle.load(
-        'packages/openpgp/web/assets/openpgp.wasm');
+    var data =
+        await rootBundle.load('packages/openpgp/web/assets/openpgp.wasm');
     var go = new Go();
 
     var result = await promiseToFutureInterop(WebAssembly.instantiate(
@@ -96,17 +96,17 @@ class OpenpgpPlugin {
     }
   }
 
-  Future<String> decrypt(String message, String privateKey,
-      String passphrase) async {
+  Future<String> decrypt(
+      String message, String privateKey, String passphrase) async {
     var completer = new Completer<String>();
     OpenPGPDecrypt(message, privateKey, passphrase,
         allowInterop((String error, String result) {
-          if (error != null && error != "") {
-            completer.completeError(error);
-            return;
-          }
-          completer.complete(result);
-        }));
+      if (error != null && error != "") {
+        completer.completeError(error);
+        return;
+      }
+      completer.complete(result);
+    }));
     return completer.future;
   }
 
@@ -114,12 +114,12 @@ class OpenpgpPlugin {
     var completer = new Completer<String>();
     OpenPGPEncrypt(message, publicKey,
         allowInterop((String error, String result) {
-          if (error != null && error != "") {
-            completer.completeError(error);
-            return;
-          }
-          completer.complete(result);
-        }));
+      if (error != null && error != "") {
+        completer.completeError(error);
+        return;
+      }
+      completer.complete(result);
+    }));
     return completer.future;
   }
 
@@ -128,60 +128,61 @@ class OpenpgpPlugin {
     var completer = new Completer<String>();
     OpenPGPSign(message, publicKey, privateKey, passphrase,
         allowInterop((String error, String result) {
-          if (error != null && error != "") {
-            completer.completeError(error);
-            return;
-          }
-          completer.complete(result);
-        }));
+      if (error != null && error != "") {
+        completer.completeError(error);
+        return;
+      }
+      completer.complete(result);
+    }));
     return completer.future;
   }
 
-  Future<bool> verify(String signature, String message,
-      String publicKey) async {
+  Future<bool> verify(
+      String signature, String message, String publicKey) async {
     var completer = new Completer<bool>();
     OpenPGPVerify(signature, message, publicKey,
         allowInterop((String error, bool result) {
-          if (error != null && error != "") {
-            completer.completeError(error);
-            return;
-          }
-          completer.complete(result);
-        }));
+      if (error != null && error != "") {
+        completer.completeError(error);
+        return;
+      }
+      completer.complete(result);
+    }));
     return completer.future;
   }
 
-  Future<String> decryptSymmetric(String message, String passphrase,
-      dynamic options) async {
+  Future<String> decryptSymmetric(
+      String message, String passphrase, dynamic options) async {
     var completer = new Completer<String>();
-    OpenPGPDecryptSymmetric(message, passphrase, options,
+    OpenPGPDecryptSymmetric(message, passphrase, _getKeyOptionsMap(options),
         allowInterop((String error, String result) {
-          if (error != null && error != "") {
-            completer.completeError(error);
-            return;
-          }
-          completer.complete(result);
-        }));
+      if (error != null && error != "") {
+        completer.completeError(error);
+        return;
+      }
+      completer.complete(result);
+    }));
     return completer.future;
   }
 
-  Future<String> encryptSymmetric(String message, String passphrase,
-      dynamic options) async {
+  Future<String> encryptSymmetric(
+      String message, String passphrase, dynamic options) async {
     var completer = new Completer<String>();
-    OpenPGPEncryptSymmetric(message, passphrase, options,
+    OpenPGPEncryptSymmetric(message, passphrase, _getKeyOptionsMap(options),
         allowInterop((String error, String result) {
-          if (error != null && error != "") {
-            completer.completeError(error);
-            return;
-          }
-          completer.complete(result);
-        }));
+      if (error != null && error != "") {
+        completer.completeError(error);
+        return;
+      }
+      completer.complete(result);
+    }));
     return completer.future;
   }
 
   Future<dynamic> generate(dynamic options) async {
     var completer = new Completer<dynamic>();
-    OpenPGPGenerate(options, allowInterop((String error, KeyPairObject result) {
+    OpenPGPGenerate(_getOptionsMap(options),
+        allowInterop((String error, KeyPairObject result) {
       if (error != null && error != "") {
         completer.completeError(error);
         return;
@@ -192,5 +193,54 @@ class OpenpgpPlugin {
       });
     }));
     return completer.future;
+  }
+
+  static OptionsObject _getOptionsMap(dynamic options) {
+    var result = OptionsObject();
+    if (options == null) {
+      return result;
+    }
+    if (options["email"] != null) {
+      result.email = options["email"];
+    }
+    if (options["name"] != null) {
+      result.name = options["name"];
+    }
+    if (options["comment"] != null) {
+      result.comment = options["comment"];
+    }
+    if (options["passphrase"] != null) {
+      result.passphrase = options["passphrase"];
+    }
+    if (options["keyOptions"] != null) {
+      result.keyOptions = _getKeyOptionsMap(options["keyOptions"]);
+    }
+
+    return result;
+  }
+
+  static KeyOptionsObject _getKeyOptionsMap(dynamic options) {
+    var result = KeyOptionsObject();
+    if (options == null) {
+      return result;
+    }
+
+    if (options["cipher"] != null) {
+      result.cipher = options["cipher"];
+    }
+    if (options["compression"] != null) {
+      result.compression = options["compression"];
+    }
+    if (options["compressionLevel"] != null) {
+      result.compressionLevel = options["compressionLevel"];
+    }
+    if (options["hash"] != null) {
+      result.hash = options["hash"];
+    }
+    if (options["rsaBits"] != null) {
+      result.rsaBits = options["rsaBits"];
+    }
+
+    return result;
   }
 }
