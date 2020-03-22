@@ -219,10 +219,10 @@
         [options setHash:map[@"hash"]];
     }
     if(map[@"rsaBits"]){
-        [options setRsaBits:[map[@"rsaBits"] floatValue]];
+        [options setRSABitsFromString:[NSString stringWithFormat:@"%.0f",[map[@"rsaBits"] floatValue]]];
     }
     if(map[@"compressionLevel"]){
-        [options setCompressionLevel:[map[@"compressionLevel"] floatValue]];
+        [options setCompressionLevelFromString:[NSString stringWithFormat:@"%.0f",[map[@"compressionLevel"] floatValue]]];
     }
     return options;
 }

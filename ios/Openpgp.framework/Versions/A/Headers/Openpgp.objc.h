@@ -42,6 +42,8 @@
 @property (nonatomic) NSString* _Nonnull compression;
 @property (nonatomic) long compressionLevel;
 @property (nonatomic) long rsaBits;
+- (void)setCompressionLevelFromString:(NSString* _Nullable)value;
+- (void)setRSABitsFromString:(NSString* _Nullable)value;
 @end
 
 @interface OpenpgpKeyPair : NSObject <goSeqRefInterface> {
