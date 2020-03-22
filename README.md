@@ -97,7 +97,7 @@ ref: https://github.com/jerson/flutter-openpgp/blob/master/example/web/index.htm
 
 ### Linux
 
-(comming soon) add to you `linux/app_configuration.mk`
+add to you `linux/app_configuration.mk`
 
 ```make
 EXTRA_LDFLAGS=-lopenpgp

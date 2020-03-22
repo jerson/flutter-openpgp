@@ -1,3 +1,7 @@
+## 0.8.5
+
+- Linux support
+
 ## 0.8.2
 
 - Better implementation registerWith for android, thanks to @irasekh3
