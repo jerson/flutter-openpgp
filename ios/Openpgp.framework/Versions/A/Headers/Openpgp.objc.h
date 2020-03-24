@@ -15,6 +15,7 @@
 @class OpenpgpKeyOptions;
 @class OpenpgpKeyPair;
 @class OpenpgpOptions;
+@class OpenpgpPublicKeyMetadata;
 
 @interface OpenpgpFastOpenPGP : NSObject <goSeqRefInterface> {
 }
@@ -27,6 +28,7 @@
 - (NSString* _Nonnull)encrypt:(NSString* _Nullable)message publicKey:(NSString* _Nullable)publicKey error:(NSError* _Nullable* _Nullable)error;
 - (NSString* _Nonnull)encryptSymmetric:(NSString* _Nullable)message passphrase:(NSString* _Nullable)passphrase options:(OpenpgpKeyOptions* _Nullable)options error:(NSError* _Nullable* _Nullable)error;
 - (OpenpgpKeyPair* _Nullable)generate:(OpenpgpOptions* _Nullable)options error:(NSError* _Nullable* _Nullable)error;
+- (OpenpgpPublicKeyMetadata* _Nullable)getPublicKeyMetadata:(NSString* _Nullable)key error:(NSError* _Nullable* _Nullable)error;
 - (NSString* _Nonnull)sign:(NSString* _Nullable)message publicKey:(NSString* _Nullable)publicKey privateKey:(NSString* _Nullable)privateKey passphrase:(NSString* _Nullable)passphrase error:(NSError* _Nullable* _Nullable)error;
 - (BOOL)verify:(NSString* _Nullable)signature message:(NSString* _Nullable)message publicKey:(NSString* _Nullable)publicKey ret0_:(BOOL* _Nullable)ret0_ error:(NSError* _Nullable* _Nullable)error;
 @end
@@ -67,6 +69,20 @@
 @property (nonatomic) NSString* _Nonnull comment;
 @property (nonatomic) NSString* _Nonnull email;
 @property (nonatomic) NSString* _Nonnull passphrase;
+@end
+
+@interface OpenpgpPublicKeyMetadata : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) _Nonnull id _ref;
+
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
+- (nonnull instancetype)init;
+@property (nonatomic) NSString* _Nonnull keyID;
+@property (nonatomic) NSString* _Nonnull keyIDShort;
+@property (nonatomic) NSString* _Nonnull creationTime;
+@property (nonatomic) NSString* _Nonnull fingerprint;
+@property (nonatomic) NSString* _Nonnull keyIDNumeric;
+@property (nonatomic) BOOL isSubKey;
 @end
 
 FOUNDATION_EXPORT OpenpgpFastOpenPGP* _Nullable OpenpgpNewFastOpenPGP(void);

@@ -1,3 +1,7 @@
+## 0.9.2
+
+- Multikeys support for android and ios
+
 ## 0.9.1
 
 - Fixed web support
