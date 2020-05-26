@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:openpgp/key_options.dart';
@@ -17,12 +18,29 @@ class OpenPGP {
     });
   }
 
+  static Future<String> decryptBytes( Uint8List message, String privateKey,
+      String passphrase) async {
+    return await _channel.invokeMethod('decryptBytes', {
+      "message": message,
+      "privateKey": privateKey,
+      "passphrase": passphrase,
+    });
+  }
+
   static Future<String> encrypt(String message, String publicKey) async {
     return await _channel.invokeMethod('encrypt', {
       "message": message,
       "publicKey": publicKey,
     });
   }
+
+  static Future<Uint8List> encryptBytes(String message, String publicKey) async {
+    return await _channel.invokeMethod('encryptBytes', {
+      "message": message,
+      "publicKey": publicKey,
+    });
+  }
+
 
   static Future<String> sign(String message, String publicKey,
       String privateKey, String passphrase) async {
