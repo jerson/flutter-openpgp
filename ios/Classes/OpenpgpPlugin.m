@@ -27,7 +27,7 @@
       
       [self encrypt:[call arguments][@"message"] publicKey:[call arguments][@"publicKey"] result:result];
       
-  } if ([@"encryptBytes" isEqualToString:call.method]) {
+  } else if ([@"encryptBytes" isEqualToString:call.method]) {
       
       [self encryptBytes:[call arguments][@"message"] publicKey:[call arguments][@"publicKey"] result:result];
       
