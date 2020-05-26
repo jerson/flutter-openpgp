@@ -99,7 +99,7 @@ class OpenPGP {
     });
   }
 
-  static Future<String> decryptSymmetricBytes(Uint8List message, String passphrase,
+  static Future<Uint8List> decryptSymmetricBytes(Uint8List message, String passphrase,
       {KeyOptions options}) async {
     return await _channel.invokeMethod('decryptSymmetricBytes', {
       "message": message,
