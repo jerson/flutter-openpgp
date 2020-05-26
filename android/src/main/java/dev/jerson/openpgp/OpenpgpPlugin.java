@@ -78,14 +78,6 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
                 );
                 break;
 
-            case "encrypt":
-                encrypt(
-                        (String) call.argument("message"),
-                        (String) call.argument("publicKey"),
-                        result
-                );
-                break;
-
             case "decryptBytes":
                 decryptBytes(
                         (byte[]) call.argument("message"),
@@ -95,10 +87,28 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
                 );
                 break;
 
-            case "encryptBytes":
-                encryptBytes(
+            case "encrypt":
+                encrypt(
                         (String) call.argument("message"),
                         (String) call.argument("publicKey"),
+                        result
+                );
+                break;
+
+            case "encryptBytes":
+                encryptBytes(
+                        (byte[]) call.argument("message"),
+                        (String) call.argument("publicKey"),
+                        result
+                );
+                break;
+
+            case "sign":
+                sign(
+                        (String) call.argument("message"),	            
+                        (String) call.argument("publicKey"),	                       
+                        (String) call.argument("privateKey"),	                     
+                        (String) call.argument("passphrase"),
                         result
                 );
                 break;
@@ -112,6 +122,7 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
                         result
                 );
                 break;
+
             case "decryptSymmetric":
                 decryptSymmetric(
                         (String) call.argument("message"),
@@ -120,6 +131,7 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
                         result
                 );
                 break;
+
             case "encryptSymmetric":
                 encryptSymmetric(
                         (String) call.argument("message"),
@@ -128,12 +140,14 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
                         result
                 );
                 break;
+
             case "generate":
                 generate(
                         (HashMap<String, Object>) call.argument("options"),
                         result
                 );
                 break;
+
             default:
                 result.notImplemented();
                 break;
@@ -181,6 +195,19 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
         }).start();
     }
 
+    private void decryptBytes(final byte[] message, final String privateKey, final String passphrase, final Result promise) {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    byte[] result = instance.decryptBytes(message, privateKey, passphrase);
+                    success(promise, result);
+                } catch (Exception e) {
+                    error(promise, "error", e.getMessage(), null);
+                }
+            }
+        }).start();
+    }
+
 
     private void encrypt(final String message, final String publicKey, final Result promise) {
         new Thread(new Runnable() {
@@ -195,21 +222,8 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
         }).start();
     }
 
-    private void decryptBytes(final byte[] message, final String privateKey, final String passphrase, final Result promise) {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    String result = instance.decryptBytes(message, privateKey, passphrase);
-                    success(promise, result);
-                } catch (Exception e) {
-                    error(promise, "error", e.getMessage(), null);
-                }
-            }
-        }).start();
-    }
 
-
-    private void encryptBytes(final String message, final String publicKey, final Result promise) {
+    private void encryptBytes(final byte[] message, final String publicKey, final Result promise) {
         new Thread(new Runnable() {
             public void run() {
                 try {

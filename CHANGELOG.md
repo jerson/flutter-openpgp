@@ -1,3 +1,7 @@
+## 0.9.3
+
+- encrypt and decrypt bytes support, thanks @delaosa 
+
 ## 0.9.2
 
 - Multikeys support for android and ios
