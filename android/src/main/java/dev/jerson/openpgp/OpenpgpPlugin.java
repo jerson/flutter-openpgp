@@ -161,9 +161,27 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
                 );
                 break;
 
+            case "decryptSymmetricBytes":
+                decryptSymmetricBytes(
+                        (byte[]) call.argument("message"),
+                        (String) call.argument("passphrase"),
+                        (HashMap<String, Object>) call.argument("options"),
+                        result
+                );
+                break;
+
             case "encryptSymmetric":
                 encryptSymmetric(
                         (String) call.argument("message"),
+                        (String) call.argument("passphrase"),
+                        (HashMap<String, Object>) call.argument("options"),
+                        result
+                );
+                break;
+
+            case "encryptSymmetricBytes":
+                encryptSymmetricBytes(
+                        (byte[]) call.argument("message"),
                         (String) call.argument("passphrase"),
                         (HashMap<String, Object>) call.argument("options"),
                         result
@@ -394,12 +412,40 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
         }).start();
     }
 
+    private void decryptSymmetricBytes(final byte[] message, final String passphrase, final HashMap<String, Object> mapOptions, final Result promise) {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    KeyOptions options = getKeyOptions(mapOptions);
+                    byte[] result = instance.decryptSymmetricBytes(message, passphrase, options);
+                    success(promise, result);
+                } catch (Exception e) {
+                    error(promise, "error", e.getMessage(), null);
+                }
+            }
+        }).start();
+    }
+
     private void encryptSymmetric(final String message, final String passphrase, final HashMap<String, Object> mapOptions, final Result promise) {
         new Thread(new Runnable() {
             public void run() {
                 try {
                     KeyOptions options = getKeyOptions(mapOptions);
                     String result = instance.encryptSymmetric(message, passphrase, options);
+                    success(promise, result);
+                } catch (Exception e) {
+                    error(promise, "error", e.getMessage(), null);
+                }
+            }
+        }).start();
+    }
+
+    private void encryptSymmetricBytes(final byte[] message, final String passphrase, final HashMap<String, Object> mapOptions, final Result promise) {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    KeyOptions options = getKeyOptions(mapOptions);
+                    byte[] result = instance.encryptSymmetricBytes(message, passphrase, options);
                     success(promise, result);
                 } catch (Exception e) {
                     error(promise, "error", e.getMessage(), null);

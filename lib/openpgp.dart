@@ -99,9 +99,27 @@ class OpenPGP {
     });
   }
 
+  static Future<String> decryptSymmetricBytes(Uint8List message, String passphrase,
+      {KeyOptions options}) async {
+    return await _channel.invokeMethod('decryptSymmetricBytes', {
+      "message": message,
+      "passphrase": passphrase,
+      "options": _getKeyOptionsMap(options),
+    });
+  }
+
   static Future<String> encryptSymmetric(String message, String passphrase,
       {KeyOptions options}) async {
     return await _channel.invokeMethod('encryptSymmetric', {
+      "message": message,
+      "passphrase": passphrase,
+      "options": _getKeyOptionsMap(options),
+    });
+  }
+
+  static Future<String> encryptSymmetricBytes(Uint8List message, String passphrase,
+      {KeyOptions options}) async {
+    return await _channel.invokeMethod('encryptSymmetricBytes', {
       "message": message,
       "passphrase": passphrase,
       "options": _getKeyOptionsMap(options),
