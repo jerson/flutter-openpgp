@@ -105,19 +105,48 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
 
             case "sign":
                 sign(
-                        (String) call.argument("message"),	            
-                        (String) call.argument("publicKey"),	                       
-                        (String) call.argument("privateKey"),	                     
+                        (String) call.argument("message"),
+                        (String) call.argument("publicKey"),
+                        (String) call.argument("privateKey"),
                         (String) call.argument("passphrase"),
                         result
                 );
                 break;
 
+            case "signBytes":
+                signBytes(
+                        (byte[]) call.argument("message"),
+                        (String) call.argument("publicKey"),
+                        (String) call.argument("privateKey"),
+                        (String) call.argument("passphrase"),
+                        result
+                );
+                break;
+
+            case "signBytesToString":
+                signBytesToString(
+                        (byte[]) call.argument("message"),
+                        (String) call.argument("publicKey"),
+                        (String) call.argument("privateKey"),
+                        (String) call.argument("passphrase"),
+                        result
+                );
+                break;
 
             case "verify":
                 verify(
                         (String) call.argument("signature"),
                         (String) call.argument("message"),
+                        (String) call.argument("publicKey"),
+                        result
+                );
+                break;
+
+
+            case "verifyBytes":
+                verifyBytes(
+                        (String) call.argument("signature"),
+                        (byte[]) call.argument("message"),
                         (String) call.argument("publicKey"),
                         result
                 );
@@ -208,7 +237,6 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
         }).start();
     }
 
-
     private void encrypt(final String message, final String publicKey, final Result promise) {
         new Thread(new Runnable() {
             public void run() {
@@ -221,7 +249,6 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
             }
         }).start();
     }
-
 
     private void encryptBytes(final byte[] message, final String publicKey, final Result promise) {
         new Thread(new Runnable() {
@@ -236,8 +263,6 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
         }).start();
     }
 
-
-
     private void sign(final String message, final String publicKey, final String privateKey, final String passphrase, final Result promise) {
         new Thread(new Runnable() {
             public void run() {
@@ -251,12 +276,50 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
         }).start();
     }
 
+    private void signBytes(final byte[] message, final String publicKey, final String privateKey, final String passphrase, final Result promise) {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    byte[] result = instance.signBytes(message, publicKey, privateKey, passphrase);
+                    success(promise, result);
+                } catch (Exception e) {
+                    error(promise, "error", e.getMessage(), null);
+                }
+            }
+        }).start();
+    }
+
+    private void signBytesToString(final byte[] message, final String publicKey, final String privateKey, final String passphrase, final Result promise) {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    String result = instance.signBytesToString(message, publicKey, privateKey, passphrase);
+                    success(promise, result);
+                } catch (Exception e) {
+                    error(promise, "error", e.getMessage(), null);
+                }
+            }
+        }).start();
+    }
 
     private void verify(final String signature, final String message, final String publicKey, final Result promise) {
         new Thread(new Runnable() {
             public void run() {
                 try {
                     Boolean result = instance.verify(signature, message, publicKey);
+                    success(promise, result);
+                } catch (Exception e) {
+                    error(promise, "error", e.getMessage(), null);
+                }
+            }
+        }).start();
+    }
+
+    private void verifyBytes(final String signature, final byte[] message, final String publicKey, final Result promise) {
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    Boolean result = instance.verifyBytes(signature, message, publicKey);
                     success(promise, result);
                 } catch (Exception e) {
                     error(promise, "error", e.getMessage(), null);

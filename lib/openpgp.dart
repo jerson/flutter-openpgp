@@ -9,8 +9,8 @@ import 'package:openpgp/options.dart';
 class OpenPGP {
   static const MethodChannel _channel = const MethodChannel('openpgp');
 
-  static Future<String> decrypt(String message, String privateKey,
-      String passphrase) async {
+  static Future<String> decrypt(
+      String message, String privateKey, String passphrase) async {
     return await _channel.invokeMethod('decrypt', {
       "message": message,
       "privateKey": privateKey,
@@ -18,8 +18,8 @@ class OpenPGP {
     });
   }
 
-  static Future<String> decryptBytes( Uint8List message, String privateKey,
-      String passphrase) async {
+  static Future<String> decryptBytes(
+      Uint8List message, String privateKey, String passphrase) async {
     return await _channel.invokeMethod('decryptBytes', {
       "message": message,
       "privateKey": privateKey,
@@ -34,13 +34,13 @@ class OpenPGP {
     });
   }
 
-  static Future<Uint8List> encryptBytes(String message, String publicKey) async {
+  static Future<Uint8List> encryptBytes(
+      String message, String publicKey) async {
     return await _channel.invokeMethod('encryptBytes', {
       "message": message,
       "publicKey": publicKey,
     });
   }
-
 
   static Future<String> sign(String message, String publicKey,
       String privateKey, String passphrase) async {
@@ -52,9 +52,38 @@ class OpenPGP {
     });
   }
 
-  static Future<bool> verify(String signature, String message,
-      String publicKey) async {
+  static Future<String> signBytes(Uint8List message, String publicKey,
+      String privateKey, String passphrase) async {
+    return await _channel.invokeMethod('signBytes', {
+      "message": message,
+      "publicKey": publicKey,
+      "privateKey": privateKey,
+      "passphrase": passphrase,
+    });
+  }
+
+  static Future<String> signBytesToString(Uint8List message, String publicKey,
+      String privateKey, String passphrase) async {
+    return await _channel.invokeMethod('signBytesToString', {
+      "message": message,
+      "publicKey": publicKey,
+      "privateKey": privateKey,
+      "passphrase": passphrase,
+    });
+  }
+
+  static Future<bool> verify(
+      String signature, String message, String publicKey) async {
     return await _channel.invokeMethod('verify', {
+      "signature": signature,
+      "message": message,
+      "publicKey": publicKey,
+    });
+  }
+
+  static Future<bool> verifyBytes(
+      String signature, Uint8List message, String publicKey) async {
+    return await _channel.invokeMethod('verifyBytes', {
       "signature": signature,
       "message": message,
       "publicKey": publicKey,
