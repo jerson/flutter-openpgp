@@ -1,3 +1,7 @@
+## 0.9.4
+
+- more bytes methods to android and ios
+
 ## 0.9.3
 
 - encrypt and decrypt bytes support, thanks @delaosa 
