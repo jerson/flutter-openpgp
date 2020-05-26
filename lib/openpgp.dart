@@ -18,7 +18,7 @@ class OpenPGP {
     });
   }
 
-  static Future<String> decryptBytes(
+  static Future<Uint8List> decryptBytes(
       Uint8List message, String privateKey, String passphrase) async {
     return await _channel.invokeMethod('decryptBytes', {
       "message": message,
