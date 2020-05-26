@@ -1,6 +1,6 @@
 PODS:
   - Flutter (1.0.0)
-  - openpgp (0.0.1):
+  - openpgp (0.1.0):
     - Flutter
 
 DEPENDENCIES:
@@ -15,8 +15,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  openpgp: f6c3bb2caf06a2530b62cea349a4f6524303435f
+  openpgp: aa75bd9d3c0c06094db757d495db30aa653d53f5
 
 PODFILE CHECKSUM: 3dbe063e9c90a5d7c9e4e76e70a821b9e2c1d271
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.8.3

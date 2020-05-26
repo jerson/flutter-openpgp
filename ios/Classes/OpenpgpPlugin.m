@@ -27,29 +27,56 @@
       
       [self encrypt:[call arguments][@"message"] publicKey:[call arguments][@"publicKey"] result:result];
       
+  } if ([@"encryptBytes" isEqualToString:call.method]) {
+      
+      [self encryptBytes:[call arguments][@"message"] publicKey:[call arguments][@"publicKey"] result:result];
+      
   } else if ([@"decrypt" isEqualToString:call.method]) {
       
       [self decrypt:[call arguments][@"message"] privateKey:[call arguments][@"privateKey"] passphrase:[call arguments][@"passphrase"] result:result];
+      
+  } else if ([@"decryptBytes" isEqualToString:call.method]) {
+      
+      [self decryptBytes:[call arguments][@"message"] privateKey:[call arguments][@"privateKey"] passphrase:[call arguments][@"passphrase"] result:result];
       
   } else if ([@"sign" isEqualToString:call.method]) {
       
       [self sign:[call arguments][@"message"] publicKey:[call arguments][@"publicKey"] privateKey:[call arguments][@"privateKey"] passphrase:[call arguments][@"passphrase"] result:result];
       
+  } else if ([@"signBytes" isEqualToString:call.method]) {
+      
+      [self signBytes:[call arguments][@"message"] publicKey:[call arguments][@"publicKey"] privateKey:[call arguments][@"privateKey"] passphrase:[call arguments][@"passphrase"] result:result];
+      
+  } else if ([@"signBytesToString" isEqualToString:call.method]) {
+      
+      [self signBytesToString:[call arguments][@"message"] publicKey:[call arguments][@"publicKey"] privateKey:[call arguments][@"privateKey"] passphrase:[call arguments][@"passphrase"] result:result];
+      
   } else if ([@"verify" isEqualToString:call.method]) {
       
       [self verify:[call arguments][@"signature"] message:[call arguments][@"message"] publicKey:[call arguments][@"publicKey"] result:result];
+      
+  } else if ([@"verifyBytes" isEqualToString:call.method]) {
+      
+      [self verifyBytes:[call arguments][@"signature"] message:[call arguments][@"message"] publicKey:[call arguments][@"publicKey"] result:result];
       
   } else if ([@"decryptSymmetric" isEqualToString:call.method]) {
       
       [self decryptSymmetric:[call arguments][@"message"] passphrase:[call arguments][@"passphrase"] options:[call arguments][@"options"] result:result];
       
+  } else if ([@"decryptSymmetricBytes" isEqualToString:call.method]) {
+      
+      [self decryptSymmetricBytes:[call arguments][@"message"] passphrase:[call arguments][@"passphrase"] options:[call arguments][@"options"] result:result];
+      
   } else if ([@"encryptSymmetric" isEqualToString:call.method]) {
       
       [self encryptSymmetric:[call arguments][@"message"] passphrase:[call arguments][@"passphrase"] options:[call arguments][@"options"] result:result];
       
+  }else if ([@"encryptSymmetricBytes" isEqualToString:call.method]) {
+      
+      [self encryptSymmetricBytes:[call arguments][@"message"] passphrase:[call arguments][@"passphrase"] options:[call arguments][@"options"] result:result];
+      
   } else if ([@"generate" isEqualToString:call.method]) {
       [self generate:[call arguments][@"options"] result:result];
-      
   } else {
     result(FlutterMethodNotImplemented);
   }
@@ -86,6 +113,24 @@
     });
 }
 
+- (void)encryptBytes:(FlutterStandardTypedData *)message publicKey: (NSString *)publicKey result:(FlutterResult)result {
+    dispatch_async(queue, ^(void){
+        @try {
+            NSError *error;
+            NSData * output = [self->instance encryptBytes:message.data publicKey:publicKey error:&error];
+            
+            if(error!=nil){
+                [self result:result output:[FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]];
+            }else{
+                [self result:result output:[FlutterStandardTypedData typedDataWithBytes:output]];
+            }
+        }
+        @catch (NSException * e) {
+            [self result:result output:[FlutterError errorWithCode:e.name message:e.reason details:nil]];
+        }
+    });
+}
+
 - (void)decrypt:(NSString *)message privateKey: (NSString *)privateKey passphrase: (NSString *)passphrase result:(FlutterResult)result {
     dispatch_async(queue, ^(void){
         @try {
@@ -104,11 +149,65 @@
     });
 }
 
+- (void)decryptBytes:(FlutterStandardTypedData *)message privateKey: (NSString *)privateKey passphrase: (NSString *)passphrase result:(FlutterResult)result {
+    dispatch_async(queue, ^(void){
+        @try {
+            NSError *error;
+            NSData * output = [self->instance decryptBytes:message.data privateKey:privateKey passphrase:passphrase error:&error];
+
+            if(error!=nil){
+                [self result:result output:[FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]];
+            }else{
+                [self result:result output:[FlutterStandardTypedData typedDataWithBytes:output]];
+            }
+        }
+        @catch (NSException * e) {
+            [self result:result output:[FlutterError errorWithCode:e.name message:e.reason details:nil]];
+        }
+    });
+}
+
 - (void)sign:(NSString *)message publicKey: (NSString *)publicKey privateKey: (NSString *)privateKey passphrase: (NSString *)passphrase result:(FlutterResult)result {
     dispatch_async(queue, ^(void){
         @try {
             NSError *error;
             NSString * output = [self->instance sign:message publicKey:publicKey privateKey:privateKey passphrase:passphrase error:&error];
+
+            if(error!=nil){
+                [self result:result output:[FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]];
+            }else{
+                [self result:result output:output];
+            }
+        }
+        @catch (NSException * e) {
+            [self result:result output:[FlutterError errorWithCode:e.name message:e.reason details:nil]];
+        }
+    });
+}
+
+- (void)signBytes:(FlutterStandardTypedData *)message publicKey: (NSString *)publicKey privateKey: (NSString *)privateKey passphrase: (NSString *)passphrase result:(FlutterResult)result {
+    dispatch_async(queue, ^(void){
+        @try {
+            NSError *error;
+            NSData * output = [self->instance signBytes:message.data publicKey:publicKey privateKey:privateKey passphrase:passphrase error:&error];
+
+            if(error!=nil){
+                [self result:result output:[FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]];
+            }else{
+                [self result:result output:[FlutterStandardTypedData typedDataWithBytes:output]];
+            }
+        }
+        @catch (NSException * e) {
+            [self result:result output:[FlutterError errorWithCode:e.name message:e.reason details:nil]];
+        }
+    });
+}
+
+- (void)signBytesToString:(FlutterStandardTypedData *)message publicKey: (NSString *)publicKey privateKey: (NSString *)privateKey passphrase: (NSString *)passphrase result:(FlutterResult)result {
+    dispatch_async(queue, ^(void){
+        @try {
+            NSError *error;
+            NSString * output = [self->instance signBytesToString:message.data publicKey:publicKey privateKey:privateKey passphrase:passphrase error:&error];
 
             if(error!=nil){
                 [self result:result output:[FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]];
@@ -141,6 +240,25 @@
     });
 }
 
+- (void)verifyBytes:(NSString *)signature message: (FlutterStandardTypedData *)message publicKey: (NSString *)publicKey result:(FlutterResult)result {
+    dispatch_async(queue, ^(void){
+        @try {
+            NSError *error;
+            BOOL ret0_;
+            BOOL output = [self->instance verifyBytes:signature message:message.data publicKey:publicKey ret0_:&ret0_ error:&error];
+
+            if(error!=nil){
+                [self result:result output:[FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]];
+            }else{
+                [self result:result output:[NSNumber numberWithBool:output]];
+            }
+        }
+        @catch (NSException * e) {
+            [self result:result output:[FlutterError errorWithCode:e.name message:e.reason details:nil]];
+        }
+    });
+}
+
 - (void)decryptSymmetric:(NSString *)message passphrase: (NSString *)passphrase options:(NSDictionary *)map result:(FlutterResult)result {
     dispatch_async(queue, ^(void){
         @try {
@@ -160,6 +278,25 @@
     });
 }
 
+- (void)decryptSymmetricBytes:(FlutterStandardTypedData *)message passphrase: (NSString *)passphrase options:(NSDictionary *)map result:(FlutterResult)result {
+    dispatch_async(queue, ^(void){
+        @try {
+            OpenpgpKeyOptions *options = [self getKeyOptions:map];
+            NSError *error;
+            NSData * output = [self->instance decryptSymmetricBytes:message.data passphrase:passphrase options:options error:&error];
+
+            if(error!=nil){
+                [self result:result output:[FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]];
+            }else{
+                [self result:result output:[FlutterStandardTypedData typedDataWithBytes:output]];
+            }
+        }
+        @catch (NSException * e) {
+            [self result:result output:[FlutterError errorWithCode:e.name message:e.reason details:nil]];
+        }
+    });
+}
+
 - (void)encryptSymmetric:(NSString *)message passphrase: (NSString *)passphrase options:(NSDictionary *)map result:(FlutterResult)result {
     dispatch_async(queue, ^(void){
         @try {
@@ -171,6 +308,25 @@
                 [self result:result output:[FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]];
             }else{
                 [self result:result output:output];
+            }
+        }
+        @catch (NSException * e) {
+            [self result:result output:[FlutterError errorWithCode:e.name message:e.reason details:nil]];
+        }
+    });
+}
+
+- (void)encryptSymmetricBytes:(FlutterStandardTypedData *)message passphrase: (NSString *)passphrase options:(NSDictionary *)map result:(FlutterResult)result {
+    dispatch_async(queue, ^(void){
+        @try {
+            OpenpgpKeyOptions *options = [self getKeyOptions:map];
+            NSError *error;
+            NSData * output = [self->instance encryptSymmetricBytes:message.data passphrase:passphrase options:options error:&error];
+
+            if(error!=nil){
+                [self result:result output:[FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", error.code] message:error.description details:nil]];
+            }else{
+                [self result:result output:[FlutterStandardTypedData typedDataWithBytes:output]];
             }
         }
         @catch (NSException * e) {

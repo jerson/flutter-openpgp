@@ -15,6 +15,7 @@
 @class OpenpgpKeyOptions;
 @class OpenpgpKeyPair;
 @class OpenpgpOptions;
+@class OpenpgpPrivateKeyMetadata;
 @class OpenpgpPublicKeyMetadata;
 
 @interface OpenpgpFastOpenPGP : NSObject <goSeqRefInterface> {
@@ -24,13 +25,21 @@
 - (nonnull instancetype)initWithRef:(_Nonnull id)ref;
 - (nullable instancetype)init;
 - (NSString* _Nonnull)decrypt:(NSString* _Nullable)message privateKey:(NSString* _Nullable)privateKey passphrase:(NSString* _Nullable)passphrase error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)decryptBytes:(NSData* _Nullable)message privateKey:(NSString* _Nullable)privateKey passphrase:(NSString* _Nullable)passphrase error:(NSError* _Nullable* _Nullable)error;
 - (NSString* _Nonnull)decryptSymmetric:(NSString* _Nullable)message passphrase:(NSString* _Nullable)passphrase options:(OpenpgpKeyOptions* _Nullable)options error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)decryptSymmetricBytes:(NSData* _Nullable)message passphrase:(NSString* _Nullable)passphrase options:(OpenpgpKeyOptions* _Nullable)options error:(NSError* _Nullable* _Nullable)error;
 - (NSString* _Nonnull)encrypt:(NSString* _Nullable)message publicKey:(NSString* _Nullable)publicKey error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)encryptBytes:(NSData* _Nullable)message publicKey:(NSString* _Nullable)publicKey error:(NSError* _Nullable* _Nullable)error;
 - (NSString* _Nonnull)encryptSymmetric:(NSString* _Nullable)message passphrase:(NSString* _Nullable)passphrase options:(OpenpgpKeyOptions* _Nullable)options error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)encryptSymmetricBytes:(NSData* _Nullable)message passphrase:(NSString* _Nullable)passphrase options:(OpenpgpKeyOptions* _Nullable)options error:(NSError* _Nullable* _Nullable)error;
 - (OpenpgpKeyPair* _Nullable)generate:(OpenpgpOptions* _Nullable)options error:(NSError* _Nullable* _Nullable)error;
+- (OpenpgpPrivateKeyMetadata* _Nullable)getPrivateKeyMetadata:(NSString* _Nullable)key error:(NSError* _Nullable* _Nullable)error;
 - (OpenpgpPublicKeyMetadata* _Nullable)getPublicKeyMetadata:(NSString* _Nullable)key error:(NSError* _Nullable* _Nullable)error;
 - (NSString* _Nonnull)sign:(NSString* _Nullable)message publicKey:(NSString* _Nullable)publicKey privateKey:(NSString* _Nullable)privateKey passphrase:(NSString* _Nullable)passphrase error:(NSError* _Nullable* _Nullable)error;
+- (NSData* _Nullable)signBytes:(NSData* _Nullable)message publicKey:(NSString* _Nullable)publicKey privateKey:(NSString* _Nullable)privateKey passphrase:(NSString* _Nullable)passphrase error:(NSError* _Nullable* _Nullable)error;
+- (NSString* _Nonnull)signBytesToString:(NSData* _Nullable)message publicKey:(NSString* _Nullable)publicKey privateKey:(NSString* _Nullable)privateKey passphrase:(NSString* _Nullable)passphrase error:(NSError* _Nullable* _Nullable)error;
 - (BOOL)verify:(NSString* _Nullable)signature message:(NSString* _Nullable)message publicKey:(NSString* _Nullable)publicKey ret0_:(BOOL* _Nullable)ret0_ error:(NSError* _Nullable* _Nullable)error;
+- (BOOL)verifyBytes:(NSString* _Nullable)signature message:(NSData* _Nullable)message publicKey:(NSString* _Nullable)publicKey ret0_:(BOOL* _Nullable)ret0_ error:(NSError* _Nullable* _Nullable)error;
 @end
 
 @interface OpenpgpKeyOptions : NSObject <goSeqRefInterface> {
@@ -69,6 +78,21 @@
 @property (nonatomic) NSString* _Nonnull comment;
 @property (nonatomic) NSString* _Nonnull email;
 @property (nonatomic) NSString* _Nonnull passphrase;
+@end
+
+@interface OpenpgpPrivateKeyMetadata : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) _Nonnull id _ref;
+
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
+- (nonnull instancetype)init;
+@property (nonatomic) NSString* _Nonnull keyID;
+@property (nonatomic) NSString* _Nonnull keyIDShort;
+@property (nonatomic) NSString* _Nonnull creationTime;
+@property (nonatomic) NSString* _Nonnull fingerprint;
+@property (nonatomic) NSString* _Nonnull keyIDNumeric;
+@property (nonatomic) BOOL isSubKey;
+@property (nonatomic) BOOL encrypted;
 @end
 
 @interface OpenpgpPublicKeyMetadata : NSObject <goSeqRefInterface> {
