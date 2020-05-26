@@ -1,3 +1,7 @@
+## 0.9.6
+
+- fixed definition in dart
+
 ## 0.9.4
 
 - more bytes methods to android and ios
