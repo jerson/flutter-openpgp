@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'openpgp'
-  s.version          = '0.1.0'
+  s.version          = '0.1.1'
   s.summary          = 'library for use OpenPGP.'
   s.description      = <<-DESC
 library for use OpenPGP.
