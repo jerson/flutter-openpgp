@@ -18,11 +18,9 @@ Library for use openPGP with support for android, ios, macos, linux, web and hov
 
 ## Usage
 
+## Generate methods
 ```dart
-import 'package:openpgp/key_options.dart';
-import 'package:openpgp/key_pair.dart';
 import 'package:openpgp/openpgp.dart';
-import 'package:openpgp/options.dart';
 
 var keyPair = await OpenPGP.generate(
       options: Options(
@@ -39,19 +37,56 @@ var keyPair = await OpenPGP.generate(
         ),
       ),
 );
+```
 
+### Encrypt methods
 
-var encrypted = await OpenPGP.encrypt("text","[publicKey here]");
+```dart
+import 'package:fast_rsa/rsa.dart';
 
-var decrypted = await OpenPGP.decrypt("text encrypted","[privateKey here]","[passphrase here]");
+var bytesSample := Uint8List.fromList('data'.codeUnits)
 
-var signed = await OpenPGP.sign("text","[publicKey here]","[privateKey here]","[passphrase here]");
+var result = await OpenPGP.encrypt("text","[publicKey here]");
+var result = await OpenPGP.encryptSymmetric("text","[passphrase here]");
+var result = await OpenPGP.encryptBytes(bytesSample,"[publicKey here]");
+var result = await OpenPGP.encryptSymmetricBytes(bytesSample,"[passphrase here]");
 
-var verified = await OpenPGP.verify("text signed","text","[publicKey here]");
+```
 
-var encryptedSymmetric = await OpenPGP.encryptSymmetric("text","[passphrase here]");
+### Decrypt methods
 
-var decryptedSymmetric = await OpenPGP.decryptSymmetric("text encrypted","[passphrase here]");
+```dart
+import 'package:fast_rsa/rsa.dart';
+
+var bytesSample := Uint8List.fromList('data'.codeUnits)
+
+var result = await OpenPGP.decrypt("text encrypted","[privateKey here]","[passphrase here]");
+var result = await OpenPGP.decryptSymmetric("text encrypted","[passphrase here]");
+var result = await OpenPGP.decryptBytes(bytesSample,"[privateKey here]","[passphrase here]");
+var result = await OpenPGP.decryptSymmetricBytes(bytesSample,"[passphrase here]");
+```
+
+### Sign methods
+
+```dart
+import 'package:fast_rsa/rsa.dart';
+
+var bytesSample := Uint8List.fromList('data'.codeUnits)
+
+var result = await OpenPGP.sign("text","[publicKey here]","[privateKey here]","[passphrase here]");
+var result = await OpenPGP.signBytesToString(bytesSample,"[publicKey here]","[privateKey here]","[passphrase here]");
+
+```
+
+### Verify methods
+
+```dart
+import 'package:fast_rsa/rsa.dart';
+
+var bytesSample := Uint8List.fromList('data'.codeUnits)
+
+var result = await OpenPGP.verify("text signed","text","[publicKey here]");
+var result = await OpenPGP.verifyBytes("text signed", bytesSample,"[publicKey here]");
 
 ```
 
@@ -95,7 +130,7 @@ and in you `web/index.html`
 
 ref: https://github.com/jerson/flutter-openpgp/blob/master/example/web/index.html
 
-### Linux
+### Linux (need to upgrade to new linux flutter template, use older version)
 
 add to you `linux/app_configuration.mk`
 

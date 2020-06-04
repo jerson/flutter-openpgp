@@ -1,3 +1,7 @@
+## 0.9.7
+
+- bytes method for macos, web and hover
+
 ## 0.9.6
 
 - fixed definition in dart

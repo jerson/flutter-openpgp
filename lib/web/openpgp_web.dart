@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:openpgp/web/js/go.dart';
 import 'package:openpgp/web/js/promise.dart';
@@ -54,13 +56,38 @@ class OpenpgpPlugin {
           call.arguments['privateKey'],
           call.arguments['passphrase'],
         );
+      case 'decryptBytes':
+        return await decryptBytes(
+          call.arguments['message'],
+          call.arguments['privateKey'],
+          call.arguments['passphrase'],
+        );
       case 'encrypt':
         return await encrypt(
           call.arguments['message'],
           call.arguments['publicKey'],
         );
+      case 'encryptBytes':
+        return await encryptBytes(
+          call.arguments['message'],
+          call.arguments['publicKey'],
+        );
       case 'sign':
         return await sign(
+          call.arguments['message'],
+          call.arguments['publicKey'],
+          call.arguments['privateKey'],
+          call.arguments['passphrase'],
+        );
+      case 'signBytes':
+        return await signBytes(
+          call.arguments['message'],
+          call.arguments['publicKey'],
+          call.arguments['privateKey'],
+          call.arguments['passphrase'],
+        );
+      case 'signBytesToString':
+        return await signBytesToString(
           call.arguments['message'],
           call.arguments['publicKey'],
           call.arguments['privateKey'],
@@ -72,14 +99,32 @@ class OpenpgpPlugin {
           call.arguments['message'],
           call.arguments['publicKey'],
         );
+      case 'verifyBytes':
+        return await verifyBytes(
+          call.arguments['signature'],
+          call.arguments['message'],
+          call.arguments['publicKey'],
+        );
       case 'decryptSymmetric':
         return await decryptSymmetric(
           call.arguments['message'],
           call.arguments['passphrase'],
           call.arguments['options'],
         );
+      case 'decryptSymmetricBytes':
+        return await decryptSymmetricBytes(
+          call.arguments['message'],
+          call.arguments['passphrase'],
+          call.arguments['options'],
+        );
       case 'encryptSymmetric':
         return await encryptSymmetric(
+          call.arguments['message'],
+          call.arguments['passphrase'],
+          call.arguments['options'],
+        );
+      case 'encryptSymmetricBytes':
+        return await encryptSymmetricBytes(
           call.arguments['message'],
           call.arguments['passphrase'],
           call.arguments['options'],
@@ -110,6 +155,20 @@ class OpenpgpPlugin {
     return completer.future;
   }
 
+  Future<Uint8List> decryptBytes(
+      Uint8List message, String privateKey, String passphrase) async {
+    var completer = new Completer<Uint8List>();
+    OpenPGPDecryptBytes(base64Encode(message), privateKey, passphrase,
+        allowInterop((String error, String result) {
+      if (error != null && error != "") {
+        completer.completeError(error);
+        return;
+      }
+      completer.complete(base64Decode(result));
+    }));
+    return completer.future;
+  }
+
   Future<String> encrypt(String message, String publicKey) async {
     var completer = new Completer<String>();
     OpenPGPEncrypt(message, publicKey,
@@ -123,10 +182,51 @@ class OpenpgpPlugin {
     return completer.future;
   }
 
+  Future<Uint8List> encryptBytes(Uint8List message, String publicKey) async {
+    var completer = new Completer<Uint8List>();
+    OpenPGPEncryptBytes(base64Encode(message), publicKey,
+        allowInterop((String error, String result) {
+      if (error != null && error != "") {
+        completer.completeError(error);
+        return;
+      }
+      completer.complete(base64Decode(result));
+    }));
+    return completer.future;
+  }
+
   Future<String> sign(String message, String publicKey, String privateKey,
       String passphrase) async {
     var completer = new Completer<String>();
     OpenPGPSign(message, publicKey, privateKey, passphrase,
+        allowInterop((String error, String result) {
+      if (error != null && error != "") {
+        completer.completeError(error);
+        return;
+      }
+      completer.complete(result);
+    }));
+    return completer.future;
+  }
+
+  Future<Uint8List> signBytes(Uint8List message, String publicKey, String privateKey,
+      String passphrase) async {
+    var completer = new Completer<Uint8List>();
+    OpenPGPSignBytes(base64Encode(message), publicKey, privateKey, passphrase,
+        allowInterop((String error, String result) {
+      if (error != null && error != "") {
+        completer.completeError(error);
+        return;
+      }
+      completer.complete(base64Decode(result));
+    }));
+    return completer.future;
+  }
+
+  Future<String> signBytesToString(Uint8List message, String publicKey, String privateKey,
+      String passphrase) async {
+    var completer = new Completer<String>();
+    OpenPGPSignBytesToString(base64Encode(message), publicKey, privateKey, passphrase,
         allowInterop((String error, String result) {
       if (error != null && error != "") {
         completer.completeError(error);
@@ -151,6 +251,20 @@ class OpenpgpPlugin {
     return completer.future;
   }
 
+  Future<bool> verifyBytes(
+      String signature, Uint8List message, String publicKey) async {
+    var completer = new Completer<bool>();
+    OpenPGPVerifyBytes(signature, base64Encode(message), publicKey,
+        allowInterop((String error, bool result) {
+      if (error != null && error != "") {
+        completer.completeError(error);
+        return;
+      }
+      completer.complete(result);
+    }));
+    return completer.future;
+  }
+
   Future<String> decryptSymmetric(
       String message, String passphrase, dynamic options) async {
     var completer = new Completer<String>();
@@ -165,6 +279,20 @@ class OpenpgpPlugin {
     return completer.future;
   }
 
+  Future<Uint8List> decryptSymmetricBytes(
+      Uint8List message, String passphrase, dynamic options) async {
+    var completer = new Completer<Uint8List>();
+    OpenPGPDecryptSymmetricBytes(base64Encode(message), passphrase, _getKeyOptionsMap(options),
+        allowInterop((String error, String result) {
+      if (error != null && error != "") {
+        completer.completeError(error);
+        return;
+      }
+      completer.complete(base64Decode(result));
+    }));
+    return completer.future;
+  }
+
   Future<String> encryptSymmetric(
       String message, String passphrase, dynamic options) async {
     var completer = new Completer<String>();
@@ -175,6 +303,20 @@ class OpenpgpPlugin {
         return;
       }
       completer.complete(result);
+    }));
+    return completer.future;
+  }
+
+  Future<Uint8List> encryptSymmetricBytes(
+      Uint8List message, String passphrase, dynamic options) async {
+    var completer = new Completer<Uint8List>();
+    OpenPGPEncryptSymmetricBytes(base64Encode(message), passphrase, _getKeyOptionsMap(options),
+        allowInterop((String error, String result) {
+      if (error != null && error != "") {
+        completer.completeError(error);
+        return;
+      }
+      completer.complete(base64Decode(result));
     }));
     return completer.future;
   }

@@ -12,6 +12,14 @@ external OpenPGPDecrypt(
 );
 
 @JS()
+external OpenPGPDecryptBytes(
+  String message,
+  String privateKey,
+  String passphrase,
+  Function(String error, String result) callback,
+);
+
+@JS()
 external OpenPGPEncrypt(
   String message,
   String publicKey,
@@ -19,7 +27,32 @@ external OpenPGPEncrypt(
 );
 
 @JS()
+external OpenPGPEncryptBytes(
+  String message,
+  String publicKey,
+  Function(String error, String result) callback,
+);
+
+@JS()
 external OpenPGPSign(
+  String message,
+  String publicKey,
+  String privateKey,
+  String passphrase,
+  Function(String error, String result) callback,
+);
+
+@JS()
+external OpenPGPSignBytes(
+  String message,
+  String publicKey,
+  String privateKey,
+  String passphrase,
+  Function(String error, String result) callback,
+);
+
+@JS()
+external OpenPGPSignBytesToString(
   String message,
   String publicKey,
   String privateKey,
@@ -36,6 +69,14 @@ external OpenPGPVerify(
 );
 
 @JS()
+external OpenPGPVerifyBytes(
+  String signature,
+  String message,
+  String publicKey,
+  Function(String error, bool result) callback,
+);
+
+@JS()
 external OpenPGPDecryptSymmetric(
   String message,
   String passphrase,
@@ -44,7 +85,23 @@ external OpenPGPDecryptSymmetric(
 );
 
 @JS()
+external OpenPGPDecryptSymmetricBytes(
+  String message,
+  String passphrase,
+  KeyOptionsObject options,
+  Function(String error, String result) callback,
+);
+
+@JS()
 external OpenPGPEncryptSymmetric(
+  String message,
+  String passphrase,
+  KeyOptionsObject options,
+  Function(String error, String result) callback,
+);
+
+@JS()
+external OpenPGPEncryptSymmetricBytes(
   String message,
   String passphrase,
   KeyOptionsObject options,
