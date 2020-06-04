@@ -5,7 +5,6 @@ go 1.14
 require (
 	github.com/go-flutter-desktop/go-flutter v0.41.1
 	github.com/jerson/flutter-openpgp/go v0.0.0-20200526173622-c292d4e2032e
-	github.com/jerson/openpgp-mobile v0.7.0 // indirect
 	github.com/pkg/errors v0.9.1
 )
 
