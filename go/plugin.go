@@ -37,7 +37,7 @@ func (p *Plugin) InitPlugin(messenger plugin.BinaryMessenger) error {
 	p.channel.HandleFunc("signBytes", p.signBytes)
 	p.channel.HandleFunc("signBytesToString", p.signBytesToString)
 	p.channel.HandleFunc("verify", p.verify)
-	p.channel.HandleFunc("verify", p.verify)
+	p.channel.HandleFunc("verifyBytes", p.verifyBytes)
 	p.channel.HandleFunc("generate", p.generate)
 	p.channel.CatchAllHandleFunc(p.catchAllTest)
 
