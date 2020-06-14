@@ -3,10 +3,12 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:openpgp/key_options.dart';
 import 'package:openpgp/key_pair.dart';
 import 'package:openpgp/openpgp.dart';
 import 'package:openpgp/options.dart';
+import 'package:openpgp_example/encrypt_decrypt.dart';
 
 const passphrase = 'test';
 
@@ -24,7 +26,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final encryptController = TextEditingController();
   final encryptSymmetricController = TextEditingController();
   final signController = TextEditingController();
 
@@ -34,8 +35,6 @@ class _MyAppState extends State<MyApp> {
     privateKey: "",
     publicKey: "",
   );
-  String _encrypted = "";
-  String _decrypted = "";
   String _encryptedSymmetric = "";
   String _decryptedSymmetric = "";
   String _signed = "";
@@ -46,7 +45,6 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     initKeyPair();
 
-    encryptController.text = "sample";
     encryptSymmetricController.text = "sample";
     signController.text = "sample";
   }
@@ -70,7 +68,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-    encryptController.dispose();
     encryptSymmetricController.dispose();
     signController.dispose();
     super.dispose();
@@ -89,60 +86,10 @@ class _MyAppState extends State<MyApp> {
         ),
         body: ListView(
           children: <Widget>[
-            Container(
-              padding: const EdgeInsets.all(20),
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: <Widget>[
-                      TextField(
-                        decoration: InputDecoration(labelText: "Message"),
-                        controller: encryptController,
-                      ),
-                      RaisedButton(
-                        child: Text("Encrypt"),
-                        onPressed: () async {
-                          var encrypted = await OpenPGP.encrypt(
-                            encryptController.text,
-                            _defaultKeyPair.publicKey,
-                          );
-                          setState(() {
-                            _encrypted = encrypted;
-                          });
-                        },
-                      ),
-                      SelectableText(_encrypted)
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(20),
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: <Widget>[
-                      RaisedButton(
-                        child: Text("Decrypt"),
-                        onPressed: () async {
-                          var decrypted = await OpenPGP.decrypt(
-                            _encrypted,
-                            _defaultKeyPair.privateKey,
-                            passphrase,
-                          );
-                          setState(() {
-                            _decrypted = decrypted;
-                          });
-                        },
-                      ),
-                      SelectableText(_decrypted)
-                    ],
-                  ),
-                ),
-              ),
+            EncryptAndDecrypt(
+              title: "Encrypt And Decrypt",
+              keyPair: _defaultKeyPair,
+              key: Key("encrypt-decrypt"),
             ),
             Container(
               padding: const EdgeInsets.all(20),
