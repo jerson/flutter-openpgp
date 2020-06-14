@@ -35,6 +35,8 @@ void main() {
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
+
+        await Future.delayed(Duration(seconds: 1));
         var result = await driver.getText(
           find.descendant(of: container, matching: find.byValueKey("result")),
         );
@@ -52,6 +54,7 @@ void main() {
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
+        await Future.delayed(Duration(seconds: 1));
         var result = await driver.getText(
           find.descendant(of: container, matching: find.byValueKey("result")),
         );
@@ -77,6 +80,7 @@ void main() {
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
+        await Future.delayed(Duration(seconds: 1));
         var result = await driver.getText(
           find.descendant(of: container, matching: find.byValueKey("result")),
         );
@@ -94,6 +98,7 @@ void main() {
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
+        await Future.delayed(Duration(seconds: 1));
         var result = await driver.getText(
           find.descendant(of: container, matching: find.byValueKey("result")),
         );
@@ -119,6 +124,7 @@ void main() {
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
+        await Future.delayed(Duration(seconds: 1));
         var result = await driver.getText(
           find.descendant(of: container, matching: find.byValueKey("result")),
         );
@@ -136,6 +142,7 @@ void main() {
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
+        await Future.delayed(Duration(seconds: 1));
         var result = await driver.getText(
           find.descendant(of: container, matching: find.byValueKey("result")),
         );
@@ -161,6 +168,7 @@ void main() {
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
+        await Future.delayed(Duration(seconds: 1));
         var result = await driver.getText(
           find.descendant(of: container, matching: find.byValueKey("result")),
         );
@@ -178,6 +186,7 @@ void main() {
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
+        await Future.delayed(Duration(seconds: 1));
         var result = await driver.getText(
           find.descendant(of: container, matching: find.byValueKey("result")),
         );
@@ -203,6 +212,7 @@ void main() {
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
+        await Future.delayed(Duration(seconds: 1));
         var result = await driver.getText(
           find.descendant(of: container, matching: find.byValueKey("result")),
         );
@@ -220,6 +230,7 @@ void main() {
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
+        await Future.delayed(Duration(seconds: 1));
         var result = await driver.getText(
           find.descendant(of: container, matching: find.byValueKey("result")),
         );
@@ -245,6 +256,7 @@ void main() {
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
+        await Future.delayed(Duration(seconds: 1));
         var result = await driver.getText(
           find.descendant(of: container, matching: find.byValueKey("result")),
         );
@@ -262,6 +274,7 @@ void main() {
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
+        await Future.delayed(Duration(seconds: 1));
         var result = await driver.getText(
           find.descendant(of: container, matching: find.byValueKey("result")),
         );
@@ -283,6 +296,7 @@ void main() {
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
+        await Future.delayed(Duration(seconds: 1));
         var result = await driver.getText(
           find.descendant(of: container, matching: find.byValueKey("result")),
         );
