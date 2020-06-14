@@ -9,6 +9,10 @@ import 'package:openpgp/key_pair.dart';
 import 'package:openpgp/openpgp.dart';
 import 'package:openpgp/options.dart';
 import 'package:openpgp_example/encrypt_decrypt.dart';
+import 'package:openpgp_example/encrypt_decrypt_bytes.dart';
+import 'package:openpgp_example/encrypt_decrypt_symmetric.dart';
+import 'package:openpgp_example/encrypt_decrypt_symmetric_bytes.dart';
+import 'package:openpgp_example/generate.dart';
 
 const passphrase = 'test';
 
@@ -26,17 +30,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final encryptSymmetricController = TextEditingController();
   final signController = TextEditingController();
 
   KeyPair _defaultKeyPair;
-
-  KeyPair _keyPair = KeyPair(
-    privateKey: "",
-    publicKey: "",
-  );
-  String _encryptedSymmetric = "";
-  String _decryptedSymmetric = "";
   String _signed = "";
   bool _verified = false;
 
@@ -45,7 +41,6 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     initKeyPair();
 
-    encryptSymmetricController.text = "sample";
     signController.text = "sample";
   }
 
@@ -68,7 +63,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-    encryptSymmetricController.dispose();
     signController.dispose();
     super.dispose();
   }
@@ -90,6 +84,21 @@ class _MyAppState extends State<MyApp> {
               title: "Encrypt And Decrypt",
               keyPair: _defaultKeyPair,
               key: Key("encrypt-decrypt"),
+            ),
+            EncryptAndDecryptBytes(
+              title: "Encrypt And Decrypt Bytes",
+              keyPair: _defaultKeyPair,
+              key: Key("encrypt-decrypt-bytes"),
+            ),
+            EncryptAndDecryptSymmetric(
+              title: "Encrypt And Decrypt Symmetric",
+              keyPair: _defaultKeyPair,
+              key: Key("encrypt-decrypt-symmetric"),
+            ),
+            EncryptAndDecryptSymmetricBytes(
+              title: "Encrypt And Decrypt Symmetric Bytes",
+              keyPair: _defaultKeyPair,
+              key: Key("encrypt-decrypt-symmetric-bytes"),
             ),
             Container(
               padding: const EdgeInsets.all(20),
@@ -148,91 +157,9 @@ class _MyAppState extends State<MyApp> {
                 ),
               ),
             ),
-            Container(
-              padding: const EdgeInsets.all(20),
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: <Widget>[
-                      TextField(
-                        decoration: InputDecoration(labelText: "Message"),
-                        controller: encryptSymmetricController,
-                      ),
-                      RaisedButton(
-                        child: Text("Encrypt Symmetric"),
-                        onPressed: () async {
-                          var encrypted = await OpenPGP.encryptSymmetric(
-                            encryptSymmetricController.text,
-                            passphrase,
-                          );
-                          setState(() {
-                            _encryptedSymmetric = encrypted;
-                          });
-                        },
-                      ),
-                      SelectableText(_encryptedSymmetric)
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(20),
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: <Widget>[
-                      RaisedButton(
-                        child: Text("Decrypt Symmetric"),
-                        onPressed: () async {
-                          var decrypted = await OpenPGP.decryptSymmetric(
-                            _encryptedSymmetric,
-                            passphrase,
-                          );
-                          setState(() {
-                            _decryptedSymmetric = decrypted;
-                          });
-                        },
-                      ),
-                      SelectableText(_decryptedSymmetric)
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(20),
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: <Widget>[
-                      RaisedButton(
-                        child: Text("Generate"),
-                        onPressed: () async {
-                          var keyPair = await OpenPGP.generate(
-                            options: Options(
-                              name: 'test',
-                              email: 'test@test.com',
-                              passphrase: 'test',
-                              keyOptions: KeyOptions(
-                                rsaBits: 2048,
-                              ),
-                            ),
-                          );
-                          setState(() {
-                            _keyPair = keyPair;
-                          });
-                        },
-                      ),
-                      SelectableText(_keyPair.publicKey),
-                      SelectableText(_keyPair.privateKey)
-                    ],
-                  ),
-                ),
-              ),
+            Generate(
+              title: "Generate",
+              key: Key("generate"),
             ),
           ],
         ),

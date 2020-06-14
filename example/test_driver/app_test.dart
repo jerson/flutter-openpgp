@@ -17,7 +17,7 @@ void main() {
 
     var input = "sample1111";
 
-    group('Encrypt and Decrypt', ()  {
+    group('Encrypt and Decrypt', () {
       final parent = find.byValueKey("encrypt-decrypt");
 
       test('Encrypt', () async {
@@ -25,6 +25,9 @@ void main() {
           of: parent,
           matching: find.byValueKey("encrypt"),
         );
+        await driver.waitFor(container);
+        await driver.scrollIntoView(container);
+
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("message")),
         );
@@ -43,6 +46,9 @@ void main() {
           of: parent,
           matching: find.byValueKey("decrypt"),
         );
+        await driver.waitFor(container);
+        await driver.scrollIntoView(container);
+
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
@@ -53,5 +59,153 @@ void main() {
       });
     });
 
+    group('Encrypt and Decrypt Bytes', () {
+      final parent = find.byValueKey("encrypt-decrypt-bytes");
+
+      test('Encrypt', () async {
+        final container = find.descendant(
+          of: parent,
+          matching: find.byValueKey("encrypt"),
+        );
+        await driver.waitFor(container);
+        await driver.scrollIntoView(container);
+
+        await driver.tap(
+          find.descendant(of: container, matching: find.byValueKey("message")),
+        );
+        await driver.enterText(input);
+        await driver.tap(
+          find.descendant(of: container, matching: find.byValueKey("button")),
+        );
+        var result = await driver.getText(
+          find.descendant(of: container, matching: find.byValueKey("result")),
+        );
+        expect(result != "", true);
+      });
+
+      test('Decrypt', () async {
+        final container = find.descendant(
+          of: parent,
+          matching: find.byValueKey("decrypt"),
+        );
+        await driver.waitFor(container);
+        await driver.scrollIntoView(container);
+
+        await driver.tap(
+          find.descendant(of: container, matching: find.byValueKey("button")),
+        );
+        var result = await driver.getText(
+          find.descendant(of: container, matching: find.byValueKey("result")),
+        );
+        expect(result, input);
+      });
+    });
+
+    group('Encrypt and Decrypt Symmetric', () {
+      final parent = find.byValueKey("encrypt-decrypt-symmetric");
+
+      test('Encrypt', () async {
+        final container = find.descendant(
+          of: parent,
+          matching: find.byValueKey("encrypt"),
+        );
+        await driver.waitFor(container);
+        await driver.scrollIntoView(container);
+
+        await driver.tap(
+          find.descendant(of: container, matching: find.byValueKey("message")),
+        );
+        await driver.enterText(input);
+        await driver.tap(
+          find.descendant(of: container, matching: find.byValueKey("button")),
+        );
+        var result = await driver.getText(
+          find.descendant(of: container, matching: find.byValueKey("result")),
+        );
+        expect(result != "", true);
+      });
+
+      test('Decrypt', () async {
+        final container = find.descendant(
+          of: parent,
+          matching: find.byValueKey("decrypt"),
+        );
+        await driver.waitFor(container);
+        await driver.scrollIntoView(container);
+
+        await driver.tap(
+          find.descendant(of: container, matching: find.byValueKey("button")),
+        );
+        var result = await driver.getText(
+          find.descendant(of: container, matching: find.byValueKey("result")),
+        );
+        expect(result, input);
+      });
+    });
+
+    group('Encrypt and Decrypt Symmetric Bytes', () {
+      final parent = find.byValueKey("encrypt-decrypt-symmetric-bytes");
+
+      test('Encrypt', () async {
+        final container = find.descendant(
+          of: parent,
+          matching: find.byValueKey("encrypt"),
+        );
+        await driver.waitFor(container);
+        await driver.scrollIntoView(container);
+
+        await driver.tap(
+          find.descendant(of: container, matching: find.byValueKey("message")),
+        );
+        await driver.enterText(input);
+        await driver.tap(
+          find.descendant(of: container, matching: find.byValueKey("button")),
+        );
+        var result = await driver.getText(
+          find.descendant(of: container, matching: find.byValueKey("result")),
+        );
+        expect(result != "", true);
+      });
+
+      test('Decrypt', () async {
+        final container = find.descendant(
+          of: parent,
+          matching: find.byValueKey("decrypt"),
+        );
+        await driver.waitFor(container);
+        await driver.scrollIntoView(container);
+
+        await driver.tap(
+          find.descendant(of: container, matching: find.byValueKey("button")),
+        );
+        var result = await driver.getText(
+          find.descendant(of: container, matching: find.byValueKey("result")),
+        );
+        expect(result, input);
+      });
+    });
+
+    group('Generate', () {
+      final parent = find.byValueKey("generate");
+
+      test('Default', () async {
+        final container = find.descendant(
+          of: parent,
+          matching: find.byValueKey("generate"),
+        );
+        await driver.waitFor(container);
+        await driver.scrollIntoView(container);
+
+        await driver.tap(
+          find.descendant(of: container, matching: find.byValueKey("button")),
+        );
+        // maybe use a better delay or wait for condition
+        await Future.delayed(Duration(seconds: 6));
+        var result = await driver.getText(
+          find.descendant(of: container, matching: find.byValueKey("result")),
+        );
+        expect(result != "", true);
+      }, retry: 3);
+    });
   });
 }
