@@ -57,7 +57,7 @@ class _EncryptAndDecryptBytesState extends State<EncryptAndDecryptBytes> {
               key: Key("decrypt"),
               result: _decrypted,
               onPressed: () async {
-                var  decrypted= await OpenPGP.decryptBytes(
+                var decrypted = await OpenPGP.decryptBytes(
                   base64Decode(_encrypted),
                   widget.keyPair.privateKey,
                   passphrase,

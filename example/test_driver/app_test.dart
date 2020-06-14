@@ -185,6 +185,111 @@ void main() {
       });
     });
 
+    group('Sign And Verify', () {
+      final parent = find.byValueKey("sign-verify");
+
+      test('Sign', () async {
+        final container = find.descendant(
+          of: parent,
+          matching: find.byValueKey("sign"),
+        );
+        await driver.waitFor(container);
+        await driver.scrollIntoView(container);
+
+        await driver.tap(
+          find.descendant(of: container, matching: find.byValueKey("message")),
+        );
+        await driver.enterText(input);
+        await driver.tap(
+          find.descendant(of: container, matching: find.byValueKey("button")),
+        );
+        var result = await driver.getText(
+          find.descendant(of: container, matching: find.byValueKey("result")),
+        );
+        expect(result != "", true);
+      });
+
+      test('Verify', () async {
+        final container = find.descendant(
+          of: parent,
+          matching: find.byValueKey("verify"),
+        );
+        await driver.waitFor(container);
+        await driver.scrollIntoView(container);
+
+        await driver.tap(
+          find.descendant(of: container, matching: find.byValueKey("button")),
+        );
+        var result = await driver.getText(
+          find.descendant(of: container, matching: find.byValueKey("result")),
+        );
+        expect(result, "VALID");
+      });
+    });
+
+    group('Sign And Verify Bytes', () {
+      final parent = find.byValueKey("sign-verify-bytes");
+
+      test('Sign', () async {
+        final container = find.descendant(
+          of: parent,
+          matching: find.byValueKey("sign"),
+        );
+        await driver.waitFor(container);
+        await driver.scrollIntoView(container);
+
+        await driver.tap(
+          find.descendant(of: container, matching: find.byValueKey("message")),
+        );
+        await driver.enterText(input);
+        await driver.tap(
+          find.descendant(of: container, matching: find.byValueKey("button")),
+        );
+        var result = await driver.getText(
+          find.descendant(of: container, matching: find.byValueKey("result")),
+        );
+        expect(result != "", true);
+      });
+
+      test('Verify', () async {
+        final container = find.descendant(
+          of: parent,
+          matching: find.byValueKey("verify"),
+        );
+        await driver.waitFor(container);
+        await driver.scrollIntoView(container);
+
+        await driver.tap(
+          find.descendant(of: container, matching: find.byValueKey("button")),
+        );
+        var result = await driver.getText(
+          find.descendant(of: container, matching: find.byValueKey("result")),
+        );
+        expect(result, "VALID");
+      });
+
+      test('Sign Bytes', () async {
+        final container = find.descendant(
+          of: parent,
+          matching: find.byValueKey("sign-bytes"),
+        );
+        await driver.waitFor(container);
+        await driver.scrollIntoView(container);
+
+        await driver.tap(
+          find.descendant(of: container, matching: find.byValueKey("message")),
+        );
+        await driver.enterText(input);
+        await driver.tap(
+          find.descendant(of: container, matching: find.byValueKey("button")),
+        );
+        var result = await driver.getText(
+          find.descendant(of: container, matching: find.byValueKey("result")),
+        );
+        expect(result != "", true);
+      });
+    });
+
     group('Generate', () {
       final parent = find.byValueKey("generate");
 

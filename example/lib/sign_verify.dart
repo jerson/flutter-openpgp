@@ -8,8 +8,8 @@ import 'package:openpgp_example/shared/button_widget.dart';
 import 'package:openpgp_example/shared/input_widget.dart';
 import 'package:openpgp_example/shared/title_widget.dart';
 
-class EncryptAndDecrypt extends StatefulWidget {
-  const EncryptAndDecrypt({
+class SignAndVerify extends StatefulWidget {
+  const SignAndVerify({
     Key key,
     @required this.title,
     @required KeyPair keyPair,
@@ -20,12 +20,13 @@ class EncryptAndDecrypt extends StatefulWidget {
   final String title;
 
   @override
-  _EncryptAndDecryptState createState() => _EncryptAndDecryptState();
+  _SignAndVerifyState createState() => _SignAndVerifyState();
 }
 
-class _EncryptAndDecryptState extends State<EncryptAndDecrypt> {
-  String _encrypted = "";
-  String _decrypted = "";
+class _SignAndVerifyState extends State<SignAndVerify> {
+  String _signed = "";
+  String _verify = "";
+  String _text = "";
 
   @override
   Widget build(BuildContext context) {
@@ -36,31 +37,34 @@ class _EncryptAndDecryptState extends State<EncryptAndDecrypt> {
           children: [
             TitleWidget(widget.title),
             InputWidget(
-              title: "Encrypt",
-              key: Key("encrypt"),
-              result: _encrypted,
+              title: "Sign",
+              key: Key("sign"),
+              result: _signed,
               onPressed: (controller) async {
-                var encrypted = await OpenPGP.encrypt(
+                var result = await OpenPGP.sign(
                   controller.text,
                   widget.keyPair.publicKey,
-                );
-                setState(() {
-                  _encrypted = encrypted;
-                });
-              },
-            ),
-            ButtonWidget(
-              title: "Decrypt",
-              key: Key("decrypt"),
-              result: _decrypted,
-              onPressed: () async {
-                var decrypted = await OpenPGP.decrypt(
-                  _encrypted,
                   widget.keyPair.privateKey,
                   passphrase,
                 );
                 setState(() {
-                  _decrypted = decrypted;
+                  _text = controller.text;
+                  _signed = result;
+                });
+              },
+            ),
+            ButtonWidget(
+              title: "Verify",
+              key: Key("verify"),
+              result: _verify,
+              onPressed: () async {
+                var result = await OpenPGP.verify(
+                  _signed,
+                  _text,
+                  widget.keyPair.publicKey,
+                );
+                setState(() {
+                  _verify = result ? "VALID" : "INVALID";
                 });
               },
             ),

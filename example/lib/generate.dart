@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -9,12 +8,11 @@ import 'package:openpgp_example/shared/title_widget.dart';
 import 'package:openpgp/key_options.dart';
 import 'package:openpgp/options.dart';
 
-
 class Generate extends StatefulWidget {
   const Generate({
     Key key,
     @required this.title,
-  })  : super(key: key);
+  }) : super(key: key);
 
   final String title;
 
@@ -23,7 +21,7 @@ class Generate extends StatefulWidget {
 }
 
 class _GenerateState extends State<Generate> {
-  KeyPair _keyPair = KeyPair(publicKey: "",privateKey: "");
+  KeyPair _keyPair = KeyPair(publicKey: "", privateKey: "");
 
   @override
   Widget build(BuildContext context) {

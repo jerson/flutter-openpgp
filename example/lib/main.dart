@@ -13,6 +13,8 @@ import 'package:openpgp_example/encrypt_decrypt_bytes.dart';
 import 'package:openpgp_example/encrypt_decrypt_symmetric.dart';
 import 'package:openpgp_example/encrypt_decrypt_symmetric_bytes.dart';
 import 'package:openpgp_example/generate.dart';
+import 'package:openpgp_example/sign_verify.dart';
+import 'package:openpgp_example/sign_verify_bytes.dart';
 
 const passphrase = 'test';
 
@@ -30,18 +32,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final signController = TextEditingController();
-
   KeyPair _defaultKeyPair;
-  String _signed = "";
-  bool _verified = false;
 
   @override
   void initState() {
     super.initState();
     initKeyPair();
-
-    signController.text = "sample";
   }
 
   Future<void> initKeyPair() async {
@@ -63,7 +59,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-    signController.dispose();
     super.dispose();
   }
 
@@ -100,62 +95,15 @@ class _MyAppState extends State<MyApp> {
               keyPair: _defaultKeyPair,
               key: Key("encrypt-decrypt-symmetric-bytes"),
             ),
-            Container(
-              padding: const EdgeInsets.all(20),
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: <Widget>[
-                      TextField(
-                        decoration: InputDecoration(labelText: "Message"),
-                        controller: signController,
-                      ),
-                      RaisedButton(
-                        child: Text("Sign"),
-                        onPressed: () async {
-                          var signed = await OpenPGP.sign(
-                            signController.text,
-                            _defaultKeyPair.publicKey,
-                            _defaultKeyPair.privateKey,
-                            passphrase,
-                          );
-                          setState(() {
-                            _signed = signed;
-                          });
-                        },
-                      ),
-                      SelectableText(_signed)
-                    ],
-                  ),
-                ),
-              ),
+            SignAndVerify(
+              title: "Sign And Verify",
+              keyPair: _defaultKeyPair,
+              key: Key("sign-verify"),
             ),
-            Container(
-              padding: const EdgeInsets.all(20),
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: <Widget>[
-                      RaisedButton(
-                        child: Text("Verify"),
-                        onPressed: () async {
-                          var verified = await OpenPGP.verify(
-                            _signed,
-                            signController.text,
-                            _defaultKeyPair.publicKey,
-                          );
-                          setState(() {
-                            _verified = verified;
-                          });
-                        },
-                      ),
-                      SelectableText(_verified ? "VALID" : "INVALID")
-                    ],
-                  ),
-                ),
-              ),
+            SignAndVerifyBytes(
+              title: "Sign And Verify Bytes",
+              keyPair: _defaultKeyPair,
+              key: Key("sign-verify-bytes"),
             ),
             Generate(
               title: "Generate",

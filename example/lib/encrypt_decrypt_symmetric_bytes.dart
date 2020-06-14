@@ -23,10 +23,12 @@ class EncryptAndDecryptSymmetricBytes extends StatefulWidget {
   final String title;
 
   @override
-  _EncryptAndDecryptSymmetricBytesState createState() => _EncryptAndDecryptSymmetricBytesState();
+  _EncryptAndDecryptSymmetricBytesState createState() =>
+      _EncryptAndDecryptSymmetricBytesState();
 }
 
-class _EncryptAndDecryptSymmetricBytesState extends State<EncryptAndDecryptSymmetricBytes> {
+class _EncryptAndDecryptSymmetricBytesState
+    extends State<EncryptAndDecryptSymmetricBytes> {
   String _encrypted = "";
   String _decrypted = "";
 
@@ -57,7 +59,7 @@ class _EncryptAndDecryptSymmetricBytesState extends State<EncryptAndDecryptSymme
               key: Key("decrypt"),
               result: _decrypted,
               onPressed: () async {
-                var  decrypted= await OpenPGP.decryptSymmetricBytes(
+                var decrypted = await OpenPGP.decryptSymmetricBytes(
                   base64Decode(_encrypted),
                   passphrase,
                 );
