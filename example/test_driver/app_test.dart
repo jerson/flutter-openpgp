@@ -310,7 +310,7 @@ void main() {
           find.descendant(of: container, matching: find.byValueKey("result")),
         );
         expect(result != "", true);
-      }, retry: 3);
+      }, retry: 3, timeout: Timeout(Duration(minutes: 5)));
     });
   });
 }
