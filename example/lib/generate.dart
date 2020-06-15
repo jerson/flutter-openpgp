@@ -36,7 +36,7 @@ class _GenerateState extends State<Generate> {
             ButtonWidget(
               title: "Generate",
               key: Key("generate"),
-              result: jsonEncode(_keyPair),
+              result: _keyPair.privateKey,
               onPressed: () async {
                 var keyPair = await OpenPGP.generate(
                   options: Options(
