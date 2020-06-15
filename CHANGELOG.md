@@ -1,3 +1,7 @@
+## 0.9.8
+
+- Added integration tests
+
 ## 0.9.7
 
 - bytes method for macos, web and hover
