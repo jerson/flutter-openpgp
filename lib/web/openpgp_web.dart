@@ -209,8 +209,8 @@ class OpenpgpPlugin {
     return completer.future;
   }
 
-  Future<Uint8List> signBytes(Uint8List message, String publicKey, String privateKey,
-      String passphrase) async {
+  Future<Uint8List> signBytes(Uint8List message, String publicKey,
+      String privateKey, String passphrase) async {
     var completer = new Completer<Uint8List>();
     OpenPGPSignBytes(base64Encode(message), publicKey, privateKey, passphrase,
         allowInterop((String error, String result) {
@@ -223,10 +223,11 @@ class OpenpgpPlugin {
     return completer.future;
   }
 
-  Future<String> signBytesToString(Uint8List message, String publicKey, String privateKey,
-      String passphrase) async {
+  Future<String> signBytesToString(Uint8List message, String publicKey,
+      String privateKey, String passphrase) async {
     var completer = new Completer<String>();
-    OpenPGPSignBytesToString(base64Encode(message), publicKey, privateKey, passphrase,
+    OpenPGPSignBytesToString(
+        base64Encode(message), publicKey, privateKey, passphrase,
         allowInterop((String error, String result) {
       if (error != null && error != "") {
         completer.completeError(error);
@@ -282,7 +283,8 @@ class OpenpgpPlugin {
   Future<Uint8List> decryptSymmetricBytes(
       Uint8List message, String passphrase, dynamic options) async {
     var completer = new Completer<Uint8List>();
-    OpenPGPDecryptSymmetricBytes(base64Encode(message), passphrase, _getKeyOptionsMap(options),
+    OpenPGPDecryptSymmetricBytes(
+        base64Encode(message), passphrase, _getKeyOptionsMap(options),
         allowInterop((String error, String result) {
       if (error != null && error != "") {
         completer.completeError(error);
@@ -310,7 +312,8 @@ class OpenpgpPlugin {
   Future<Uint8List> encryptSymmetricBytes(
       Uint8List message, String passphrase, dynamic options) async {
     var completer = new Completer<Uint8List>();
-    OpenPGPEncryptSymmetricBytes(base64Encode(message), passphrase, _getKeyOptionsMap(options),
+    OpenPGPEncryptSymmetricBytes(
+        base64Encode(message), passphrase, _getKeyOptionsMap(options),
         allowInterop((String error, String result) {
       if (error != null && error != "") {
         completer.completeError(error);

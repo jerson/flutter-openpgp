@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -34,7 +36,7 @@ class _GenerateState extends State<Generate> {
             ButtonWidget(
               title: "Generate",
               key: Key("generate"),
-              result: _keyPair.publicKey,
+              result: jsonEncode(_keyPair),
               onPressed: () async {
                 var keyPair = await OpenPGP.generate(
                   options: Options(
