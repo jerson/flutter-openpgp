@@ -21,15 +21,18 @@ class InputWidget extends StatefulWidget {
 
 class _InputWidgetState extends State<InputWidget> {
   final _controller = TextEditingController();
+  FocusNode _focusNode;
 
   @override
   void initState() {
     super.initState();
+    _focusNode = FocusNode();
     _controller.text = "";
   }
 
   @override
   void dispose() {
+    _focusNode.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -41,6 +44,8 @@ class _InputWidgetState extends State<InputWidget> {
       child: Column(
         children: <Widget>[
           TextField(
+            autofocus: false,
+            focusNode: _focusNode,
             decoration: InputDecoration(labelText: "Message"),
             controller: _controller,
             key: Key("message"),
@@ -48,6 +53,7 @@ class _InputWidgetState extends State<InputWidget> {
           RaisedButton(
             child: Text(widget.title),
             onPressed: () {
+              _focusNode.unfocus();
               widget.onPressed(_controller);
             },
             key: Key("button"),
