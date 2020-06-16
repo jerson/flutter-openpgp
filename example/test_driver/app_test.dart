@@ -15,7 +15,10 @@ void main() {
       }
     });
 
-    var input = "sample1111";
+    var input =
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras orci ex, pellentesque quis lobortis in";
+    var dyScroll = -50.0;
+    final list = find.byValueKey("list");
 
     group('Encrypt and Decrypt', () {
       final parent = find.byValueKey("encrypt-decrypt");
@@ -25,8 +28,7 @@ void main() {
           of: parent,
           matching: find.byValueKey("encrypt"),
         );
-        await driver.waitFor(container);
-        await driver.scrollIntoView(container);
+        await driver.scrollUntilVisible(list, container, dyScroll: dyScroll);
 
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("message")),
@@ -36,30 +38,29 @@ void main() {
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
 
-        await Future.delayed(Duration(seconds: 1));
-        var result = await driver.getText(
-          find.descendant(of: container, matching: find.byValueKey("result")),
-        );
+        var resultSelector =
+            find.descendant(of: container, matching: find.byValueKey("result"));
+        await driver.waitFor(resultSelector, timeout: Duration(seconds: 60));
+        var result = await driver.getText(resultSelector);
         expect(result != "", true);
-      });
+      }, timeout: Timeout(Duration(minutes: 5)));
 
       test('Decrypt', () async {
         final container = find.descendant(
           of: parent,
           matching: find.byValueKey("decrypt"),
         );
-        await driver.waitFor(container);
-        await driver.scrollIntoView(container);
+        await driver.scrollUntilVisible(list, container, dyScroll: dyScroll);
 
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
-        await Future.delayed(Duration(seconds: 1));
-        var result = await driver.getText(
-          find.descendant(of: container, matching: find.byValueKey("result")),
-        );
+        var resultSelector =
+            find.descendant(of: container, matching: find.byValueKey("result"));
+        await driver.waitFor(resultSelector, timeout: Duration(seconds: 60));
+        var result = await driver.getText(resultSelector);
         expect(result, input);
-      });
+      }, timeout: Timeout(Duration(minutes: 5)));
     });
 
     group('Encrypt and Decrypt Bytes', () {
@@ -70,8 +71,7 @@ void main() {
           of: parent,
           matching: find.byValueKey("encrypt"),
         );
-        await driver.waitFor(container);
-        await driver.scrollIntoView(container);
+        await driver.scrollUntilVisible(list, container, dyScroll: dyScroll);
 
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("message")),
@@ -80,30 +80,29 @@ void main() {
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
-        await Future.delayed(Duration(seconds: 1));
-        var result = await driver.getText(
-          find.descendant(of: container, matching: find.byValueKey("result")),
-        );
+        var resultSelector =
+            find.descendant(of: container, matching: find.byValueKey("result"));
+        await driver.waitFor(resultSelector, timeout: Duration(seconds: 60));
+        var result = await driver.getText(resultSelector);
         expect(result != "", true);
-      });
+      }, timeout: Timeout(Duration(minutes: 5)));
 
       test('Decrypt', () async {
         final container = find.descendant(
           of: parent,
           matching: find.byValueKey("decrypt"),
         );
-        await driver.waitFor(container);
-        await driver.scrollIntoView(container);
+        await driver.scrollUntilVisible(list, container, dyScroll: dyScroll);
 
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
-        await Future.delayed(Duration(seconds: 1));
-        var result = await driver.getText(
-          find.descendant(of: container, matching: find.byValueKey("result")),
-        );
+        var resultSelector =
+            find.descendant(of: container, matching: find.byValueKey("result"));
+        await driver.waitFor(resultSelector, timeout: Duration(seconds: 60));
+        var result = await driver.getText(resultSelector);
         expect(result, input);
-      });
+      }, timeout: Timeout(Duration(minutes: 5)));
     });
 
     group('Encrypt and Decrypt Symmetric', () {
@@ -114,8 +113,7 @@ void main() {
           of: parent,
           matching: find.byValueKey("encrypt"),
         );
-        await driver.waitFor(container);
-        await driver.scrollIntoView(container);
+        await driver.scrollUntilVisible(list, container, dyScroll: dyScroll);
 
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("message")),
@@ -124,30 +122,29 @@ void main() {
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
-        await Future.delayed(Duration(seconds: 1));
-        var result = await driver.getText(
-          find.descendant(of: container, matching: find.byValueKey("result")),
-        );
+        var resultSelector =
+            find.descendant(of: container, matching: find.byValueKey("result"));
+        await driver.waitFor(resultSelector, timeout: Duration(seconds: 60));
+        var result = await driver.getText(resultSelector);
         expect(result != "", true);
-      });
+      }, timeout: Timeout(Duration(minutes: 5)));
 
       test('Decrypt', () async {
         final container = find.descendant(
           of: parent,
           matching: find.byValueKey("decrypt"),
         );
-        await driver.waitFor(container);
-        await driver.scrollIntoView(container);
+        await driver.scrollUntilVisible(list, container, dyScroll: dyScroll);
 
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
-        await Future.delayed(Duration(seconds: 1));
-        var result = await driver.getText(
-          find.descendant(of: container, matching: find.byValueKey("result")),
-        );
+        var resultSelector =
+            find.descendant(of: container, matching: find.byValueKey("result"));
+        await driver.waitFor(resultSelector, timeout: Duration(seconds: 60));
+        var result = await driver.getText(resultSelector);
         expect(result, input);
-      });
+      }, timeout: Timeout(Duration(minutes: 5)));
     });
 
     group('Encrypt and Decrypt Symmetric Bytes', () {
@@ -158,8 +155,7 @@ void main() {
           of: parent,
           matching: find.byValueKey("encrypt"),
         );
-        await driver.waitFor(container);
-        await driver.scrollIntoView(container);
+        await driver.scrollUntilVisible(list, container, dyScroll: dyScroll);
 
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("message")),
@@ -168,30 +164,29 @@ void main() {
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
-        await Future.delayed(Duration(seconds: 1));
-        var result = await driver.getText(
-          find.descendant(of: container, matching: find.byValueKey("result")),
-        );
+        var resultSelector =
+            find.descendant(of: container, matching: find.byValueKey("result"));
+        await driver.waitFor(resultSelector, timeout: Duration(seconds: 60));
+        var result = await driver.getText(resultSelector);
         expect(result != "", true);
-      });
+      }, timeout: Timeout(Duration(minutes: 5)));
 
       test('Decrypt', () async {
         final container = find.descendant(
           of: parent,
           matching: find.byValueKey("decrypt"),
         );
-        await driver.waitFor(container);
-        await driver.scrollIntoView(container);
+        await driver.scrollUntilVisible(list, container, dyScroll: dyScroll);
 
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
-        await Future.delayed(Duration(seconds: 1));
-        var result = await driver.getText(
-          find.descendant(of: container, matching: find.byValueKey("result")),
-        );
+        var resultSelector =
+            find.descendant(of: container, matching: find.byValueKey("result"));
+        await driver.waitFor(resultSelector, timeout: Duration(seconds: 60));
+        var result = await driver.getText(resultSelector);
         expect(result, input);
-      });
+      }, timeout: Timeout(Duration(minutes: 5)));
     });
 
     group('Sign And Verify', () {
@@ -202,8 +197,7 @@ void main() {
           of: parent,
           matching: find.byValueKey("sign"),
         );
-        await driver.waitFor(container);
-        await driver.scrollIntoView(container);
+        await driver.scrollUntilVisible(list, container, dyScroll: dyScroll);
 
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("message")),
@@ -212,30 +206,29 @@ void main() {
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
-        await Future.delayed(Duration(seconds: 1));
-        var result = await driver.getText(
-          find.descendant(of: container, matching: find.byValueKey("result")),
-        );
+        var resultSelector =
+            find.descendant(of: container, matching: find.byValueKey("result"));
+        await driver.waitFor(resultSelector, timeout: Duration(seconds: 60));
+        var result = await driver.getText(resultSelector);
         expect(result != "", true);
-      });
+      }, timeout: Timeout(Duration(minutes: 5)));
 
       test('Verify', () async {
         final container = find.descendant(
           of: parent,
           matching: find.byValueKey("verify"),
         );
-        await driver.waitFor(container);
-        await driver.scrollIntoView(container);
+        await driver.scrollUntilVisible(list, container, dyScroll: dyScroll);
 
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
-        await Future.delayed(Duration(seconds: 1));
-        var result = await driver.getText(
-          find.descendant(of: container, matching: find.byValueKey("result")),
-        );
+        var resultSelector =
+            find.descendant(of: container, matching: find.byValueKey("result"));
+        await driver.waitFor(resultSelector, timeout: Duration(seconds: 60));
+        var result = await driver.getText(resultSelector);
         expect(result, "VALID");
-      });
+      }, timeout: Timeout(Duration(minutes: 5)));
     });
 
     group('Sign And Verify Bytes', () {
@@ -246,8 +239,7 @@ void main() {
           of: parent,
           matching: find.byValueKey("sign"),
         );
-        await driver.waitFor(container);
-        await driver.scrollIntoView(container);
+        await driver.scrollUntilVisible(list, container, dyScroll: dyScroll);
 
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("message")),
@@ -256,38 +248,36 @@ void main() {
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
-        await Future.delayed(Duration(seconds: 1));
-        var result = await driver.getText(
-          find.descendant(of: container, matching: find.byValueKey("result")),
-        );
+        var resultSelector =
+            find.descendant(of: container, matching: find.byValueKey("result"));
+        await driver.waitFor(resultSelector, timeout: Duration(seconds: 60));
+        var result = await driver.getText(resultSelector);
         expect(result != "", true);
-      });
+      }, timeout: Timeout(Duration(minutes: 5)));
 
       test('Verify', () async {
         final container = find.descendant(
           of: parent,
           matching: find.byValueKey("verify"),
         );
-        await driver.waitFor(container);
-        await driver.scrollIntoView(container);
+        await driver.scrollUntilVisible(list, container, dyScroll: dyScroll);
 
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
-        await Future.delayed(Duration(seconds: 1));
-        var result = await driver.getText(
-          find.descendant(of: container, matching: find.byValueKey("result")),
-        );
+        var resultSelector =
+            find.descendant(of: container, matching: find.byValueKey("result"));
+        await driver.waitFor(resultSelector, timeout: Duration(seconds: 60));
+        var result = await driver.getText(resultSelector);
         expect(result, "VALID");
-      });
+      }, timeout: Timeout(Duration(minutes: 5)));
 
       test('Sign Bytes', () async {
         final container = find.descendant(
           of: parent,
           matching: find.byValueKey("sign-bytes"),
         );
-        await driver.waitFor(container);
-        await driver.scrollIntoView(container);
+        await driver.scrollUntilVisible(list, container, dyScroll: dyScroll);
 
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("message")),
@@ -296,12 +286,12 @@ void main() {
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
-        await Future.delayed(Duration(seconds: 1));
-        var result = await driver.getText(
-          find.descendant(of: container, matching: find.byValueKey("result")),
-        );
+        var resultSelector =
+            find.descendant(of: container, matching: find.byValueKey("result"));
+        await driver.waitFor(resultSelector, timeout: Duration(seconds: 60));
+        var result = await driver.getText(resultSelector);
         expect(result != "", true);
-      });
+      }, timeout: Timeout(Duration(minutes: 5)));
     });
 
     group('Generate', () {
@@ -310,21 +300,19 @@ void main() {
       test('Default', () async {
         final container = find.descendant(
           of: parent,
-          matching: find.byValueKey("generate"),
+          matching: find.byValueKey("action"),
         );
-        await driver.waitFor(container);
-        await driver.scrollIntoView(container);
+        await driver.scrollUntilVisible(list, container, dyScroll: dyScroll);
 
         await driver.tap(
           find.descendant(of: container, matching: find.byValueKey("button")),
         );
-        // maybe use a better delay or wait for condition
-        await Future.delayed(Duration(seconds: 6));
-        var result = await driver.getText(
-          find.descendant(of: container, matching: find.byValueKey("result")),
-        );
+        var resultSelector =
+            find.descendant(of: container, matching: find.byValueKey("result"));
+        await driver.waitFor(resultSelector, timeout: Duration(minutes: 5));
+        var result = await driver.getText(resultSelector);
         expect(result != "", true);
-      }, retry: 3, timeout: Timeout(Duration(minutes: 5)));
+      }, timeout: Timeout(Duration(minutes: 5)));
     });
   });
 }

@@ -74,6 +74,7 @@ class _MyAppState extends State<MyApp> {
           title: const Text('OpenPGP example app'),
         ),
         body: ListView(
+          key: Key('list'),
           children: <Widget>[
             EncryptAndDecrypt(
               title: "Encrypt And Decrypt",
