@@ -1,3 +1,7 @@
+## 0.9.9
+
+- Updated onAttachedToEngine now using getBinaryMessenger
+
 ## 0.9.8
 
 - Added integration tests
