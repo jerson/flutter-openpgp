@@ -1,11 +1,11 @@
 name: openpgp
 description: library for use OpenPGP with support for android and ios, macOS, linux, web and hover
-version: 0.9.8
+version: 0.9.9
 homepage: https://github.com/jerson/flutter-openpgp
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
-  flutter: ">=1.10.0 <2.0.0"
+  sdk: ">=2.7.0 <3.0.0"
+  flutter: ">=1.10.0"
 
 dependencies:
   flutter:

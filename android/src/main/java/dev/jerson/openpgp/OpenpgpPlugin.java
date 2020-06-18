@@ -42,7 +42,7 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
         initialize();
-        channel = new MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "openpgp");
+        channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "openpgp");
         channel.setMethodCallHandler(this);
     }
 

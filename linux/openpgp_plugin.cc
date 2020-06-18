@@ -1,363 +1,68 @@
-#include "include/openpgp_plugin.h"
+#include "include/openpgp/openpgp_plugin.h"
 
-#include <flutter/method_channel.h>
-#include <flutter/plugin_registrar_glfw.h>
-#include <flutter/standard_method_codec.h>
+#include <flutter_linux/flutter_linux.h>
+#include <gtk/gtk.h>
 #include <sys/utsname.h>
-#include "include/openpgp.h"
 
-#include <map>
-#include <memory>
-#include <sstream>
-#include <iostream>
-#include <string.h>
-#include <stdio.h>
-#include <inttypes.h>
+#define OPENPGP_PLUGIN(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST((obj), openpgp_plugin_get_type(), \
+                              OpenpgpPlugin))
 
-namespace {
+struct _OpenpgpPlugin {
+  GObject parent_instance;
+};
 
-    using flutter::EncodableList;
-    using flutter::EncodableMap;
-    using flutter::EncodableValue;
+G_DEFINE_TYPE(OpenpgpPlugin, openpgp_plugin, g_object_get_type())
 
-    const EncodableValue &ValueOrNull(const EncodableMap &map, const char *key) {
-        static EncodableValue null_value;
-        auto it = map.find(EncodableValue(key));
-        if (it == map.end()) {
-            return null_value;
-        }
-        return it->second;
-    }
+// Called when a method call is received from Flutter.
+static void openpgp_plugin_handle_method_call(
+    OpenpgpPlugin* self,
+    FlMethodCall* method_call) {
+  g_autoptr(FlMethodResponse) response = nullptr;
 
-    char *WriteableChar(const std::string &str) {
-        char *writable = new char[str.size() + 1];
-        std::copy(str.begin(), str.end(), writable);
-        writable[str.size()] = '\0';
-        return writable;
-    }
+  const gchar* method = fl_method_call_get_name(method_call);
 
-    KeyOptions GetKeyOptions(const EncodableMap &args) {
-        KeyOptions options = {};
+  if (strcmp(method, "getPlatformVersion") == 0) {
+    struct utsname uname_data = {};
+    uname(&uname_data);
+    g_autofree gchar *version = g_strdup_printf("Linux %s", uname_data.version);
+    g_autoptr(FlValue) result = fl_value_new_string(version);
+    response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
+  } else {
+    response = FL_METHOD_RESPONSE(fl_method_not_implemented_response_new());
+  }
 
-        EncodableValue hash = ValueOrNull(args, "hash");
-        if (hash.IsString()) {
-            options.hash = WriteableChar(hash.StringValue());
-        }
+  fl_method_call_respond(method_call, response, nullptr);
+}
 
-        EncodableValue cipher = ValueOrNull(args, "cipher");
-        if (cipher.IsString()) {
-            options.cipher = WriteableChar(cipher.StringValue());
-        }
+static void openpgp_plugin_dispose(GObject* object) {
+  G_OBJECT_CLASS(openpgp_plugin_parent_class)->dispose(object);
+}
 
-        EncodableValue compression = ValueOrNull(args, "compression");
-        if (compression.IsString()) {
-            options.compression = WriteableChar(compression.StringValue());
-        }
+static void openpgp_plugin_class_init(OpenpgpPluginClass* klass) {
+  G_OBJECT_CLASS(klass)->dispose = openpgp_plugin_dispose;
+}
 
-        EncodableValue compressionLevel = ValueOrNull(args, "compressionLevel");
-        if (compressionLevel.IsInt()) {
-            options.compressionLevel = WriteableChar(std::to_string(compressionLevel.IntValue()));
-        }
+static void openpgp_plugin_init(OpenpgpPlugin* self) {}
 
-        EncodableValue rsaBits = ValueOrNull(args, "rsaBits");
-        if (rsaBits.IsInt()) {
-            options.rsaBits = WriteableChar(std::to_string(rsaBits.IntValue()));
-        }
+static void method_call_cb(FlMethodChannel* channel, FlMethodCall* method_call,
+                           gpointer user_data) {
+  OpenpgpPlugin* plugin = OPENPGP_PLUGIN(user_data);
+  openpgp_plugin_handle_method_call(plugin, method_call);
+}
 
-        return options;
-    }
+void openpgp_plugin_register_with_registrar(FlPluginRegistrar* registrar) {
+  OpenpgpPlugin* plugin = OPENPGP_PLUGIN(
+      g_object_new(openpgp_plugin_get_type(), nullptr));
 
-    Options GetOptions(const EncodableMap &args) {
-        Options options = {};
+  g_autoptr(FlStandardMethodCodec) codec = fl_standard_method_codec_new();
+  g_autoptr(FlMethodChannel) channel =
+      fl_method_channel_new(fl_plugin_registrar_get_messenger(registrar),
+                            "openpgp",
+                            FL_METHOD_CODEC(codec));
+  fl_method_channel_set_method_call_handler(channel, method_call_cb,
+                                            g_object_ref(plugin),
+                                            g_object_unref);
 
-        EncodableValue name = ValueOrNull(args, "name");
-        if (name.IsString()) {
-            options.name = WriteableChar(name.StringValue());
-        }
-
-        EncodableValue comment = ValueOrNull(args, "comment");
-        if (comment.IsString()) {
-            options.comment = WriteableChar(comment.StringValue());
-        }
-
-        EncodableValue email = ValueOrNull(args, "email");
-        if (email.IsString()) {
-            options.email = WriteableChar(email.StringValue());
-        }
-
-        EncodableValue passphrase = ValueOrNull(args, "passphrase");
-        if (passphrase.IsString()) {
-            options.passphrase = WriteableChar(passphrase.StringValue());
-        }
-
-        EncodableValue keyOptions = ValueOrNull(args, "keyOptions");
-        if (keyOptions.IsMap()) {
-            options.keyOptions = GetKeyOptions(keyOptions.MapValue());
-        }
-
-        return options;
-    }
-
-    void encrypt(
-            char *message,
-            char *publicKey,
-            std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
-
-        try {
-            char *output = Encrypt(
-                    message,
-                    publicKey);
-            if (output == NULL) {
-                result->Error("error", "null pointer");
-                return;
-            }
-            flutter::EncodableValue response(output);
-            result->Success(&response);
-        }
-        catch (const std::exception &e) {
-            result->Error("error", e.what());
-        }
-    }
-
-    void decrypt(
-            char *message,
-            char *privateKey,
-            char *passphrase,
-            std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
-
-        try {
-            char *output = Decrypt(
-                    message,
-                    privateKey,
-                    passphrase);
-            if (output == NULL) {
-                result->Error("error", "null pointer");
-                return;
-            }
-            flutter::EncodableValue response(output);
-            result->Success(&response);
-        }
-        catch (const std::exception &e) {
-            result->Error("error", e.what());
-        }
-    }
-
-    void encryptSymmetric(
-            char *message,
-            char *passphrase,
-            KeyOptions options,
-            std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
-
-        try {
-            char *output = EncryptSymmetric(
-                    message,
-                    passphrase,
-                    options);
-            if (output == NULL) {
-                result->Error("error", "null pointer");
-                return;
-            }
-            flutter::EncodableValue response(output);
-            result->Success(&response);
-        }
-        catch (const std::exception &e) {
-            result->Error("error", e.what());
-        }
-    }
-
-    void decryptSymmetric(
-            char *message,
-            char *passphrase,
-            KeyOptions options,
-            std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
-
-        try {
-            char *output = DecryptSymmetric(
-                    message,
-                    passphrase,
-                    options);
-            if (output == NULL) {
-                result->Error("error", "null pointer");
-                return;
-            }
-            flutter::EncodableValue response(output);
-            result->Success(&response);
-        }
-        catch (const std::exception &e) {
-            result->Error("error", e.what());
-        }
-    }
-
-    void sign(
-            char *message,
-            char *publicKey,
-            char *privateKey,
-            char *passphrase,
-            std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
-
-        try {
-            char *output = Sign(
-                    message,
-                    publicKey,
-                    privateKey,
-                    passphrase);
-            if (output == NULL) {
-                result->Error("error", "null pointer");
-                return;
-            }
-            flutter::EncodableValue response(output);
-            result->Success(&response);
-        }
-        catch (const std::exception &e) {
-            result->Error("error", e.what());
-        }
-    }
-
-    void verify(
-            char *signature,
-            char *message,
-            char *publicKey,
-            std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
-
-        try {
-            char *output = Verify(
-                    signature,
-                    message,
-                    publicKey);
-            if (output == NULL) {
-                result->Error("error", "null pointer");
-                return;
-            }
-            flutter::EncodableValue response(strcmp(output, "1") == 0);
-            result->Success(&response);
-        }
-        catch (const std::exception &e) {
-            result->Error("error", e.what());
-        }
-    }
-
-    void generate(
-            Options options,
-            std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
-
-        try {
-            KeyPair output = Generate(options);
-            // printf("privateKey: %s\n", output.privateKey);
-            // printf("publicKey: %s\n", output.publicKey);
-
-            flutter::EncodableValue response(flutter::EncodableMap{
-                    {flutter::EncodableValue("publicKey"),  flutter::EncodableValue(output.publicKey)},
-                    {flutter::EncodableValue("privateKey"), flutter::EncodableValue(output.privateKey)}});
-
-            result->Success(&response);
-        }
-        catch (const std::exception &e) {
-            result->Error("error", e.what());
-        }
-    }
-
-    class OpenpgpPlugin : public flutter::Plugin {
-    public:
-        static void RegisterWithRegistrar(flutter::PluginRegistrarGlfw *registrar);
-
-        OpenpgpPlugin();
-
-        virtual ~OpenpgpPlugin();
-
-    private:
-        // Called when a method is called on this plugin's channel from Dart.
-        void HandleMethodCall(
-                const flutter::MethodCall<flutter::EncodableValue> &method_call,
-                std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result);
-    };
-
-// static
-    void OpenpgpPlugin::RegisterWithRegistrar(
-            flutter::PluginRegistrarGlfw *registrar) {
-        auto channel =
-                std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
-                        registrar->messenger(), "openpgp",
-                        &flutter::StandardMethodCodec::GetInstance());
-        auto plugin = std::make_unique<OpenpgpPlugin>();
-
-        channel->SetMethodCallHandler(
-                [plugin_pointer = plugin.get()](const auto &call, auto result) {
-                    plugin_pointer->HandleMethodCall(call, std::move(result));
-                });
-
-        registrar->AddPlugin(std::move(plugin));
-    }
-
-    OpenpgpPlugin::OpenpgpPlugin() {}
-
-    OpenpgpPlugin::~OpenpgpPlugin() {}
-
-    void OpenpgpPlugin::HandleMethodCall(
-            const flutter::MethodCall<flutter::EncodableValue> &method_call,
-            std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
-        if (method_call.method_name().compare("encrypt") == 0) {
-            const EncodableMap &args = method_call.arguments()->MapValue();
-            encrypt(
-                    WriteableChar(ValueOrNull(args, "message").StringValue()),
-                    WriteableChar(ValueOrNull(args, "publicKey").StringValue()),
-                    move(result));
-        } else if (method_call.method_name().compare("decrypt") == 0) {
-            const EncodableMap &args = method_call.arguments()->MapValue();
-            decrypt(
-                    WriteableChar(ValueOrNull(args, "message").StringValue()),
-                    WriteableChar(ValueOrNull(args, "privateKey").StringValue()),
-                    WriteableChar(ValueOrNull(args, "passphrase").StringValue()),
-                    move(result));
-        } else if (method_call.method_name().compare("encryptSymmetric") == 0) {
-            const EncodableMap &args = method_call.arguments()->MapValue();
-            encryptSymmetric(
-                    WriteableChar(ValueOrNull(args, "message").StringValue()),
-                    WriteableChar(ValueOrNull(args, "passphrase").StringValue()),
-                    GetKeyOptions(ValueOrNull(args, "options").MapValue()),
-                    move(result));
-        } else if (method_call.method_name().compare("decryptSymmetric") == 0) {
-            const EncodableMap &args = method_call.arguments()->MapValue();
-            decryptSymmetric(
-                    WriteableChar(ValueOrNull(args, "message").StringValue()),
-                    WriteableChar(ValueOrNull(args, "passphrase").StringValue()),
-                    GetKeyOptions(ValueOrNull(args, "options").MapValue()),
-                    move(result));
-        } else if (method_call.method_name().compare("sign") == 0) {
-            const EncodableMap &args = method_call.arguments()->MapValue();
-            sign(
-                    WriteableChar(ValueOrNull(args, "message").StringValue()),
-                    WriteableChar(ValueOrNull(args, "publicKey").StringValue()),
-                    WriteableChar(ValueOrNull(args, "privateKey").StringValue()),
-                    WriteableChar(ValueOrNull(args, "passphrase").StringValue()),
-                    move(result));
-        } else if (method_call.method_name().compare("verify") == 0) {
-            const EncodableMap &args = method_call.arguments()->MapValue();
-            verify(
-                    WriteableChar(ValueOrNull(args, "signature").StringValue()),
-                    WriteableChar(ValueOrNull(args, "message").StringValue()),
-                    WriteableChar(ValueOrNull(args, "publicKey").StringValue()),
-                    move(result));
-        } else if (method_call.method_name().compare("generate") == 0) {
-            const EncodableMap &args = method_call.arguments()->MapValue();
-            generate(
-                    GetOptions(ValueOrNull(args, "options").MapValue()),
-                    move(result));
-        } else {
-            result->NotImplemented();
-        }
-    }
-
-} // namespace
-
-void OpenpgpPluginRegisterWithRegistrar(
-        FlutterDesktopPluginRegistrarRef registrar) {
-    // The plugin registrar wrappers owns the plugins, registered callbacks, etc.,
-    // so must remain valid for the life of the application.
-    static auto *plugin_registrars =
-            new std::map<FlutterDesktopPluginRegistrarRef,
-                    std::unique_ptr<flutter::PluginRegistrarGlfw>>;
-    auto insert_result = plugin_registrars->emplace(
-            registrar, std::make_unique<flutter::PluginRegistrarGlfw>(registrar));
-
-    OpenpgpPlugin::RegisterWithRegistrar(insert_result.first->second.get());
+  g_object_unref(plugin);
 }
