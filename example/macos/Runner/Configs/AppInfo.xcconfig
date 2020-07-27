@@ -8,7 +8,7 @@
 PRODUCT_NAME = openpgp_example
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = dev.jerson.openpgp
+PRODUCT_BUNDLE_IDENTIFIER = dev.jerson.openpgpExample
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2020 dev.jerson. All rights reserved.
