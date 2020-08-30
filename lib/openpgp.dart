@@ -2,13 +2,14 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
+import 'package:openpgp/binding.dart';
 import 'package:openpgp/key_options.dart';
 import 'package:openpgp/key_pair.dart';
 import 'package:openpgp/options.dart';
+import 'package:openpgp/shared.dart';
 
 class OpenPGP {
   static const MethodChannel _channel = const MethodChannel('openpgp');
-
   static Future<String> decrypt(
       String message, String privateKey, String passphrase) async {
     return await _channel.invokeMethod('decrypt', {
@@ -28,10 +29,11 @@ class OpenPGP {
   }
 
   static Future<String> encrypt(String message, String publicKey) async {
-    return await _channel.invokeMethod('encrypt', {
-      "message": message,
-      "publicKey": publicKey,
-    });
+    return Binding().encrypt(message, publicKey);
+    // return await _channel.invokeMethod('encrypt', {
+    //   "message": message,
+    //   "publicKey": publicKey,
+    // });
   }
 
   static Future<Uint8List> encryptBytes(
@@ -129,14 +131,15 @@ class OpenPGP {
   }
 
   static Future<KeyPair> generate({Options options}) async {
-    var result = await _channel.invokeMethod('generate', {
-      "options": _getOptionsMap(options),
-    });
-
-    return KeyPair(
-      privateKey: result["privateKey"],
-      publicKey: result["publicKey"],
-    );
+    return Binding().generate(options);
+    // var result = await _channel.invokeMethod('generate', {
+    //   "options": _getOptionsMap(options),
+    // });
+    //
+    // return KeyPair(
+    //   privateKey: result["privateKey"],
+    //   publicKey: result["publicKey"],
+    // );
   }
 
   static _getOptionsMap(Options options) {
@@ -170,16 +173,16 @@ class OpenPGP {
     }
 
     if (options.cipher != null) {
-      result["cipher"] = _toStringCypher(options.cipher);
+      result["cipher"] = toStringCypher(options.cipher);
     }
     if (options.compression != null) {
-      result["compression"] = _toStringCompression(options.compression);
+      result["compression"] = toStringCompression(options.compression);
     }
     if (options.compressionLevel != null) {
       result["compressionLevel"] = options.compressionLevel;
     }
     if (options.hash != null) {
-      result["hash"] = _toStringHash(options.hash);
+      result["hash"] = toStringHash(options.hash);
     }
     if (options.rsaBits != null) {
       result["rsaBits"] = options.rsaBits;
@@ -187,24 +190,4 @@ class OpenPGP {
     return result;
   }
 
-  static String _toStringCypher(Cypher input) {
-    if (input == null) {
-      input = Cypher.aes128;
-    }
-    return input.toString().replaceFirst("Cypher.", "");
-  }
-
-  static String _toStringCompression(Compression input) {
-    if (input == null) {
-      input = Compression.none;
-    }
-    return input.toString().replaceFirst("Compression.", "");
-  }
-
-  static String _toStringHash(Hash input) {
-    if (input == null) {
-      input = Hash.sha256;
-    }
-    return input.toString().replaceFirst("Hash.", "");
-  }
 }
