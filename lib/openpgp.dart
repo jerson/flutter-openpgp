@@ -1,15 +1,19 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:openpgp/binding.dart';
-import 'package:openpgp/key_options.dart';
-import 'package:openpgp/key_pair.dart';
-import 'package:openpgp/options.dart';
+import 'package:openpgp/models.dart';
 import 'package:openpgp/shared.dart';
 
 class OpenPGP {
   static const MethodChannel _channel = const MethodChannel('openpgp');
+  static bool _bindingSupported = Platform.isMacOS ||
+      Platform.isWindows ||
+      Platform.isLinux ||
+      Platform.isFuchsia;
+
   static Future<String> decrypt(
       String message, String privateKey, String passphrase) async {
     return await _channel.invokeMethod('decrypt', {
@@ -29,11 +33,13 @@ class OpenPGP {
   }
 
   static Future<String> encrypt(String message, String publicKey) async {
-    return Binding().encrypt(message, publicKey);
-    // return await _channel.invokeMethod('encrypt', {
-    //   "message": message,
-    //   "publicKey": publicKey,
-    // });
+    if (_bindingSupported) {
+      return Binding().encrypt(message, publicKey);
+    }
+    return await _channel.invokeMethod('encrypt', {
+      "message": message,
+      "publicKey": publicKey,
+    });
   }
 
   static Future<Uint8List> encryptBytes(
@@ -131,15 +137,17 @@ class OpenPGP {
   }
 
   static Future<KeyPair> generate({Options options}) async {
-    return Binding().generate(options);
-    // var result = await _channel.invokeMethod('generate', {
-    //   "options": _getOptionsMap(options),
-    // });
-    //
-    // return KeyPair(
-    //   privateKey: result["privateKey"],
-    //   publicKey: result["publicKey"],
-    // );
+    if (_bindingSupported) {
+      return Binding().generate(options);
+    }
+    var result = await _channel.invokeMethod('generate', {
+      "options": _getOptionsMap(options),
+    });
+
+    return KeyPair(
+      privateKey: result["privateKey"],
+      publicKey: result["publicKey"],
+    );
   }
 
   static _getOptionsMap(Options options) {
@@ -189,5 +197,4 @@ class OpenPGP {
     }
     return result;
   }
-
 }

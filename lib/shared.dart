@@ -1,4 +1,4 @@
-import 'package:openpgp/key_options.dart';
+import 'package:openpgp/models.dart';
 
 String toStringCypher(Cypher input) {
   if (input == null) {

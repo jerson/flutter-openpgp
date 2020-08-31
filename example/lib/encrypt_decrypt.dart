@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:openpgp/key_pair.dart';
+import 'package:openpgp/models.dart';
 import 'package:openpgp/openpgp.dart';
 import 'package:openpgp_example/main.dart';
 import 'package:openpgp_example/shared/button_widget.dart';
@@ -40,13 +40,17 @@ class _EncryptAndDecryptState extends State<EncryptAndDecrypt> {
               key: Key("encrypt"),
               result: _encrypted,
               onPressed: (controller) async {
-                var encrypted = await OpenPGP.encrypt(
-                  controller.text,
-                  widget.keyPair.publicKey,
-                );
-                setState(() {
-                  _encrypted = encrypted;
-                });
+               try{
+                 var encrypted = await OpenPGP.encrypt(
+                   controller.text,
+                   'D',
+                 );
+                 setState(() {
+                   _encrypted = encrypted;
+                 });
+               }catch(e){
+                 print(e);
+               }
               },
             ),
             ButtonWidget(

@@ -14,7 +14,7 @@ String _platformPath(String name, {String path = ''}) {
   }
   if (Platform.isLinux || Platform.isAndroid) {
     // return path + name + "_linux_amd64.so";
-    return '/home/gerson/Proyectos/flutter/flutter-openpgp/assets/binding/openpgp.so';
+    return '/home/gerson/Proyectos/go/openpgp-mobile/output/binding/openpgp.so';
   }
   if (Platform.isWindows) {
     return path + name + ".dll";

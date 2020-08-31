@@ -1,88 +1,13 @@
-import 'dart:typed_data';
-
-import 'package:flutter/cupertino.dart';
+import 'package:openpgp/binding/functions.dart';
+import 'package:openpgp/binding/key_options.dart';
+import 'package:openpgp/binding/key_pair.dart';
+import 'package:openpgp/binding/options.dart';
 import 'package:openpgp/ffi.dart';
-import 'package:openpgp/key_options.dart';
-import 'package:openpgp/key_pair.dart';
-import 'package:openpgp/options.dart';
+import 'package:openpgp/models.dart';
 import 'dart:ffi' as ffi;
-import 'dart:io' show Platform;
 
 import 'package:ffi/ffi.dart';
 import 'package:openpgp/shared.dart';
-
-typedef encrypt_func = ffi.Pointer<Utf8> Function(
-  ffi.Pointer<Utf8>,
-  ffi.Pointer<Utf8>,
-);
-typedef Encrypt = ffi.Pointer<Utf8> Function(
-  ffi.Pointer<Utf8>,
-  ffi.Pointer<Utf8>,
-);
-
-typedef generate_func = ffi.Pointer<ffiKeyPair> Function(
-  ffi.Pointer<ffiKeyOptions> options,
-);
-typedef Generate = ffi.Pointer<ffiKeyPair> Function(
-  ffi.Pointer<ffiKeyOptions> options,
-);
-
-class ffiKeyPair extends ffi.Struct {
-  ffi.Pointer<Utf8> publicKey;
-  ffi.Pointer<Utf8> privateKey;
-
-  factory ffiKeyPair.allocate(
-    ffi.Pointer<Utf8> publicKey,
-    ffi.Pointer<Utf8> privateKey,
-  ) =>
-      allocate<ffiKeyPair>().ref
-        ..publicKey
-        ..privateKey;
-}
-
-class ffiKeyOptions extends ffi.Struct {
-  ffi.Pointer<Utf8> hash;
-  ffi.Pointer<Utf8> cipher;
-  ffi.Pointer<Utf8> compression;
-  ffi.Pointer<Utf8> compressionLevel;
-  ffi.Pointer<Utf8> rsaBits;
-
-  factory ffiKeyOptions.allocate(
-    ffi.Pointer<Utf8> hash,
-    ffi.Pointer<Utf8> cipher,
-    ffi.Pointer<Utf8> compression,
-    ffi.Pointer<Utf8> compressionLevel,
-    ffi.Pointer<Utf8> rsaBits,
-  ) =>
-      allocate<ffiKeyOptions>().ref
-        ..hash
-        ..cipher
-        ..compression
-        ..compressionLevel
-        ..rsaBits;
-}
-
-class ffiOptions extends ffi.Struct {
-  ffi.Pointer<Utf8> name;
-  ffi.Pointer<Utf8> comment;
-  ffi.Pointer<Utf8> email;
-  ffi.Pointer<Utf8> passphrase;
-  ffi.Pointer<ffiKeyOptions> keyOptions;
-
-  factory ffiOptions.allocate(
-    ffi.Pointer<Utf8> name,
-    ffi.Pointer<Utf8> comment,
-    ffi.Pointer<Utf8> email,
-    ffi.Pointer<Utf8> passphrase,
-    ffiKeyOptions keyOptions,
-  ) =>
-      allocate<ffiOptions>().ref
-        ..name
-        ..comment
-        ..email
-        ..passphrase
-        ..keyOptions;
-}
 
 class Binding {
   static final Binding _singleton = Binding._internal();
@@ -101,7 +26,7 @@ class Binding {
         .lookup<ffi.NativeFunction<encrypt_func>>('Encrypt')
         .asFunction<Encrypt>();
 
-    return Utf8.fromUtf8(callable(toUtf8(message), toUtf8(publicKey)));
+    return fromUtf8(callable(toUtf8(message), toUtf8(publicKey)));
   }
 
   KeyPair generate(Options originalOptions) {
@@ -110,12 +35,32 @@ class Binding {
         .asFunction<Generate>();
 
     var options = _getOptions(originalOptions);
+    var result = callable(
+      options.addressOf.cast(),
+      ffiGenerate_return.allocateEmpty().addressOf,
+    ).cast<ffiGenerate_return>().ref;
 
-    var result = callable(options.addressOf.cast()).ref;
-    return KeyPair(
-      privateKey: Utf8.fromUtf8(result.privateKey),
-      publicKey: Utf8.fromUtf8(result.publicKey),
+    handleError(result.error);
+
+    var keyPair = result.keyPair.ref;
+    var output = KeyPair(
+      privateKey: fromUtf8(keyPair.privateKey),
+      publicKey: fromUtf8(keyPair.publicKey),
     );
+
+    free(result.addressOf);
+    return output;
+  }
+
+  void handleError(ffi.Pointer<Utf8> error) {
+    print(error);
+    print(error.toString());
+    print(error.address);
+    print(error.address.bitLength);
+    if (error.address != ffi.nullptr.address) {
+      print(fromUtf8(error));
+      throw fromUtf8(error);
+    }
   }
 
   ffiOptions _getOptions(Options originalOptions) {
@@ -156,7 +101,11 @@ class Binding {
     );
   }
 
+  ffi.Pointer<Utf8> toUtf8(String text) {
+    return text == null ? Utf8.toUtf8("") : Utf8.toUtf8(text);
+  }
 
-  ffi.Pointer<Utf8> toUtf8(String text) =>
-      text == null ? Utf8.toUtf8("") : Utf8.toUtf8(text);
+  String fromUtf8(ffi.Pointer<Utf8> text) {
+    return text == null ? "" : Utf8.fromUtf8(text);
+  }
 }

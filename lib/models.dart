@@ -1,3 +1,5 @@
+
+
 enum Cypher {
   aes128,
   aes192,
@@ -18,6 +20,32 @@ enum Hash {
   sha224,
   sha384,
   sha512,
+}
+
+class Options {
+  final String comment;
+  final String email;
+  final String name;
+  final String passphrase;
+  final KeyOptions keyOptions;
+
+  Options({
+    this.comment,
+    this.email,
+    this.name,
+    this.passphrase,
+    this.keyOptions,
+  });
+}
+
+class KeyPair {
+  final String publicKey;
+  final String privateKey;
+
+  KeyPair({
+    this.publicKey,
+    this.privateKey,
+  });
 }
 
 class KeyOptions {

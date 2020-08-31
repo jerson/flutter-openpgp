@@ -22,20 +22,8 @@ typedef struct { const char *p; ptrdiff_t n; } _GoString_;
 #line 3 "main.go"
 #include <stdint.h>
 typedef struct { char *publicKey; char *privateKey; } KeyPair;
-typedef struct {
-char *hash;
-char *cipher;
- char *compression;
-  char *compressionLevel;
-  char *rsaBits;
-   } KeyOptions;
-typedef struct {
-char *name;
-char *comment;
- char *email;
- char *passphrase;
- KeyOptions keyOptions;
- } Options;
+typedef struct { char *hash; char *cipher; char *compression; char *compressionLevel; char *rsaBits; } KeyOptions;
+typedef struct { char *name; char *comment; char *email; char *passphrase; KeyOptions *keyOptions; } Options;
 
 #line 1 "cgo-generated-wrapper"
 
@@ -114,23 +102,23 @@ extern struct SignBytes_return SignBytes(void* message, int messageSize, char* p
 extern char* SignBytesToString(void* message, int messageSize, char* publicKey, char* privateKey, char* passphrase);
 extern char* Verify(char* signature, char* message, char* publicKey);
 extern char* VerifyBytes(char* signature, void* message, int messageSize, char* publicKey);
-extern char* EncryptSymmetric(char* message, char* passphrase, KeyOptions options);
+extern char* EncryptSymmetric(char* message, char* passphrase, KeyOptions* options);
 
 /* Return type for EncryptSymmetricBytes */
 struct EncryptSymmetricBytes_return {
 	void* r0;
 	int r1;
 };
-extern struct EncryptSymmetricBytes_return EncryptSymmetricBytes(void* message, int messageSize, char* passphrase, KeyOptions options);
-extern char* DecryptSymmetric(char* message, char* passphrase, KeyOptions options);
+extern struct EncryptSymmetricBytes_return EncryptSymmetricBytes(void* message, int messageSize, char* passphrase, KeyOptions* options);
+extern char* DecryptSymmetric(char* message, char* passphrase, KeyOptions* options);
 
 /* Return type for DecryptSymmetricBytes */
 struct DecryptSymmetricBytes_return {
 	void* r0;
 	int r1;
 };
-extern struct DecryptSymmetricBytes_return DecryptSymmetricBytes(void* message, int messageSize, char* passphrase, KeyOptions options);
-extern KeyPair Generate(Options options);
+extern struct DecryptSymmetricBytes_return DecryptSymmetricBytes(void* message, int messageSize, char* passphrase, KeyOptions* options);
+extern void* Generate(Options* options);
 
 #ifdef __cplusplus
 }
