@@ -18,11 +18,7 @@ class ffiKeyPair extends ffi.Struct {
         ..privateKey=privateKey;
 }
 
-class ffiGenerate_return extends ffi.Struct {
+class ffiKeyPairReturn extends ffi.Struct {
   ffi.Pointer<ffiKeyPair> keyPair;
   ffi.Pointer<Utf8> error;
-
-  factory ffiGenerate_return.allocateEmpty() => allocate<ffiGenerate_return>().ref
-  ..error = null
-  ..keyPair = null;
 }

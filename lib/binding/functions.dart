@@ -12,11 +12,9 @@ typedef Encrypt = ffi.Pointer<Utf8> Function(
   ffi.Pointer<Utf8>,
 );
 
-typedef generate_func = ffi.Pointer<ffiGenerate_return> Function(
+typedef generate_func = ffi.Pointer<ffiKeyPairReturn> Function(
   ffi.Pointer<ffiKeyOptions>,
-  ffi.Pointer<ffiGenerate_return>,
 );
-typedef Generate = ffi.Pointer<ffiGenerate_return> Function(
+typedef Generate = ffi.Pointer<ffiKeyPairReturn> Function(
   ffi.Pointer<ffiKeyOptions>,
-  ffi.Pointer<ffiGenerate_return>,
 );

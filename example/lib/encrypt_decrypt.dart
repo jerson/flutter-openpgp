@@ -43,7 +43,7 @@ class _EncryptAndDecryptState extends State<EncryptAndDecrypt> {
                try{
                  var encrypted = await OpenPGP.encrypt(
                    controller.text,
-                   'D',
+                   widget.keyPair.publicKey,
                  );
                  setState(() {
                    _encrypted = encrypted;

@@ -37,10 +37,9 @@ class Binding {
     var options = _getOptions(originalOptions);
     var result = callable(
       options.addressOf.cast(),
-      ffiGenerate_return.allocateEmpty().addressOf,
-    ).cast<ffiGenerate_return>().ref;
+    ).cast<ffiKeyPairReturn>().ref;
 
-    handleError(result.error);
+    handleError(result.error, result.addressOf);
 
     var keyPair = result.keyPair.ref;
     var output = KeyPair(
@@ -52,14 +51,15 @@ class Binding {
     return output;
   }
 
-  void handleError(ffi.Pointer<Utf8> error) {
+  void handleError(ffi.Pointer<Utf8> error, ffi.Pointer pointer) {
     print(error);
     print(error.toString());
     print(error.address);
     print(error.address.bitLength);
     if (error.address != ffi.nullptr.address) {
-      print(fromUtf8(error));
-      throw fromUtf8(error);
+      var message = fromUtf8(error);
+      free(pointer);
+      throw message;
     }
   }
 
