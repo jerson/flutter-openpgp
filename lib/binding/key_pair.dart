@@ -17,8 +17,3 @@ class ffiKeyPair extends ffi.Struct {
         ..publicKey=publicKey
         ..privateKey=privateKey;
 }
-
-class ffiKeyPairReturn extends ffi.Struct {
-  ffi.Pointer<ffiKeyPair> keyPair;
-  ffi.Pointer<Utf8> error;
-}

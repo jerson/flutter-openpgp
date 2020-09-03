@@ -2,6 +2,7 @@ import 'package:openpgp/binding/functions.dart';
 import 'package:openpgp/binding/key_options.dart';
 import 'package:openpgp/binding/key_pair.dart';
 import 'package:openpgp/binding/options.dart';
+import 'package:openpgp/binding/return.dart';
 import 'package:openpgp/ffi.dart';
 import 'package:openpgp/models.dart';
 import 'dart:ffi' as ffi;
@@ -26,7 +27,16 @@ class Binding {
         .lookup<ffi.NativeFunction<encrypt_func>>('Encrypt')
         .asFunction<Encrypt>();
 
-    return fromUtf8(callable(toUtf8(message), toUtf8(publicKey)));
+    var result = callable(
+        toUtf8(message), toUtf8(publicKey)
+    ).cast<ffiStringReturn>().ref;
+
+    handleError(result.error, result.addressOf);
+
+    var output = fromUtf8(result.result);
+    free(result.addressOf);
+    return output;
+
   }
 
   KeyPair generate(Options originalOptions) {
