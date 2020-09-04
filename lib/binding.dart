@@ -1,6 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:openpgp/binding/functions.dart';
 import 'package:openpgp/binding/key_options.dart';
-import 'package:openpgp/binding/key_pair.dart';
 import 'package:openpgp/binding/options.dart';
 import 'package:openpgp/binding/return.dart';
 import 'package:openpgp/ffi.dart';
@@ -39,6 +40,32 @@ class Binding {
     return output;
   }
 
+  Uint8List decryptBytes(
+      Uint8List message, String privateKey, String passphrase) {
+    final callable = _library
+        .lookup<ffi.NativeFunction<decryptBytes_func>>('DecryptBytes')
+        .asFunction<DecryptBytes>();
+
+    final pointer = allocate<ffi.Uint8>(count: message.length);
+
+    // https://github.com/dart-lang/ffi/issues/27
+    for( var i = 0 ; i <  message.length; i++) {
+      pointer[i] = message[i];
+    }
+    final voidStar = pointer.cast<ffi.Void>();
+
+    var result =
+        callable(voidStar, message.length, toUtf8(privateKey), toUtf8(passphrase))
+            .cast<ffiSliceReturn>()
+            .ref;
+
+    handleError(result.error, result.addressOf);
+
+    var output = result.message.cast<ffi.Uint8>().asTypedList(result.size);
+    free(result.addressOf);
+    return output;
+  }
+
   String encrypt(String message, String publicKey) {
     final callable = _library
         .lookup<ffi.NativeFunction<encrypt_func>>('Encrypt')
@@ -51,6 +78,32 @@ class Binding {
     handleError(result.error, result.addressOf);
 
     var output = fromUtf8(result.result);
+    free(result.addressOf);
+    return output;
+  }
+
+  Uint8List encryptBytes(
+      Uint8List message, String publicKey) {
+    final callable = _library
+        .lookup<ffi.NativeFunction<encryptBytes_func>>('EncryptBytes')
+        .asFunction<EncryptBytes>();
+
+    final pointer = allocate<ffi.Uint8>(count: message.length);
+
+    // https://github.com/dart-lang/ffi/issues/27
+    for( var i = 0 ; i <  message.length; i++) {
+      pointer[i] = message[i];
+    }
+    final voidStar = pointer.cast<ffi.Void>();
+
+    var result =
+        callable(voidStar, message.length, toUtf8(publicKey))
+            .cast<ffiSliceReturn>()
+            .ref;
+
+    handleError(result.error, result.addressOf);
+
+    var output = result.message.cast<ffi.Uint8>().asTypedList(result.size);
     free(result.addressOf);
     return output;
   }

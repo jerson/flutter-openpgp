@@ -1,9 +1,32 @@
 import 'dart:ffi' as ffi;
+import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
 import 'package:openpgp/binding/key_options.dart';
 import 'package:openpgp/binding/return.dart';
 
-import 'options.dart';
+typedef decrypt_func = ffi.Pointer<ffiStringReturn> Function(
+  ffi.Pointer<Utf8>,
+  ffi.Pointer<Utf8>,
+  ffi.Pointer<Utf8>,
+);
+typedef Decrypt = ffi.Pointer<ffiStringReturn> Function(
+  ffi.Pointer<Utf8>,
+  ffi.Pointer<Utf8>,
+  ffi.Pointer<Utf8>,
+);
+
+typedef decryptBytes_func = ffi.Pointer<ffiSliceReturn> Function(
+  ffi.Pointer<ffi.Void>,
+  ffi.Int32,
+  ffi.Pointer<Utf8>,
+  ffi.Pointer<Utf8>,
+);
+typedef DecryptBytes = ffi.Pointer<ffiSliceReturn> Function(
+  ffi.Pointer<ffi.Void>,
+  int,
+  ffi.Pointer<Utf8>,
+  ffi.Pointer<Utf8>,
+);
 
 typedef encrypt_func = ffi.Pointer<ffiStringReturn> Function(
   ffi.Pointer<Utf8>,
@@ -14,14 +37,14 @@ typedef Encrypt = ffi.Pointer<ffiStringReturn> Function(
   ffi.Pointer<Utf8>,
 );
 
-typedef decrypt_func = ffi.Pointer<ffiStringReturn> Function(
-  ffi.Pointer<Utf8>,
-  ffi.Pointer<Utf8>,
+typedef encryptBytes_func = ffi.Pointer<ffiSliceReturn> Function(
+  ffi.Pointer<ffi.Void>,
+  ffi.Int32,
   ffi.Pointer<Utf8>,
 );
-typedef Decrypt = ffi.Pointer<ffiStringReturn> Function(
-  ffi.Pointer<Utf8>,
-  ffi.Pointer<Utf8>,
+typedef EncryptBytes = ffi.Pointer<ffiSliceReturn> Function(
+  ffi.Pointer<ffi.Void>,
+  int,
   ffi.Pointer<Utf8>,
 );
 

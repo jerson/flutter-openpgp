@@ -28,6 +28,9 @@ class OpenPGP {
 
   static Future<Uint8List> decryptBytes(
       Uint8List message, String privateKey, String passphrase) async {
+    if (_bindingSupported) {
+      return Binding().decryptBytes(message, privateKey, passphrase);
+    }
     return await _channel.invokeMethod('decryptBytes', {
       "message": message,
       "privateKey": privateKey,
@@ -47,6 +50,9 @@ class OpenPGP {
 
   static Future<Uint8List> encryptBytes(
       Uint8List message, String publicKey) async {
+    if (_bindingSupported) {
+      return Binding().encryptBytes(message, publicKey);
+    }
     return await _channel.invokeMethod('encryptBytes', {
       "message": message,
       "publicKey": publicKey,
