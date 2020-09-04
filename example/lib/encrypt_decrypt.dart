@@ -40,17 +40,17 @@ class _EncryptAndDecryptState extends State<EncryptAndDecrypt> {
               key: Key("encrypt"),
               result: _encrypted,
               onPressed: (controller) async {
-               try{
-                 var encrypted = await OpenPGP.encrypt(
-                   controller.text,
-                   widget.keyPair.publicKey,
-                 );
-                 setState(() {
-                   _encrypted = encrypted;
-                 });
-               }catch(e){
-                 print(e);
-               }
+                try {
+                  var encrypted = await OpenPGP.encrypt(
+                    controller.text,
+                    widget.keyPair.publicKey,
+                  );
+                  setState(() {
+                    _encrypted = encrypted;
+                  });
+                } catch (e) {
+                  print(e);
+                }
               },
             ),
             ButtonWidget(

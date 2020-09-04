@@ -6,6 +6,7 @@ class ffiKeyPairReturn extends ffi.Struct {
   ffi.Pointer<ffiKeyPair> keyPair;
   ffi.Pointer<Utf8> error;
 }
+
 class ffiSliceReturn extends ffi.Struct {
   ffi.Pointer<ffi.Void> message;
 
@@ -14,6 +15,7 @@ class ffiSliceReturn extends ffi.Struct {
 
   ffi.Pointer<Utf8> error;
 }
+
 class ffiStringReturn extends ffi.Struct {
   ffi.Pointer<Utf8> result;
   ffi.Pointer<Utf8> error;

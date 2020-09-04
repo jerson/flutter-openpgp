@@ -16,6 +16,9 @@ class OpenPGP {
 
   static Future<String> decrypt(
       String message, String privateKey, String passphrase) async {
+    if (_bindingSupported) {
+      return Binding().decrypt(message, privateKey, passphrase);
+    }
     return await _channel.invokeMethod('decrypt', {
       "message": message,
       "privateKey": privateKey,
@@ -52,6 +55,9 @@ class OpenPGP {
 
   static Future<String> sign(String message, String publicKey,
       String privateKey, String passphrase) async {
+    if (_bindingSupported) {
+      return Binding().sign(message, publicKey, privateKey, passphrase);
+    }
     return await _channel.invokeMethod('sign', {
       "message": message,
       "publicKey": publicKey,
@@ -82,6 +88,9 @@ class OpenPGP {
 
   static Future<bool> verify(
       String signature, String message, String publicKey) async {
+    if (_bindingSupported) {
+      return Binding().verify(signature, message, publicKey);
+    }
     return await _channel.invokeMethod('verify', {
       "signature": signature,
       "message": message,
@@ -100,6 +109,9 @@ class OpenPGP {
 
   static Future<String> decryptSymmetric(String message, String passphrase,
       {KeyOptions options}) async {
+    if (_bindingSupported) {
+      return Binding().decryptSymmetric(message, passphrase, options: options);
+    }
     return await _channel.invokeMethod('decryptSymmetric', {
       "message": message,
       "passphrase": passphrase,
@@ -119,6 +131,9 @@ class OpenPGP {
 
   static Future<String> encryptSymmetric(String message, String passphrase,
       {KeyOptions options}) async {
+    if (_bindingSupported) {
+      return Binding().encryptSymmetric(message, passphrase, options: options);
+    }
     return await _channel.invokeMethod('encryptSymmetric', {
       "message": message,
       "passphrase": passphrase,

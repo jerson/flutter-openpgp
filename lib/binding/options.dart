@@ -10,16 +10,16 @@ class ffiOptions extends ffi.Struct {
   ffi.Pointer<ffiKeyOptions> keyOptions;
 
   factory ffiOptions.allocate(
-      ffi.Pointer<Utf8> name,
-      ffi.Pointer<Utf8> comment,
-      ffi.Pointer<Utf8> email,
-      ffi.Pointer<Utf8> passphrase,
-      ffiKeyOptions keyOptions,
-      ) =>
+    ffi.Pointer<Utf8> name,
+    ffi.Pointer<Utf8> comment,
+    ffi.Pointer<Utf8> email,
+    ffi.Pointer<Utf8> passphrase,
+    ffiKeyOptions keyOptions,
+  ) =>
       allocate<ffiOptions>().ref
-        ..name= name
-        ..comment= comment
-        ..email= email
-        ..passphrase= passphrase
-        ..keyOptions= keyOptions.addressOf;
+        ..name = name
+        ..comment = comment
+        ..email = email
+        ..passphrase = passphrase
+        ..keyOptions = keyOptions.addressOf;
 }

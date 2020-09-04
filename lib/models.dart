@@ -1,5 +1,3 @@
-
-
 enum Cypher {
   aes128,
   aes192,

@@ -22,21 +22,109 @@ class Binding {
     _library = openLib();
   }
 
-  String encrypt(String message, String publicKey) {
+  String decrypt(String message, String privateKey, String passphrase) {
     final callable = _library
-        .lookup<ffi.NativeFunction<encrypt_func>>('Encrypt')
-        .asFunction<Encrypt>();
+        .lookup<ffi.NativeFunction<decrypt_func>>('Decrypt')
+        .asFunction<Decrypt>();
 
-    var result = callable(
-        toUtf8(message), toUtf8(publicKey)
-    ).cast<ffiStringReturn>().ref;
+    var result =
+        callable(toUtf8(message), toUtf8(privateKey), toUtf8(passphrase))
+            .cast<ffiStringReturn>()
+            .ref;
 
     handleError(result.error, result.addressOf);
 
     var output = fromUtf8(result.result);
     free(result.addressOf);
     return output;
+  }
 
+  String encrypt(String message, String publicKey) {
+    final callable = _library
+        .lookup<ffi.NativeFunction<encrypt_func>>('Encrypt')
+        .asFunction<Encrypt>();
+
+    var result = callable(toUtf8(message), toUtf8(publicKey))
+        .cast<ffiStringReturn>()
+        .ref;
+
+    handleError(result.error, result.addressOf);
+
+    var output = fromUtf8(result.result);
+    free(result.addressOf);
+    return output;
+  }
+
+  String sign(
+      String message, String publicKey, String privateKey, String passphrase) {
+    final callable = _library
+        .lookup<ffi.NativeFunction<sign_func>>('Sign')
+        .asFunction<Sign>();
+
+    var result = callable(toUtf8(message), toUtf8(publicKey),
+            toUtf8(privateKey), toUtf8(passphrase))
+        .cast<ffiStringReturn>()
+        .ref;
+
+    handleError(result.error, result.addressOf);
+
+    var output = fromUtf8(result.result);
+    free(result.addressOf);
+    return output;
+  }
+
+  bool verify(String signature, String message, String publicKey) {
+    final callable = _library
+        .lookup<ffi.NativeFunction<verify_func>>('Verify')
+        .asFunction<Verify>();
+
+    var result = callable(toUtf8(signature), toUtf8(message), toUtf8(publicKey))
+        .cast<ffiStringReturn>()
+        .ref;
+
+    handleError(result.error, result.addressOf);
+
+    var output = fromUtf8(result.result);
+    free(result.addressOf);
+    return output == "1";
+  }
+
+  String decryptSymmetric(String message, String passphrase,
+      {KeyOptions options}) {
+    final callable = _library
+        .lookup<ffi.NativeFunction<decryptSymmetric_func>>('DecryptSymmetric')
+        .asFunction<DecryptSymmetric>();
+
+    var keyOptions = _getKeyOptions(options);
+    var result =
+        callable(toUtf8(message), toUtf8(passphrase), keyOptions.addressOf)
+            .cast<ffiStringReturn>()
+            .ref;
+
+    handleError(result.error, result.addressOf);
+
+    var output = fromUtf8(result.result);
+    free(result.addressOf);
+    return output;
+  }
+
+  String encryptSymmetric(String message, String passphrase,
+      {KeyOptions options}) {
+    final callable = _library
+        .lookup<ffi.NativeFunction<encryptSymmetric_func>>('EncryptSymmetric')
+        .asFunction<EncryptSymmetric>();
+
+    var keyOptions = _getKeyOptions(options);
+    var result =
+        callable(toUtf8(message), toUtf8(passphrase), keyOptions.addressOf)
+            .cast<ffiStringReturn>()
+            .ref;
+
+    handleError(result.error, result.addressOf);
+
+    var output = fromUtf8(result.result);
+    free(result.addressOf);
+    return output;
   }
 
   KeyPair generate(Options originalOptions) {
