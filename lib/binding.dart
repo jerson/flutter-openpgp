@@ -23,7 +23,8 @@ class Binding {
     _library = openLib();
   }
 
-  String decrypt(String message, String privateKey, String passphrase) {
+  Future<String> decrypt(
+      String message, String privateKey, String passphrase) async {
     final callable = _library
         .lookup<ffi.NativeFunction<decrypt_func>>('Decrypt')
         .asFunction<Decrypt>();
@@ -40,8 +41,8 @@ class Binding {
     return output;
   }
 
-  Uint8List decryptBytes(
-      Uint8List message, String privateKey, String passphrase) {
+  Future<Uint8List> decryptBytes(
+      Uint8List message, String privateKey, String passphrase) async {
     final callable = _library
         .lookup<ffi.NativeFunction<decryptBytes_func>>('DecryptBytes')
         .asFunction<DecryptBytes>();
@@ -49,15 +50,16 @@ class Binding {
     final pointer = allocate<ffi.Uint8>(count: message.length);
 
     // https://github.com/dart-lang/ffi/issues/27
-    for( var i = 0 ; i <  message.length; i++) {
+    // https://github.com/objectbox/objectbox-dart/issues/69
+    for (var i = 0; i < message.length; i++) {
       pointer[i] = message[i];
     }
     final voidStar = pointer.cast<ffi.Void>();
 
-    var result =
-        callable(voidStar, message.length, toUtf8(privateKey), toUtf8(passphrase))
-            .cast<ffiSliceReturn>()
-            .ref;
+    var result = callable(
+            voidStar, message.length, toUtf8(privateKey), toUtf8(passphrase))
+        .cast<ffiSliceReturn>()
+        .ref;
 
     handleError(result.error, result.addressOf);
 
@@ -66,7 +68,7 @@ class Binding {
     return output;
   }
 
-  String encrypt(String message, String publicKey) {
+  Future<String> encrypt(String message, String publicKey) async {
     final callable = _library
         .lookup<ffi.NativeFunction<encrypt_func>>('Encrypt')
         .asFunction<Encrypt>();
@@ -82,8 +84,7 @@ class Binding {
     return output;
   }
 
-  Uint8List encryptBytes(
-      Uint8List message, String publicKey) {
+  Future<Uint8List> encryptBytes(Uint8List message, String publicKey) async {
     final callable = _library
         .lookup<ffi.NativeFunction<encryptBytes_func>>('EncryptBytes')
         .asFunction<EncryptBytes>();
@@ -91,15 +92,15 @@ class Binding {
     final pointer = allocate<ffi.Uint8>(count: message.length);
 
     // https://github.com/dart-lang/ffi/issues/27
-    for( var i = 0 ; i <  message.length; i++) {
+    // https://github.com/objectbox/objectbox-dart/issues/69
+    for (var i = 0; i < message.length; i++) {
       pointer[i] = message[i];
     }
     final voidStar = pointer.cast<ffi.Void>();
 
-    var result =
-        callable(voidStar, message.length, toUtf8(publicKey))
-            .cast<ffiSliceReturn>()
-            .ref;
+    var result = callable(voidStar, message.length, toUtf8(publicKey))
+        .cast<ffiSliceReturn>()
+        .ref;
 
     handleError(result.error, result.addressOf);
 
@@ -108,8 +109,8 @@ class Binding {
     return output;
   }
 
-  String sign(
-      String message, String publicKey, String privateKey, String passphrase) {
+  Future<String> sign(String message, String publicKey, String privateKey,
+      String passphrase) async {
     final callable = _library
         .lookup<ffi.NativeFunction<sign_func>>('Sign')
         .asFunction<Sign>();
@@ -126,7 +127,8 @@ class Binding {
     return output;
   }
 
-  bool verify(String signature, String message, String publicKey) {
+  Future<bool> verify(
+      String signature, String message, String publicKey) async {
     final callable = _library
         .lookup<ffi.NativeFunction<verify_func>>('Verify')
         .asFunction<Verify>();
@@ -142,8 +144,8 @@ class Binding {
     return output == "1";
   }
 
-  String decryptSymmetric(String message, String passphrase,
-      {KeyOptions options}) {
+  Future<String> decryptSymmetric(String message, String passphrase,
+      {KeyOptions options}) async {
     final callable = _library
         .lookup<ffi.NativeFunction<decryptSymmetric_func>>('DecryptSymmetric')
         .asFunction<DecryptSymmetric>();
@@ -161,8 +163,8 @@ class Binding {
     return output;
   }
 
-  String encryptSymmetric(String message, String passphrase,
-      {KeyOptions options}) {
+  Future<String> encryptSymmetric(String message, String passphrase,
+      {KeyOptions options}) async {
     final callable = _library
         .lookup<ffi.NativeFunction<encryptSymmetric_func>>('EncryptSymmetric')
         .asFunction<EncryptSymmetric>();
@@ -180,7 +182,7 @@ class Binding {
     return output;
   }
 
-  KeyPair generate(Options originalOptions) {
+  Future<KeyPair> generate(Options originalOptions) async {
     final callable = _library
         .lookup<ffi.NativeFunction<generate_func>>('Generate')
         .asFunction<Generate>();
