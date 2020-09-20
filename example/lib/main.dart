@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:openpgp/models.dart';
+import 'package:openpgp/bridge/bridge.pb.dart';
 import 'package:openpgp/openpgp.dart';
 import 'package:openpgp_example/encrypt_decrypt.dart';
 import 'package:openpgp_example/encrypt_decrypt_bytes.dart';
@@ -39,16 +39,13 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> initKeyPair() async {
+    var keyOptions = KeyOptions()..rsaBits = 1024;
     var keyPair = await OpenPGP.generate(
-      options: Options(
-        name: 'test',
-        email: 'test@test.com',
-        passphrase: passphrase,
-        keyOptions: KeyOptions(
-          rsaBits: 1024,
-        ),
-      ),
-    );
+        options: Options()
+          ..name = 'test'
+          ..email = 'test@test.com'
+          ..passphrase = passphrase
+          ..keyOptions = keyOptions);
 
     setState(() {
       _defaultKeyPair = keyPair;

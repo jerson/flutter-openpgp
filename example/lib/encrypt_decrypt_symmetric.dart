@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:openpgp/models.dart';
+import 'package:openpgp/bridge/bridge.pb.dart';
 import 'package:openpgp/openpgp.dart';
 import 'package:openpgp_example/main.dart';
 import 'package:openpgp_example/shared/button_widget.dart';

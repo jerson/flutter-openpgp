@@ -5,7 +5,6 @@ import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:openpgp/binding.dart';
 import 'package:openpgp/bridge/bridge.pb.dart';
-import 'package:openpgp/models.dart';
 import 'package:openpgp/shared.dart';
 
 class OpenPGP {
@@ -15,6 +14,53 @@ class OpenPGP {
       Platform.isLinux ||
       Platform.isFuchsia;
 
+  static Future<Uint8List> _call(String message, Uint8List payload) async {
+    if (_bindingSupported) {
+      // the idea its that only should use this
+      return await Binding().call(message, payload);
+    }
+    // this is a fallback not sure but here its :D
+    return await _channel.invokeMethod('call', payload);
+  }
+
+  static Future<Uint8List> _bytesResponse(
+      String name, Uint8List payload) async {
+    var data = await _call(name, payload);
+    var response = BytesResponse()..mergeFromBuffer(data);
+    if (response.hasError()) {
+      throw response.error;
+    }
+    return response.output;
+  }
+
+  static Future<String> _stringResponse(String name, Uint8List payload) async {
+    var data = await _call(name, payload);
+    var response = StringResponse()..mergeFromBuffer(data);
+    if (response.hasError()) {
+      throw response.error;
+    }
+    return response.output;
+  }
+
+  static Future<bool> _boolResponse(String name, Uint8List payload) async {
+    var data = await _call(name, payload);
+    var response = BoolResponse()..mergeFromBuffer(data);
+    if (response.hasError()) {
+      throw response.error;
+    }
+    return response.output;
+  }
+
+  static Future<KeyPair> _keyPairResponse(
+      String name, Uint8List payload) async {
+    var data = await _call(name, payload);
+    var response = KeyPairResponse()..mergeFromBuffer(data);
+    if (response.hasError()) {
+      throw response.error;
+    }
+    return response.output;
+  }
+
   static Future<String> decrypt(
       String message, String privateKey, String passphrase) async {
     if (_bindingSupported) {
@@ -22,12 +68,7 @@ class OpenPGP {
         ..message = message
         ..privateKey = privateKey
         ..passphrase = passphrase;
-      var data = await Binding().call("decrypt", request.writeToBuffer());
-      var response = StringResponse()..mergeFromBuffer(data);
-      if (response.hasError()) {
-        throw response.error;
-      }
-      return response.output;
+      return await _stringResponse("decrypt", request.writeToBuffer());
     }
     return await _channel.invokeMethod('decrypt', {
       "message": message,
@@ -43,12 +84,7 @@ class OpenPGP {
         ..message = message
         ..privateKey = privateKey
         ..passphrase = passphrase;
-      var data = await Binding().call("decryptBytes", request.writeToBuffer());
-      var response = BytesResponse()..mergeFromBuffer(data);
-      if (response.hasError()) {
-        throw response.error;
-      }
-      return response.output;
+      return await _bytesResponse("decryptBytes", request.writeToBuffer());
     }
     return await _channel.invokeMethod('decryptBytes', {
       "message": message,
@@ -59,7 +95,10 @@ class OpenPGP {
 
   static Future<String> encrypt(String message, String publicKey) async {
     if (_bindingSupported) {
-      return Binding().encrypt(message, publicKey);
+      var request = EncryptRequest()
+        ..message = message
+        ..publicKey = publicKey;
+      return await _stringResponse("encrypt", request.writeToBuffer());
     }
     return await _channel.invokeMethod('encrypt', {
       "message": message,
@@ -70,7 +109,10 @@ class OpenPGP {
   static Future<Uint8List> encryptBytes(
       Uint8List message, String publicKey) async {
     if (_bindingSupported) {
-      return Binding().encryptBytes(message, publicKey);
+      var request = EncryptBytesRequest()
+        ..message = message
+        ..publicKey = publicKey;
+      return await _bytesResponse("encryptBytes", request.writeToBuffer());
     }
     return await _channel.invokeMethod('encryptBytes', {
       "message": message,
@@ -81,7 +123,12 @@ class OpenPGP {
   static Future<String> sign(String message, String publicKey,
       String privateKey, String passphrase) async {
     if (_bindingSupported) {
-      return Binding().sign(message, publicKey, privateKey, passphrase);
+      var request = SignRequest()
+        ..message = message
+        ..publicKey = publicKey
+        ..privateKey = privateKey
+        ..passphrase = passphrase;
+      return await _stringResponse("sign", request.writeToBuffer());
     }
     return await _channel.invokeMethod('sign', {
       "message": message,
@@ -93,6 +140,14 @@ class OpenPGP {
 
   static Future<Uint8List> signBytes(Uint8List message, String publicKey,
       String privateKey, String passphrase) async {
+    if (_bindingSupported) {
+      var request = SignBytesRequest()
+        ..message = message
+        ..publicKey = publicKey
+        ..privateKey = privateKey
+        ..passphrase = passphrase;
+      return await _bytesResponse("signBytes", request.writeToBuffer());
+    }
     return await _channel.invokeMethod('signBytes', {
       "message": message,
       "publicKey": publicKey,
@@ -103,6 +158,15 @@ class OpenPGP {
 
   static Future<String> signBytesToString(Uint8List message, String publicKey,
       String privateKey, String passphrase) async {
+    if (_bindingSupported) {
+      var request = SignBytesRequest()
+        ..message = message
+        ..publicKey = publicKey
+        ..privateKey = privateKey
+        ..passphrase = passphrase;
+      return await _stringResponse(
+          "signBytesToString", request.writeToBuffer());
+    }
     return await _channel.invokeMethod('signBytesToString', {
       "message": message,
       "publicKey": publicKey,
@@ -114,7 +178,11 @@ class OpenPGP {
   static Future<bool> verify(
       String signature, String message, String publicKey) async {
     if (_bindingSupported) {
-      return Binding().verify(signature, message, publicKey);
+      var request = VerifyRequest()
+        ..message = message
+        ..publicKey = publicKey
+        ..signature = signature;
+      return await _boolResponse("verify", request.writeToBuffer());
     }
     return await _channel.invokeMethod('verify', {
       "signature": signature,
@@ -125,6 +193,13 @@ class OpenPGP {
 
   static Future<bool> verifyBytes(
       String signature, Uint8List message, String publicKey) async {
+    if (_bindingSupported) {
+      var request = VerifyBytesRequest()
+        ..message = message
+        ..publicKey = publicKey
+        ..signature = signature;
+      return await _boolResponse("verifyBytes", request.writeToBuffer());
+    }
     return await _channel.invokeMethod('verifyBytes', {
       "signature": signature,
       "message": message,
@@ -135,7 +210,11 @@ class OpenPGP {
   static Future<String> decryptSymmetric(String message, String passphrase,
       {KeyOptions options}) async {
     if (_bindingSupported) {
-      return Binding().decryptSymmetric(message, passphrase, options: options);
+      var request = DecryptSymmetricRequest()
+        ..message = message
+        ..passphrase = passphrase
+        ..options = options;
+      return await _stringResponse("decryptSymmetric", request.writeToBuffer());
     }
     return await _channel.invokeMethod('decryptSymmetric', {
       "message": message,
@@ -147,6 +226,14 @@ class OpenPGP {
   static Future<Uint8List> decryptSymmetricBytes(
       Uint8List message, String passphrase,
       {KeyOptions options}) async {
+    if (_bindingSupported) {
+      var request = DecryptSymmetricBytesRequest()
+        ..message = message
+        ..passphrase = passphrase
+        ..options = options;
+      return await _bytesResponse(
+          "decryptSymmetricBytes", request.writeToBuffer());
+    }
     return await _channel.invokeMethod('decryptSymmetricBytes', {
       "message": message,
       "passphrase": passphrase,
@@ -157,7 +244,11 @@ class OpenPGP {
   static Future<String> encryptSymmetric(String message, String passphrase,
       {KeyOptions options}) async {
     if (_bindingSupported) {
-      return Binding().encryptSymmetric(message, passphrase, options: options);
+      var request = EncryptSymmetricRequest()
+        ..message = message
+        ..passphrase = passphrase
+        ..options = options;
+      return await _stringResponse("encryptSymmetric", request.writeToBuffer());
     }
     return await _channel.invokeMethod('encryptSymmetric', {
       "message": message,
@@ -169,6 +260,14 @@ class OpenPGP {
   static Future<Uint8List> encryptSymmetricBytes(
       Uint8List message, String passphrase,
       {KeyOptions options}) async {
+    if (_bindingSupported) {
+      var request = EncryptSymmetricBytesRequest()
+        ..message = message
+        ..passphrase = passphrase
+        ..options = options;
+      return await _bytesResponse(
+          "encryptSymmetricBytes", request.writeToBuffer());
+    }
     return await _channel.invokeMethod('encryptSymmetricBytes', {
       "message": message,
       "passphrase": passphrase,
@@ -178,16 +277,16 @@ class OpenPGP {
 
   static Future<KeyPair> generate({Options options}) async {
     if (_bindingSupported) {
-      return Binding().generate(options);
+      var request = GenerateRequest()..options = options;
+      return await _keyPairResponse("generate", request.writeToBuffer());
     }
     var result = await _channel.invokeMethod('generate', {
       "options": _getOptionsMap(options),
     });
 
-    return KeyPair(
-      privateKey: result["privateKey"],
-      publicKey: result["publicKey"],
-    );
+    return KeyPair()
+      ..privateKey = result["privateKey"]
+      ..publicKey = result["publicKey"];
   }
 
   static _getOptionsMap(Options options) {

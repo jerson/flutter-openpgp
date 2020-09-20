@@ -1,22 +1,22 @@
-import 'package:openpgp/models.dart';
+import 'package:openpgp/bridge/bridge.pb.dart';
 
 String toStringCypher(Cypher input) {
   if (input == null) {
-    input = Cypher.aes128;
+    input = Cypher.CYPHER_AES128;
   }
   return input.toString().replaceFirst("Cypher.", "");
 }
 
 String toStringCompression(Compression input) {
   if (input == null) {
-    input = Compression.none;
+    input = Compression.COMPRESSION_NONE;
   }
   return input.toString().replaceFirst("Compression.", "");
 }
 
 String toStringHash(Hash input) {
   if (input == null) {
-    input = Hash.sha256;
+    input = Hash.HASH_SHA256;
   }
   return input.toString().replaceFirst("Hash.", "");
 }

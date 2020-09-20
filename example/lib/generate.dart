@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:openpgp/models.dart';
+import 'package:openpgp/bridge/bridge.pb.dart';
 import 'package:openpgp/openpgp.dart';
 import 'package:openpgp_example/shared/button_widget.dart';
 import 'package:openpgp_example/shared/title_widget.dart';
@@ -21,7 +21,9 @@ class Generate extends StatefulWidget {
 }
 
 class _GenerateState extends State<Generate> {
-  KeyPair _keyPair = KeyPair(publicKey: "", privateKey: "");
+  KeyPair _keyPair = KeyPair()
+    ..publicKey = ""
+    ..privateKey = "";
 
   @override
   Widget build(BuildContext context) {
@@ -36,16 +38,14 @@ class _GenerateState extends State<Generate> {
               key: Key("action"),
               result: _keyPair.privateKey,
               onPressed: () async {
+                var keyOptions = KeyOptions()..rsaBits = 2048;
                 var keyPair = await OpenPGP.generate(
-                  options: Options(
-                    name: 'test',
-                    email: 'test@test.com',
-                    passphrase: 'test',
-                    keyOptions: KeyOptions(
-                      rsaBits: 2048,
-                    ),
-                  ),
-                );
+                    options: Options()
+                      ..name = 'test'
+                      ..email = 'test@test.com'
+                      ..passphrase = 'test'
+                      ..keyOptions = keyOptions);
+
                 setState(() {
                   _keyPair = keyPair;
                 });
