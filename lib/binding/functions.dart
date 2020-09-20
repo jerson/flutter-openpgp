@@ -4,6 +4,19 @@ import 'package:ffi/ffi.dart';
 import 'package:openpgp/binding/key_options.dart';
 import 'package:openpgp/binding/return.dart';
 
+
+typedef call_func = ffi.Pointer<ffiBytesReturn> Function(
+    ffi.Pointer<Utf8>,
+    ffi.Pointer<ffi.Void>,
+    ffi.Int32,
+    );
+typedef Call = ffi.Pointer<ffiBytesReturn> Function(
+    ffi.Pointer<Utf8>,
+    ffi.Pointer<ffi.Void>,
+    int,
+    );
+
+
 typedef decrypt_func = ffi.Pointer<ffiStringReturn> Function(
   ffi.Pointer<Utf8>,
   ffi.Pointer<Utf8>,

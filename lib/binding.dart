@@ -23,6 +23,33 @@ class Binding {
     _library = openLib();
   }
 
+  Future<Uint8List> call(
+      String name, Uint8List payload) async {
+    final callable = _library
+        .lookup<ffi.NativeFunction<call_func>>('Call')
+        .asFunction<Call>();
+
+    final pointer = allocate<ffi.Uint8>(count: payload.length);
+
+    // https://github.com/dart-lang/ffi/issues/27
+    // https://github.com/objectbox/objectbox-dart/issues/69
+    for (var i = 0; i < payload.length; i++) {
+      pointer[i] = payload[i];
+    }
+    final voidStar = pointer.cast<ffi.Void>();
+
+    var result = callable(
+        toUtf8(name),  voidStar, payload.length)
+        .cast<ffiBytesReturn>()
+        .ref;
+
+    handleError(result.error, result.addressOf);
+
+    var output = result.message.cast<ffi.Uint8>().asTypedList(result.size);
+    free(result.addressOf);
+    return output;
+  }
+
   Future<String> decrypt(
       String message, String privateKey, String passphrase) async {
     final callable = _library

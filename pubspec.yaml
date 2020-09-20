@@ -14,6 +14,7 @@ dependencies:
     sdk: flutter
   js: ^0.6.0
   ffi: any
+  protobuf: any
 
 dev_dependencies:
   flutter_test:

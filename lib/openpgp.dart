@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:openpgp/binding.dart';
+import 'package:openpgp/bridge/bridge.pb.dart';
 import 'package:openpgp/models.dart';
 import 'package:openpgp/shared.dart';
 
@@ -17,7 +18,16 @@ class OpenPGP {
   static Future<String> decrypt(
       String message, String privateKey, String passphrase) async {
     if (_bindingSupported) {
-      return Binding().decrypt(message, privateKey, passphrase);
+      var request = DecryptRequest()
+        ..message = message
+        ..privateKey = privateKey
+        ..passphrase = passphrase;
+      var data = await Binding().call("decrypt", request.writeToBuffer());
+      var response = StringResponse()..mergeFromBuffer(data);
+      if (response.hasError()) {
+        throw response.error;
+      }
+      return response.output;
     }
     return await _channel.invokeMethod('decrypt', {
       "message": message,
@@ -29,7 +39,16 @@ class OpenPGP {
   static Future<Uint8List> decryptBytes(
       Uint8List message, String privateKey, String passphrase) async {
     if (_bindingSupported) {
-      return Binding().decryptBytes(message, privateKey, passphrase);
+      var request = DecryptBytesRequest()
+        ..message = message
+        ..privateKey = privateKey
+        ..passphrase = passphrase;
+      var data = await Binding().call("decryptBytes", request.writeToBuffer());
+      var response = BytesResponse()..mergeFromBuffer(data);
+      if (response.hasError()) {
+        throw response.error;
+      }
+      return response.output;
     }
     return await _channel.invokeMethod('decryptBytes', {
       "message": message,

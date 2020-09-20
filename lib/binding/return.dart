@@ -20,3 +20,12 @@ class ffiStringReturn extends ffi.Struct {
   ffi.Pointer<Utf8> result;
   ffi.Pointer<Utf8> error;
 }
+
+class ffiBytesReturn extends ffi.Struct {
+  ffi.Pointer<ffi.Void> message;
+
+  @ffi.Int32()
+  int size;
+
+  ffi.Pointer<Utf8> error;
+}

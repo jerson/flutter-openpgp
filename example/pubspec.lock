@@ -134,6 +134,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.0.0-nullsafety.1"
+  fixnum:
+    dependency: transitive
+    description:
+      name: fixnum
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.10.11"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -214,7 +221,7 @@ packages:
       name: json_rpc_2
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.1"
+    version: "2.2.2"
   logging:
     dependency: transitive
     description:
@@ -313,6 +320,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0-nullsafety.1"
+  protobuf:
+    dependency: transitive
+    description:
+      name: protobuf
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   pub_semver:
     dependency: transitive
     description:
@@ -373,7 +387,7 @@ packages:
       name: source_span
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.0-nullsafety"
+    version: "1.8.0-nullsafety.1"
   stack_trace:
     dependency: transitive
     description:
@@ -494,5 +508,5 @@ packages:
     source: hosted
     version: "2.2.1"
 sdks:
-  dart: ">=2.10.0-4.0.dev <2.10.0"
+  dart: ">=2.10.0-137.0 <2.10.0"
   flutter: ">=1.10.0 <2.0.0"
