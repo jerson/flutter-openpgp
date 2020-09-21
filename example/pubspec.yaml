@@ -46,6 +46,9 @@ flutter:
   assets:
     - packages/openpgp/web/assets/wasm_exec.js
     - packages/openpgp/web/assets/openpgp.wasm
+    - packages/openpgp/static/openpgp_linux_amd64.so
+    - packages/openpgp/static/openpgp_windows_amd64.dll
+    - packages/openpgp/static/openpgp_darwin_amd64.dylib
 
   fonts:
     - family: Roboto

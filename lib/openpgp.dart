@@ -3,8 +3,8 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
-import 'package:openpgp/binding.dart';
-import 'package:openpgp/bridge/bridge.pb.dart';
+import 'package:openpgp/bridge/binding.dart';
+import 'package:openpgp/bridge/model/bridge.pb.dart';
 import 'package:openpgp/shared.dart';
 
 class OpenPGP {

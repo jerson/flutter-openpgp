@@ -1,4 +1,5 @@
-import 'package:openpgp/bridge/bridge.pb.dart';
+
+import 'package:openpgp/bridge/model/bridge.pb.dart';
 
 String toStringCypher(Cypher input) {
   if (input == null) {

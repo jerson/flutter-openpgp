@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:openpgp/bridge/bridge.pb.dart';
+import 'package:openpgp/bridge/model/bridge.pb.dart';
 import 'package:openpgp/openpgp.dart';
 import 'package:openpgp_example/encrypt_decrypt.dart';
 import 'package:openpgp_example/encrypt_decrypt_bytes.dart';
