@@ -212,8 +212,10 @@ class OpenPGP {
     if (_bindingSupported) {
       var request = DecryptSymmetricRequest()
         ..message = message
-        ..passphrase = passphrase
-        ..options = options;
+        ..passphrase = passphrase;
+      if (options != null) {
+        request.options = options;
+      }
       return await _stringResponse("decryptSymmetric", request.writeToBuffer());
     }
     return await _channel.invokeMethod('decryptSymmetric', {
@@ -229,8 +231,10 @@ class OpenPGP {
     if (_bindingSupported) {
       var request = DecryptSymmetricBytesRequest()
         ..message = message
-        ..passphrase = passphrase
-        ..options = options;
+        ..passphrase = passphrase;
+      if (options != null) {
+        request.options = options;
+      }
       return await _bytesResponse(
           "decryptSymmetricBytes", request.writeToBuffer());
     }
@@ -246,8 +250,10 @@ class OpenPGP {
     if (_bindingSupported) {
       var request = EncryptSymmetricRequest()
         ..message = message
-        ..passphrase = passphrase
-        ..options = options;
+        ..passphrase = passphrase;
+      if (options != null) {
+        request.options = options;
+      }
       return await _stringResponse("encryptSymmetric", request.writeToBuffer());
     }
     return await _channel.invokeMethod('encryptSymmetric', {
@@ -263,8 +269,10 @@ class OpenPGP {
     if (_bindingSupported) {
       var request = EncryptSymmetricBytesRequest()
         ..message = message
-        ..passphrase = passphrase
-        ..options = options;
+        ..passphrase = passphrase;
+      if (options != null) {
+        request.options = options;
+      }
       return await _bytesResponse(
           "encryptSymmetricBytes", request.writeToBuffer());
     }
@@ -277,7 +285,10 @@ class OpenPGP {
 
   static Future<KeyPair> generate({Options options}) async {
     if (_bindingSupported) {
-      var request = GenerateRequest()..options = options;
+      var request = GenerateRequest();
+      if (options != null) {
+        request.options = options;
+      }
       return await _keyPairResponse("generate", request.writeToBuffer());
     }
     var result = await _channel.invokeMethod('generate', {

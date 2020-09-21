@@ -45,10 +45,6 @@ class Binding {
   }
 
   void handleError(ffi.Pointer<Utf8> error, ffi.Pointer pointer) {
-    print(error);
-    print(error.toString());
-    print(error.address);
-    print(error.address.bitLength);
     if (error.address != ffi.nullptr.address) {
       var message = fromUtf8(error);
       free(pointer);
