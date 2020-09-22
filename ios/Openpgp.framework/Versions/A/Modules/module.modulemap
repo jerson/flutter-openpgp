@@ -1,8 +1,0 @@
-framework module "Openpgp" {
-	header "ref.h"
-    header "Openpgp.objc.h"
-    header "Universe.objc.h"
-    header "Openpgp.h"
-
-    export *
-}

@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'openpgp'
-  s.version          = '0.1.0'
+  s.version          = '0.2.0'
   s.summary          = 'library for use openPGP.'
   s.description      = <<-DESC
   library for use openPGP.
@@ -17,9 +17,9 @@ Pod::Spec.new do |s|
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
   s.platform = :ios, '8.0'
-  s.preserve_paths = 'Openpgp.framework'
-  s.xcconfig = { 'OTHER_LDFLAGS' => '-framework Openpgp' }
-  s.vendored_frameworks = 'Openpgp.framework'
+  s.preserve_paths = 'OpenPGPBridge.framework'
+  s.xcconfig = { 'OTHER_LDFLAGS' => '-framework OpenPGPBridge' }
+  s.vendored_frameworks = 'OpenPGPBridge.framework'
   # Flutter.framework does not contain a i386 slice. Only x86_64 simulators are supported.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'VALID_ARCHS[sdk=iphonesimulator*]' => 'x86_64' }
   s.swift_version = '5.0'
