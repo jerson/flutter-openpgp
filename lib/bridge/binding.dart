@@ -86,6 +86,6 @@ ffi.DynamicLibrary openLib() {
       path: join(
         Directory(Platform.resolvedExecutable).parent.path,
         // data prefix is needed for linux at least
-        'data/flutter_assets/packages/openpgp/static/',
+        'flutter_assets/packages/openpgp/static/',
       ));
 }

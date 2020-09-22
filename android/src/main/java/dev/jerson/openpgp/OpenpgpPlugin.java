@@ -13,12 +13,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
-import openpgp.FastOpenPGP;
-import openpgp.KeyOptions;
-import openpgp.KeyPair;
-import openpgp.Openpgp;
-import openpgp.Options;
-
+import openPGPBridge.OpenPGPBridge;
 /**
  * OpenpgpPlugin
  */
@@ -28,7 +23,6 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
     /// This local reference serves to register the plugin with the Flutter Engine and unregister it
     /// when the Flutter Engine is detached from the Activity
     private MethodChannel channel;
-    private FastOpenPGP instance;
     private Handler handler;
 
     // @irasekh3 - A private static function to properly instantiate OpenpgpPlugin
@@ -46,8 +40,7 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
         channel.setMethodCallHandler(this);
     }
 
-    private void initialize(){
-        instance = Openpgp.newFastOpenPGP();
+    private void initialize() {
         handler = new Handler(Looper.getMainLooper());
     }
 
@@ -67,140 +60,8 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
 
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-
-        switch (call.method) {
-            case "decrypt":
-                decrypt(
-                        (String) call.argument("message"),
-                        (String) call.argument("privateKey"),
-                        (String) call.argument("passphrase"),
-                        result
-                );
-                break;
-
-            case "decryptBytes":
-                decryptBytes(
-                        (byte[]) call.argument("message"),
-                        (String) call.argument("privateKey"),
-                        (String) call.argument("passphrase"),
-                        result
-                );
-                break;
-
-            case "encrypt":
-                encrypt(
-                        (String) call.argument("message"),
-                        (String) call.argument("publicKey"),
-                        result
-                );
-                break;
-
-            case "encryptBytes":
-                encryptBytes(
-                        (byte[]) call.argument("message"),
-                        (String) call.argument("publicKey"),
-                        result
-                );
-                break;
-
-            case "sign":
-                sign(
-                        (String) call.argument("message"),
-                        (String) call.argument("publicKey"),
-                        (String) call.argument("privateKey"),
-                        (String) call.argument("passphrase"),
-                        result
-                );
-                break;
-
-            case "signBytes":
-                signBytes(
-                        (byte[]) call.argument("message"),
-                        (String) call.argument("publicKey"),
-                        (String) call.argument("privateKey"),
-                        (String) call.argument("passphrase"),
-                        result
-                );
-                break;
-
-            case "signBytesToString":
-                signBytesToString(
-                        (byte[]) call.argument("message"),
-                        (String) call.argument("publicKey"),
-                        (String) call.argument("privateKey"),
-                        (String) call.argument("passphrase"),
-                        result
-                );
-                break;
-
-            case "verify":
-                verify(
-                        (String) call.argument("signature"),
-                        (String) call.argument("message"),
-                        (String) call.argument("publicKey"),
-                        result
-                );
-                break;
-
-
-            case "verifyBytes":
-                verifyBytes(
-                        (String) call.argument("signature"),
-                        (byte[]) call.argument("message"),
-                        (String) call.argument("publicKey"),
-                        result
-                );
-                break;
-
-            case "decryptSymmetric":
-                decryptSymmetric(
-                        (String) call.argument("message"),
-                        (String) call.argument("passphrase"),
-                        (HashMap<String, Object>) call.argument("options"),
-                        result
-                );
-                break;
-
-            case "decryptSymmetricBytes":
-                decryptSymmetricBytes(
-                        (byte[]) call.argument("message"),
-                        (String) call.argument("passphrase"),
-                        (HashMap<String, Object>) call.argument("options"),
-                        result
-                );
-                break;
-
-            case "encryptSymmetric":
-                encryptSymmetric(
-                        (String) call.argument("message"),
-                        (String) call.argument("passphrase"),
-                        (HashMap<String, Object>) call.argument("options"),
-                        result
-                );
-                break;
-
-            case "encryptSymmetricBytes":
-                encryptSymmetricBytes(
-                        (byte[]) call.argument("message"),
-                        (String) call.argument("passphrase"),
-                        (HashMap<String, Object>) call.argument("options"),
-                        result
-                );
-                break;
-
-            case "generate":
-                generate(
-                        (HashMap<String, Object>) call.argument("options"),
-                        result
-                );
-                break;
-
-            default:
-                result.notImplemented();
-                break;
-        }
+        this.call(call.method, (byte[]) call.arguments, result);
     }
-
 
     @Override
     public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
@@ -214,7 +75,6 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
                 promise.success(result);
             }
         };
-
         handler.post(local);
     }
 
@@ -225,15 +85,14 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
                 promise.error(errorCode, errorMessage, errorDetails);
             }
         };
-
         handler.post(local);
     }
 
-    private void decrypt(final String message, final String privateKey, final String passphrase, final Result promise) {
+    private void call(final String name, final byte[] payload, final Result promise) {
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    String result = instance.decrypt(message, privateKey, passphrase);
+                    byte[] result = OpenPGPBridge.call(name, payload);
                     success(promise, result);
                 } catch (Exception e) {
                     error(promise, "error", e.getMessage(), null);
@@ -242,232 +101,4 @@ public class OpenpgpPlugin implements FlutterPlugin, MethodCallHandler {
         }).start();
     }
 
-    private void decryptBytes(final byte[] message, final String privateKey, final String passphrase, final Result promise) {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    byte[] result = instance.decryptBytes(message, privateKey, passphrase);
-                    success(promise, result);
-                } catch (Exception e) {
-                    error(promise, "error", e.getMessage(), null);
-                }
-            }
-        }).start();
-    }
-
-    private void encrypt(final String message, final String publicKey, final Result promise) {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    String result = instance.encrypt(message, publicKey);
-                    success(promise, result);
-                } catch (Exception e) {
-                    error(promise, "error", e.getMessage(), null);
-                }
-            }
-        }).start();
-    }
-
-    private void encryptBytes(final byte[] message, final String publicKey, final Result promise) {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    byte[] result = instance.encryptBytes(message, publicKey);
-                    success(promise, result);
-                } catch (Exception e) {
-                    error(promise, "error", e.getMessage(), null);
-                }
-            }
-        }).start();
-    }
-
-    private void sign(final String message, final String publicKey, final String privateKey, final String passphrase, final Result promise) {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    String result = instance.sign(message, publicKey, privateKey, passphrase);
-                    success(promise, result);
-                } catch (Exception e) {
-                    error(promise, "error", e.getMessage(), null);
-                }
-            }
-        }).start();
-    }
-
-    private void signBytes(final byte[] message, final String publicKey, final String privateKey, final String passphrase, final Result promise) {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    byte[] result = instance.signBytes(message, publicKey, privateKey, passphrase);
-                    success(promise, result);
-                } catch (Exception e) {
-                    error(promise, "error", e.getMessage(), null);
-                }
-            }
-        }).start();
-    }
-
-    private void signBytesToString(final byte[] message, final String publicKey, final String privateKey, final String passphrase, final Result promise) {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    String result = instance.signBytesToString(message, publicKey, privateKey, passphrase);
-                    success(promise, result);
-                } catch (Exception e) {
-                    error(promise, "error", e.getMessage(), null);
-                }
-            }
-        }).start();
-    }
-
-    private void verify(final String signature, final String message, final String publicKey, final Result promise) {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    Boolean result = instance.verify(signature, message, publicKey);
-                    success(promise, result);
-                } catch (Exception e) {
-                    error(promise, "error", e.getMessage(), null);
-                }
-            }
-        }).start();
-    }
-
-    private void verifyBytes(final String signature, final byte[] message, final String publicKey, final Result promise) {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    Boolean result = instance.verifyBytes(signature, message, publicKey);
-                    success(promise, result);
-                } catch (Exception e) {
-                    error(promise, "error", e.getMessage(), null);
-                }
-            }
-        }).start();
-    }
-
-    private KeyOptions getKeyOptions(HashMap<String, Object> map) {
-        KeyOptions options = new KeyOptions();
-
-        if (map == null) {
-            return options;
-        }
-        if (map.containsKey("cipher")) {
-            options.setCipher((String) map.get("cipher"));
-        }
-        if (map.containsKey("compression")) {
-            options.setCompression((String) map.get("compression"));
-        }
-        if (map.containsKey("hash")) {
-            options.setHash((String) map.get("hash"));
-        }
-        if (map.containsKey("rsaBits")) {
-            options.setRSABits((Integer) map.get("rsaBits"));
-        }
-        if (map.containsKey("compressionLevel")) {
-            options.setCompressionLevel((Integer) map.get("compressionLevel"));
-        }
-        return options;
-    }
-
-    private Options getOptions(HashMap<String, Object> map) {
-        Options options = new Options();
-
-        if (map == null) {
-            return options;
-        }
-        if (map.containsKey("comment")) {
-            options.setComment((String) map.get("comment"));
-        }
-        if (map.containsKey("email")) {
-            options.setEmail((String) map.get("email"));
-        }
-        if (map.containsKey("name")) {
-            options.setName((String) map.get("name"));
-        }
-        if (map.containsKey("passphrase")) {
-            options.setPassphrase((String) map.get("passphrase"));
-        }
-        if (map.containsKey("keyOptions")) {
-            HashMap<String, Object> keyOptions = (HashMap<String, Object>) map.get("keyOptions");
-            if (keyOptions != null) {
-                options.setKeyOptions(this.getKeyOptions(keyOptions));
-            }
-        }
-
-        return options;
-    }
-
-    private void decryptSymmetric(final String message, final String passphrase, final HashMap<String, Object> mapOptions, final Result promise) {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    KeyOptions options = getKeyOptions(mapOptions);
-                    String result = instance.decryptSymmetric(message, passphrase, options);
-                    success(promise, result);
-                } catch (Exception e) {
-                    error(promise, "error", e.getMessage(), null);
-                }
-            }
-        }).start();
-    }
-
-    private void decryptSymmetricBytes(final byte[] message, final String passphrase, final HashMap<String, Object> mapOptions, final Result promise) {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    KeyOptions options = getKeyOptions(mapOptions);
-                    byte[] result = instance.decryptSymmetricBytes(message, passphrase, options);
-                    success(promise, result);
-                } catch (Exception e) {
-                    error(promise, "error", e.getMessage(), null);
-                }
-            }
-        }).start();
-    }
-
-    private void encryptSymmetric(final String message, final String passphrase, final HashMap<String, Object> mapOptions, final Result promise) {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    KeyOptions options = getKeyOptions(mapOptions);
-                    String result = instance.encryptSymmetric(message, passphrase, options);
-                    success(promise, result);
-                } catch (Exception e) {
-                    error(promise, "error", e.getMessage(), null);
-                }
-            }
-        }).start();
-    }
-
-    private void encryptSymmetricBytes(final byte[] message, final String passphrase, final HashMap<String, Object> mapOptions, final Result promise) {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    KeyOptions options = getKeyOptions(mapOptions);
-                    byte[] result = instance.encryptSymmetricBytes(message, passphrase, options);
-                    success(promise, result);
-                } catch (Exception e) {
-                    error(promise, "error", e.getMessage(), null);
-                }
-            }
-        }).start();
-    }
-
-    private void generate(final HashMap<String, Object> mapOptions, final Result promise) {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    Options options = getOptions(mapOptions);
-                    KeyPair keyPair = instance.generate(options);
-                    HashMap<String, Object> result = new HashMap<>();
-                    result.put("publicKey", keyPair.getPublicKey());
-                    result.put("privateKey", keyPair.getPrivateKey());
-                    success(promise, result);
-                } catch (Exception e) {
-                    error(promise, "error", e.getMessage(), null);
-                }
-            }
-        }).start();
-    }
 }
