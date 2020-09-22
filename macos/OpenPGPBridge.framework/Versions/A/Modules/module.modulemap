@@ -1,0 +1,8 @@
+framework module "OpenPGPBridge" {
+	header "ref.h"
+    header "OpenPGPBridge.objc.h"
+    header "Universe.objc.h"
+    header "OpenPGPBridge.h"
+
+    export *
+}
