@@ -61,31 +61,22 @@ class Binding {
   String fromUtf8(ffi.Pointer<Utf8> text) {
     return text == null ? "" : Utf8.fromUtf8(text);
   }
+
+  String _platformPath() {
+    if (Platform.isMacOS) {
+      return  "libopenpgp.dylib";
+    }
+    if (Platform.isWindows) {
+      return  "libopenpgp.dll";
+    }
+    if (Platform.isIOS) {
+      return  "OpenPGPBridge.framework/OpenPGPBridge";
+    }
+    return  "libopenpgp.so";
+  }
+
+  ffi.DynamicLibrary openLib() {
+    return ffi.DynamicLibrary.open(_platformPath());
+  }
 }
 
-ffi.DynamicLibrary _dlopenPlatformSpecific(String name, {String path}) {
-  String fullPath = _platformPath(name, path: path);
-  return ffi.DynamicLibrary.open(fullPath);
-}
-
-String _platformPath(String name, {String path = ''}) {
-  if (Platform.isMacOS) {
-    return path + name + "_darwin_amd64.dylib";
-  }
-  if (Platform.isLinux || Platform.isAndroid) {
-    return path + name + "_linux_amd64.so";
-  }
-  if (Platform.isWindows) {
-    return path + name + "_windows_amd64.dll";
-  }
-  throw Exception("Platform not implemented");
-}
-
-ffi.DynamicLibrary openLib() {
-  return _dlopenPlatformSpecific('openpgp',
-      path: join(
-        Directory(Platform.resolvedExecutable).parent.path,
-        // data prefix is needed for linux at least
-        'flutter_assets/packages/openpgp/static/',
-      ));
-}

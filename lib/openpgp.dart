@@ -8,14 +8,24 @@ import 'package:openpgp/bridge/model/bridge.pb.dart';
 
 class OpenPGP {
   static const MethodChannel _channel = const MethodChannel('openpgp');
-  static bool _bindingSupported = Platform.isWindows;
+  static bool _bindingSupported = Platform.isWindows || Platform.isLinux;
 
   static Future<Uint8List> _call(String message, Uint8List payload) async {
+    print(Platform.resolvedExecutable);
+    print("Platform.isAndroid");
+    print(Platform.isAndroid);
+    print("Platform.isFuchsia");
+    print(Platform.isFuchsia);
+    print("Platform.isLinux");
+    print(Platform.isLinux);
+    print(Platform.operatingSystem);
+    print(Platform.packageConfig);
+    print(Platform.localeName);
+    print(Platform.localHostname);
+    print(Platform.numberOfProcessors);
     if (_bindingSupported) {
-      // the idea its that only should use this
-      return await Binding().call(message, payload);
+        return await Binding().call(message, payload);
     }
-    // this is a fallback not sure but here its :D
     return await _channel.invokeMethod(message, payload);
   }
 
