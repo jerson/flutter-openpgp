@@ -18,6 +18,19 @@ target_link_libraries(${PLUGIN_NAME} PRIVATE PkgConfig::GTK)
 
 # List of absolute paths to libraries that should be bundled with the plugin
 set(openpgp_bundled_libraries
-  ""
+  "${CMAKE_CURRENT_SOURCE_DIR}/libopenpgp_bridge.so"
   PARENT_SCOPE
 )
+
+set(OPENPGP_BRIDGE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib/amd64")
+set(OPENPGP_BRIDGE_LIBRARY "${OPENPGP_BRIDGE_DIR}/libopenpgp_bridge.so")
+
+LINK_DIRECTORIES("${OPENPGP_BRIDGE_DIR}")
+
+#target_include_directories(${PLUGIN_NAME} INTERFACE ${OPENPGP_BRIDGE_DIR})
+#target_link_libraries(${PLUGIN_NAME} INTERFACE ${OPENPGP_BRIDGE_LIBRARY})
+
+#target_link_libraries(${PLUGIN_NAME} INTERFACE "${OPENPGP_BRIDGE_LIBRARY}")
+#
+#target_link_libraries(${PLUGIN_NAME} INTERFACE "openpgp_bridge")
+

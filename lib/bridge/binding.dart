@@ -64,15 +64,15 @@ class Binding {
 
   String _platformPath() {
     if (Platform.isMacOS) {
-      return  "libopenpgp.dylib";
+      return  "libopenpgp_bridge.dylib";
     }
     if (Platform.isWindows) {
-      return  "libopenpgp.dll";
+      return  "libopenpgp_bridge.dll";
     }
     if (Platform.isIOS) {
       return  "OpenPGPBridge.framework/OpenPGPBridge";
     }
-    return  "libopenpgp.so";
+    return  "libopenpgp_bridge.so";
   }
 
   ffi.DynamicLibrary openLib() {

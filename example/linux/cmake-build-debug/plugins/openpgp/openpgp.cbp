@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="openpgp"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\flutter\;CMake Files\flutter\ephemeral\;CMake Files\flutter\ephemeral\.plugin_symlinks\;CMake Files\flutter\ephemeral\.plugin_symlinks\openpgp\;CMake Files\flutter\ephemeral\.plugin_symlinks\openpgp\linux\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/cmake-build-debug/plugins/openpgp"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/cmake-build-debug/plugins/openpgp/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/cmake-build-debug/plugins/openpgp/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/cmake-build-debug/plugins/openpgp/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/cmake-build-debug/plugins/openpgp/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="openpgp_plugin">
+				<Option output="/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/cmake-build-debug/plugins/openpgp/libopenpgp_plugin.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/cmake-build-debug/plugins/openpgp"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DFLUTTER_PLUGIN_IMPL"/>
+					<Add option="-DAPPLICATION_ID=&quot;dev.jerson.openpgp&quot;"/>
+					<Add directory="/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/flutter/ephemeral"/>
+					<Add directory="/usr/include/gtk-3.0"/>
+					<Add directory="/usr/include/at-spi2-atk/2.0"/>
+					<Add directory="/usr/include/at-spi-2.0"/>
+					<Add directory="/usr/include/dbus-1.0"/>
+					<Add directory="/usr/lib/x86_64-linux-gnu/dbus-1.0/include"/>
+					<Add directory="/usr/include/gio-unix-2.0"/>
+					<Add directory="/usr/include/cairo"/>
+					<Add directory="/usr/include/pango-1.0"/>
+					<Add directory="/usr/include/fribidi"/>
+					<Add directory="/usr/include/harfbuzz"/>
+					<Add directory="/usr/include/atk-1.0"/>
+					<Add directory="/usr/include/pixman-1"/>
+					<Add directory="/usr/include/uuid"/>
+					<Add directory="/usr/include/freetype2"/>
+					<Add directory="/usr/include/libpng16"/>
+					<Add directory="/usr/include/gdk-pixbuf-2.0"/>
+					<Add directory="/usr/include/libmount"/>
+					<Add directory="/usr/include/blkid"/>
+					<Add directory="/usr/include/glib-2.0"/>
+					<Add directory="/usr/lib/x86_64-linux-gnu/glib-2.0/include"/>
+					<Add directory="/usr/include/c++/9"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
+					<Add directory="/usr/include/c++/9/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/9/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/cmake-build-debug/plugins/openpgp/Makefile&quot;  VERBOSE=1 openpgp_plugin"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/cmake-build-debug/plugins/openpgp/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/cmake-build-debug/plugins/openpgp/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/cmake-build-debug/plugins/openpgp/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="openpgp_plugin/fast">
+				<Option output="/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/cmake-build-debug/plugins/openpgp/libopenpgp_plugin.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/cmake-build-debug/plugins/openpgp"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DFLUTTER_PLUGIN_IMPL"/>
+					<Add option="-DAPPLICATION_ID=&quot;dev.jerson.openpgp&quot;"/>
+					<Add directory="/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/flutter/ephemeral"/>
+					<Add directory="/usr/include/gtk-3.0"/>
+					<Add directory="/usr/include/at-spi2-atk/2.0"/>
+					<Add directory="/usr/include/at-spi-2.0"/>
+					<Add directory="/usr/include/dbus-1.0"/>
+					<Add directory="/usr/lib/x86_64-linux-gnu/dbus-1.0/include"/>
+					<Add directory="/usr/include/gio-unix-2.0"/>
+					<Add directory="/usr/include/cairo"/>
+					<Add directory="/usr/include/pango-1.0"/>
+					<Add directory="/usr/include/fribidi"/>
+					<Add directory="/usr/include/harfbuzz"/>
+					<Add directory="/usr/include/atk-1.0"/>
+					<Add directory="/usr/include/pixman-1"/>
+					<Add directory="/usr/include/uuid"/>
+					<Add directory="/usr/include/freetype2"/>
+					<Add directory="/usr/include/libpng16"/>
+					<Add directory="/usr/include/gdk-pixbuf-2.0"/>
+					<Add directory="/usr/include/libmount"/>
+					<Add directory="/usr/include/blkid"/>
+					<Add directory="/usr/include/glib-2.0"/>
+					<Add directory="/usr/lib/x86_64-linux-gnu/glib-2.0/include"/>
+					<Add directory="/usr/include/c++/9"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
+					<Add directory="/usr/include/c++/9/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/9/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/cmake-build-debug/plugins/openpgp/Makefile&quot;  VERBOSE=1 openpgp_plugin/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/cmake-build-debug/plugins/openpgp/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/cmake-build-debug/plugins/openpgp/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/cmake-build-debug/plugins/openpgp/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/flutter/ephemeral/.plugin_symlinks/openpgp/linux/openpgp_plugin.cc">
+			<Option target="openpgp_plugin"/>
+		</Unit>
+		<Unit filename="/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/flutter/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\flutter\"/>
+		</Unit>
+		<Unit filename="/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/flutter/generated_plugins.cmake">
+			<Option virtualFolder="CMake Files\flutter\"/>
+		</Unit>
+		<Unit filename="/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/flutter/ephemeral/generated_config.cmake">
+			<Option virtualFolder="CMake Files\flutter\ephemeral\"/>
+		</Unit>
+		<Unit filename="/home/usuario/Proyectos/flutter/flutter-openpgp/example/linux/flutter/ephemeral/.plugin_symlinks/openpgp/linux/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\flutter\ephemeral\.plugin_symlinks\openpgp\linux\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
