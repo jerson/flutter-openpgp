@@ -11,23 +11,9 @@ class OpenPGP {
   static bool _bindingSupported = Platform.isWindows || Platform.isLinux|| Platform.isAndroid;
 
   static Future<Uint8List> _call(String message, Uint8List payload) async {
-    print(Platform.resolvedExecutable);
-    print("Platform.isAndroid");
-    print(Platform.isAndroid);
-    print("Platform.isFuchsia");
-    print(Platform.isFuchsia);
-    print("Platform.isLinux");
-    print(Platform.isLinux);
-    print(Platform.operatingSystem);
-    print(Platform.packageConfig);
-    print(Platform.localeName);
-    print(Platform.localHostname);
-    print(Platform.numberOfProcessors);
     if (_bindingSupported) {
-      print("_bindingSupported");
         return await Binding().call(message, payload);
     }
-    print("not ._bindingSupported");
     return await _channel.invokeMethod(message, payload);
   }
 
