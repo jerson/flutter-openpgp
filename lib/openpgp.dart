@@ -8,11 +8,16 @@ import 'package:openpgp/bridge/model/bridge.pb.dart';
 
 class OpenPGP {
   static const MethodChannel _channel = const MethodChannel('openpgp');
-  static bool _bindingSupported = Platform.isWindows || Platform.isLinux|| Platform.isAndroid;
+  static bool _bindingSupported = Platform.isWindows ||
+      Platform.isLinux ||
+      Platform.isAndroid ||
+      Platform.isMacOS ||
+      Platform.isIOS;  
+      
 
   static Future<Uint8List> _call(String message, Uint8List payload) async {
     if (_bindingSupported) {
-        return await Binding().call(message, payload);
+      return await Binding().call(message, payload);
     }
     return await _channel.invokeMethod(message, payload);
   }

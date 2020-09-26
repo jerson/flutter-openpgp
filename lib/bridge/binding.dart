@@ -23,7 +23,7 @@ class Binding {
 
   Future<Uint8List> call(String name, Uint8List payload) async {
     final callable = _library
-        .lookup<ffi.NativeFunction<call_func>>('Call')
+        .lookup<ffi.NativeFunction<call_func>>('OpenPGPBridgeCall')
         .asFunction<Call>();
 
     final pointer = allocate<ffi.Uint8>(count: payload.length);
@@ -62,21 +62,16 @@ class Binding {
     return text == null ? "" : Utf8.fromUtf8(text);
   }
 
-  String _platformPath() {
+  ffi.DynamicLibrary openLib() {
     if (Platform.isMacOS) {
-      return  "libopenpgp_bridge.dylib";
+      return ffi.DynamicLibrary.open("libopenpgp_bridge.dylib");
     }
     if (Platform.isWindows) {
-      return  "libopenpgp_bridge.dll";
+      return ffi.DynamicLibrary.open("libopenpgp_bridge.dll");
     }
     if (Platform.isIOS) {
-      return  "OpenPGPBridge.framework/OpenPGPBridge";
+        return ffi.DynamicLibrary.process();
     }
-    return  "libopenpgp_bridge.so";
-  }
-
-  ffi.DynamicLibrary openLib() {
-    return ffi.DynamicLibrary.open(_platformPath());
+    return ffi.DynamicLibrary.open("libopenpgp_bridge.so");
   }
 }
-
