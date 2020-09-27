@@ -12,8 +12,7 @@ class OpenPGP {
       Platform.isLinux ||
       Platform.isAndroid ||
       Platform.isMacOS ||
-      Platform.isIOS;  
-      
+      Platform.isIOS;
 
   static Future<Uint8List> _call(String message, Uint8List payload) async {
     if (_bindingSupported) {

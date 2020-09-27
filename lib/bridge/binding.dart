@@ -68,13 +68,14 @@ class Binding {
       // return ffi.DynamicLibrary.open("libopenpgp_bridge.dylib");
     }
     if (Platform.isWindows) {
+      //  Platform.script.resolve("build/windows/x64/Debug/Runner/hello.dll").path
       return ffi.DynamicLibrary.open("libopenpgp_bridge.dll");
     }
     if (Platform.isIOS) {
       return ffi.DynamicLibrary.process();
     }
     if (Platform.isLinux) {
-      return ffi.DynamicLibrary.process();
+      return ffi.DynamicLibrary.executable();
     }
     return ffi.DynamicLibrary.open("libopenpgp_bridge.so");
   }

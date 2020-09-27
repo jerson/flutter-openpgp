@@ -22,18 +22,7 @@ set(openpgp_bundled_libraries
   PARENT_SCOPE
 )
 
-set(OPENPGP_BRIDGE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include/openpgp")
-set(OPENPGP_BRIDGE_LIBRARY "${OPENPGP_BRIDGE_DIR}/libopenpgp_bridge.so")
-
-#LINK_DIRECTORIES("${OPENPGP_BRIDGE_DIR}")
-
-#add_library(${PLUGIN_NAME} STATIC ${OPENPGP_BRIDGE_LIBRARY})
-target_include_directories(${PLUGIN_NAME} INTERFACE ${OPENPGP_BRIDGE_DIR})
-target_link_libraries(${PLUGIN_NAME} INTERFACE openpgp_bridge)
-
-#target_link_libraries(${PLUGIN_NAME} INTERFACE ${OPENPGP_BRIDGE_LIBRARY})
-
-#target_link_libraries(${PLUGIN_NAME} INTERFACE "${OPENPGP_BRIDGE_LIBRARY}")
-#
-#target_link_libraries(${PLUGIN_NAME} INTERFACE "openpgp_bridge")
-
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/shared)
+add_library(libopenpgp_bridge SHARED IMPORTED)
+set_target_properties(libopenpgp_bridge PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/shared/libopenpgp_bridge.so)
+target_link_libraries(${PLUGIN_NAME} INTERFACE libopenpgp_bridge)
