@@ -64,7 +64,8 @@ class Binding {
 
   ffi.DynamicLibrary openLib() {
     if (Platform.isMacOS) {
-      return ffi.DynamicLibrary.open("libopenpgp_bridge.dylib");
+      return ffi.DynamicLibrary.process();
+     // return ffi.DynamicLibrary.open("libopenpgp_bridge.dylib");
     }
     if (Platform.isWindows) {
       return ffi.DynamicLibrary.open("libopenpgp_bridge.dll");

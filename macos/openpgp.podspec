@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'openpgp'
-  s.version          = '0.2.0'
+  s.version          = '0.6.0'
   s.summary          = 'library for use OpenPGP.'
   s.description      = <<-DESC
 library for use OpenPGP.
@@ -15,8 +15,10 @@ library for use OpenPGP.
   s.source           = { :path => '.' }
   s.source_files     = 'Classes/**/*'
   s.dependency 'FlutterMacOS'
-  s.vendored_frameworks = 'OpenPGPBridge.framework'
   s.platform = :osx, '10.11'
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
   s.swift_version = '5.0'
+  s.vendored_libraries  = '*.a'
+  s.xcconfig = { 'OTHER_LDFLAGS' => '-force_load "${PODS_ROOT}/../Flutter/ephemeral/.symlinks/plugins/openpgp/macos/libopenpgp_bridge.a"'}
+
 end
