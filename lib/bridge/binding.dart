@@ -65,13 +65,16 @@ class Binding {
   ffi.DynamicLibrary openLib() {
     if (Platform.isMacOS) {
       return ffi.DynamicLibrary.process();
-     // return ffi.DynamicLibrary.open("libopenpgp_bridge.dylib");
+      // return ffi.DynamicLibrary.open("libopenpgp_bridge.dylib");
     }
     if (Platform.isWindows) {
       return ffi.DynamicLibrary.open("libopenpgp_bridge.dll");
     }
     if (Platform.isIOS) {
-        return ffi.DynamicLibrary.process();
+      return ffi.DynamicLibrary.process();
+    }
+    if (Platform.isLinux) {
+      return ffi.DynamicLibrary.process();
     }
     return ffi.DynamicLibrary.open("libopenpgp_bridge.so");
   }
