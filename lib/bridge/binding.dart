@@ -4,12 +4,16 @@ import 'dart:typed_data';
 
 import 'dart:ffi' as ffi;
 import 'dart:io' show Platform;
-import 'package:openpgp/bridge/bridge.dart';
-import 'package:openpgp/bridge/functions.dart';
-import 'package:openpgp/bridge/return.dart';
+import 'package:openpgp/bridge/isolate.dart';
+import 'package:openpgp/bridge/ffi.dart';
 import 'dart:io';
 
 import 'package:ffi/ffi.dart';
+
+callBridge(IsolateArguments args) async {
+  var result = await Binding().call(args.name, args.payload);
+  args.port.send(result);
+}
 
 class Binding {
   static final String _callFuncName = 'OpenPGPBridgeCall';
@@ -28,9 +32,9 @@ class Binding {
 
   Future<Uint8List> callAsync(String name, Uint8List payload) async {
     final port = ReceivePort();
-    final args = BridgeArguments(name, payload, port.sendPort);
+    final args = IsolateArguments(name, payload, port.sendPort);
 
-    Isolate.spawn<BridgeArguments>(
+    Isolate.spawn<IsolateArguments>(
       callBridge,
       args,
       onError: port.sendPort,
