@@ -1,24 +1,21 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
-import 'package:openpgp/bridge/binding.dart';
+import 'package:openpgp/bridge/binding_stub.dart'
+    if (dart.library.io) 'package:openpgp/bridge/binding.dart'
+    if (dart.library.js) 'package:openpgp/bridge/binding_stub.dart';
 import 'package:openpgp/bridge/model/bridge.pb.dart';
 
 class OpenPGP {
   static const MethodChannel _channel = const MethodChannel('openpgp');
-  static bool _bindingSupported = Platform.isWindows ||
-      Platform.isLinux ||
-      Platform.isAndroid ||
-      Platform.isMacOS ||
-      Platform.isIOS;
+  static bool _bindingSupported = Binding().isSupported();
 
-  static Future<Uint8List> _call(String message, Uint8List payload) async {
+  static Future<Uint8List> _call(String name, Uint8List payload) async {
     if (_bindingSupported) {
-      return await Binding().call(message, payload);
+      return await Binding().callAsync(name, payload);
     }
-    return await _channel.invokeMethod(message, payload);
+    return await _channel.invokeMethod(name, payload);
   }
 
   static Future<Uint8List> _bytesResponse(

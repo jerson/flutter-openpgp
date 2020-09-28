@@ -1,10 +1,13 @@
+import 'dart:async';
+import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'dart:ffi' as ffi;
 import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart';
+import 'package:openpgp/bridge/bridge.dart';
 import 'package:openpgp/bridge/functions.dart';
 import 'package:openpgp/bridge/return.dart';
-import "package:path/path.dart" show join;
 import 'dart:io';
 
 import 'package:ffi/ffi.dart';
@@ -19,6 +22,27 @@ class Binding {
 
   Binding._internal() {
     _library = openLib();
+  }
+
+  Future<Uint8List> callAsync(String name, Uint8List payload) async {
+    final port = ReceivePort();
+    final args = BridgeArguments(name, payload, port.sendPort);
+
+    Isolate.spawn<BridgeArguments>(
+      callBridge,
+      args,
+      onError: port.sendPort,
+      onExit: port.sendPort,
+    );
+
+    Completer<Uint8List> completer = new Completer();
+
+    StreamSubscription subscription;
+    subscription = port.listen((message) async {
+      await subscription?.cancel();
+      completer.complete(message);
+    });
+    return completer.future;
   }
 
   Future<Uint8List> call(String name, Uint8List payload) async {
@@ -60,6 +84,14 @@ class Binding {
 
   String fromUtf8(ffi.Pointer<Utf8> text) {
     return text == null ? "" : Utf8.fromUtf8(text);
+  }
+
+  bool isSupported() {
+    return Platform.isWindows ||
+        Platform.isLinux ||
+        Platform.isAndroid ||
+        Platform.isMacOS ||
+        Platform.isIOS;
   }
 
   ffi.DynamicLibrary openLib() {
