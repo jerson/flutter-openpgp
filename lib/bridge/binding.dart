@@ -10,7 +10,10 @@ import 'dart:io';
 import 'package:ffi/ffi.dart';
 
 class Binding {
+  static final String _call_func_name = 'OpenPGPBridgeCall';
+  static final String _library_name = 'libopenpgp_bridge';
   static final Binding _singleton = Binding._internal();
+
   ffi.DynamicLibrary _library;
 
   factory Binding() {
@@ -23,7 +26,7 @@ class Binding {
 
   Future<Uint8List> call(String name, Uint8List payload) async {
     final callable = _library
-        .lookup<ffi.NativeFunction<call_func>>('OpenPGPBridgeCall')
+        .lookup<ffi.NativeFunction<call_func>>(_call_func_name)
         .asFunction<Call>();
 
     final pointer = allocate<ffi.Uint8>(count: payload.length);
@@ -65,11 +68,11 @@ class Binding {
   ffi.DynamicLibrary openLib() {
     if (Platform.isMacOS) {
       return ffi.DynamicLibrary.process();
-      // return ffi.DynamicLibrary.open("libopenpgp_bridge.dylib");
+      // return ffi.DynamicLibrary.open("${_library_name}.dylib");
     }
     if (Platform.isWindows) {
       //  Platform.script.resolve("build/windows/x64/Debug/Runner/hello.dll").path
-      return ffi.DynamicLibrary.open("libopenpgp_bridge.dll");
+      return ffi.DynamicLibrary.open("${_library_name}.dll");
     }
     if (Platform.isIOS) {
       return ffi.DynamicLibrary.process();
@@ -77,6 +80,6 @@ class Binding {
     if (Platform.isLinux) {
       return ffi.DynamicLibrary.executable();
     }
-    return ffi.DynamicLibrary.open("libopenpgp_bridge.so");
+    return ffi.DynamicLibrary.open("${_library_name}.so");
   }
 }
