@@ -10,11 +10,6 @@ import 'dart:io';
 
 import 'package:ffi/ffi.dart';
 
-callBridge(IsolateArguments args) async {
-  var result = await Binding().call(args.name, args.payload);
-  args.port.send(result);
-}
-
 class Binding {
   static final String _callFuncName = 'OpenPGPBridgeCall';
   static final String _libraryName = 'libopenpgp_bridge';
@@ -28,6 +23,11 @@ class Binding {
 
   Binding._internal() {
     _library = openLib();
+  }
+
+  static callBridge(IsolateArguments args) async {
+    var result = await Binding().call(args.name, args.payload);
+    args.port.send(result);
   }
 
   Future<Uint8List> callAsync(String name, Uint8List payload) async {
