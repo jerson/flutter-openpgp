@@ -5,14 +5,14 @@ import 'package:flutter/services.dart';
 import 'package:openpgp/bridge/binding_stub.dart'
     if (dart.library.io) 'package:openpgp/bridge/binding.dart'
     if (dart.library.js) 'package:openpgp/bridge/binding_stub.dart';
-import 'package:openpgp/bridge/model/bridge.pb.dart';
+import 'package:openpgp/model/bridge.pb.dart';
 
 class OpenPGP {
   static const MethodChannel _channel = const MethodChannel('openpgp');
-  static bool _bindingSupported = Binding().isSupported();
+  static bool bindingEnabled = Binding().isSupported();
 
   static Future<Uint8List> _call(String name, Uint8List payload) async {
-    if (_bindingSupported) {
+    if (bindingEnabled) {
       return await Binding().callAsync(name, payload);
     }
     return await _channel.invokeMethod(name, payload);
