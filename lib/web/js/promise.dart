@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:js/js.dart';
 
+// ignore: missing_js_lib_annotation
 @JS()
 class Promise<T> {
   external Promise(void executor(void resolve(T result), Function reject));

@@ -103,7 +103,7 @@ class Binding {
     }
     if (Platform.isWindows) {
       //  Platform.script.resolve("build/windows/x64/Debug/Runner/hello.dll").path
-      return ffi.DynamicLibrary.open("${_libraryName}.dll");
+      return ffi.DynamicLibrary.open("$_libraryName.dll");
     }
     if (Platform.isIOS) {
       return ffi.DynamicLibrary.process();
@@ -111,6 +111,6 @@ class Binding {
     if (Platform.isLinux) {
       return ffi.DynamicLibrary.executable();
     }
-    return ffi.DynamicLibrary.open("${_libraryName}.so");
+    return ffi.DynamicLibrary.open("$_libraryName.so");
   }
 }
