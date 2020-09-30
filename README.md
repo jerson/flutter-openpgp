@@ -1,6 +1,6 @@
 # OpenPGP
 
-Library for use openPGP with support for android, ios, macos, linux, web and hover
+Library for use openPGP with support for android, ios, macos, windows, linux, web and hover
 
 ## Contents
 
@@ -10,9 +10,10 @@ Library for use openPGP with support for android, ios, macos, linux, web and hov
     - [ProGuard](#proguard)
   - [iOS](#ios)
   - [Web](#web)
-  - [Linux](#linux)
   - [MacOS](#macos)
   - [Hover](#hover)
+  - [Linux](#linux)
+  - [Windows](#windows)
 - [Example](#example)
 - [Native Code](#native-code)
 
@@ -22,21 +23,15 @@ Library for use openPGP with support for android, ios, macos, linux, web and hov
 ```dart
 import 'package:openpgp/openpgp.dart';
 
-var keyPair = await OpenPGP.generate(
-      options: Options(
-        name: 'test',
-        comment: 'test',
-        email: 'test@test.com',
-        passphrase: "123456",
-        keyOptions: KeyOptions(
-            rsaBits: 2048,
-            cipher: Cypher.aes128,
-            compression: Compression.none,
-            hash: Hash.sha256,
-            compressionLevel: 0,
-        ),
-      ),
-);
+void main() async {
+ var keyOptions = KeyOptions()..rsaBits = 1024;
+ var keyPair = await OpenPGP.generate(
+        options: Options()
+          ..name = 'test'
+          ..email = 'test@test.com'
+          ..passphrase = passphrase
+          ..keyOptions = keyOptions);
+}
 ```
 
 ### Encrypt methods
@@ -44,12 +39,16 @@ var keyPair = await OpenPGP.generate(
 ```dart
 import 'package:fast_rsa/rsa.dart';
 
-var bytesSample := Uint8List.fromList('data'.codeUnits)
+void main() async {
+
+var bytesSample = Uint8List.fromList('data'.codeUnits);
 
 var result = await OpenPGP.encrypt("text","[publicKey here]");
 var result = await OpenPGP.encryptSymmetric("text","[passphrase here]");
 var result = await OpenPGP.encryptBytes(bytesSample,"[publicKey here]");
 var result = await OpenPGP.encryptSymmetricBytes(bytesSample,"[passphrase here]");
+
+}
 
 ```
 
@@ -58,12 +57,16 @@ var result = await OpenPGP.encryptSymmetricBytes(bytesSample,"[passphrase here]"
 ```dart
 import 'package:fast_rsa/rsa.dart';
 
-var bytesSample := Uint8List.fromList('data'.codeUnits)
+void main() async {
+
+var bytesSample = Uint8List.fromList('data'.codeUnits);
 
 var result = await OpenPGP.decrypt("text encrypted","[privateKey here]","[passphrase here]");
 var result = await OpenPGP.decryptSymmetric("text encrypted","[passphrase here]");
 var result = await OpenPGP.decryptBytes(bytesSample,"[privateKey here]","[passphrase here]");
 var result = await OpenPGP.decryptSymmetricBytes(bytesSample,"[passphrase here]");
+
+}
 ```
 
 ### Sign methods
@@ -71,10 +74,14 @@ var result = await OpenPGP.decryptSymmetricBytes(bytesSample,"[passphrase here]"
 ```dart
 import 'package:fast_rsa/rsa.dart';
 
-var bytesSample := Uint8List.fromList('data'.codeUnits)
+void main() async {
+
+var bytesSample = Uint8List.fromList('data'.codeUnits);
 
 var result = await OpenPGP.sign("text","[publicKey here]","[privateKey here]","[passphrase here]");
 var result = await OpenPGP.signBytesToString(bytesSample,"[publicKey here]","[privateKey here]","[passphrase here]");
+
+}
 
 ```
 
@@ -83,10 +90,14 @@ var result = await OpenPGP.signBytesToString(bytesSample,"[publicKey here]","[pr
 ```dart
 import 'package:fast_rsa/rsa.dart';
 
-var bytesSample := Uint8List.fromList('data'.codeUnits)
+void main() async {
+
+var bytesSample = Uint8List.fromList('data'.codeUnits);
 
 var result = await OpenPGP.verify("text signed","text","[publicKey here]");
 var result = await OpenPGP.verifyBytes("text signed", bytesSample,"[publicKey here]");
+
+}
 
 ```
 
@@ -109,7 +120,9 @@ no additional setup required
 
 ### Web
 
-add to you `pubspec.yaml`
+    Web support right now is half progress, we need for support web workers. in order to make async calls.
+
+Add to you `pubspec.yaml`
 
 ```yaml
 assets:
@@ -130,27 +143,38 @@ and in you `web/index.html`
 
 ref: https://github.com/jerson/flutter-openpgp/blob/master/example/web/index.html
 
-### Linux (need to upgrade to new linux flutter template, use older version)
-
-add to you `linux/app_configuration.mk`
-
-```make
-EXTRA_LDFLAGS=-lopenpgp
-```
-
-ref: https://github.com/jerson/flutter-openpgp/blob/master/example/linux/app_configuration.mk
-
 ### MacOS
 
-no additional setup required
+No additional setup required
 
 ### Hover
 
-just update your plugins
+Update your plugins
 
 ```bash
 hover plugins get
 ```
+
+In you `main_desktop.dart` by now you need to add `OpenPGP.bindingEnabled = false` in order to use channels instead of shared objects
+
+```dart
+import 'main.dart' as original_main;
+import 'package:openpgp/openpgp.dart';
+
+void main() {
+  OpenPGP.bindingEnabled = false;
+  original_main.main();
+}
+
+```
+
+### Linux
+
+work in progress...
+
+### Windows
+
+work in progress...
 
 ## Example
 
