@@ -24,13 +24,13 @@ Library for use openPGP with support for android, ios, macos, windows, linux, we
 import 'package:openpgp/openpgp.dart';
 
 void main() async {
- var keyOptions = KeyOptions()..rsaBits = 1024;
- var keyPair = await OpenPGP.generate(
-        options: Options()
-          ..name = 'test'
-          ..email = 'test@test.com'
-          ..passphrase = passphrase
-          ..keyOptions = keyOptions);
+    var keyOptions = KeyOptions()..rsaBits = 1024;
+    var keyPair = await OpenPGP.generate(
+            options: Options()
+              ..name = 'test'
+              ..email = 'test@test.com'
+              ..passphrase = passphrase
+              ..keyOptions = keyOptions);
 }
 ```
 
@@ -41,12 +41,12 @@ import 'package:fast_rsa/rsa.dart';
 
 void main() async {
 
-var bytesSample = Uint8List.fromList('data'.codeUnits);
-
-var result = await OpenPGP.encrypt("text","[publicKey here]");
-var result = await OpenPGP.encryptSymmetric("text","[passphrase here]");
-var result = await OpenPGP.encryptBytes(bytesSample,"[publicKey here]");
-var result = await OpenPGP.encryptSymmetricBytes(bytesSample,"[passphrase here]");
+    var bytesSample = Uint8List.fromList('data'.codeUnits);
+    
+    var result = await OpenPGP.encrypt("text","[publicKey here]");
+    var result = await OpenPGP.encryptSymmetric("text","[passphrase here]");
+    var result = await OpenPGP.encryptBytes(bytesSample,"[publicKey here]");
+    var result = await OpenPGP.encryptSymmetricBytes(bytesSample,"[passphrase here]");
 
 }
 
@@ -59,12 +59,12 @@ import 'package:fast_rsa/rsa.dart';
 
 void main() async {
 
-var bytesSample = Uint8List.fromList('data'.codeUnits);
-
-var result = await OpenPGP.decrypt("text encrypted","[privateKey here]","[passphrase here]");
-var result = await OpenPGP.decryptSymmetric("text encrypted","[passphrase here]");
-var result = await OpenPGP.decryptBytes(bytesSample,"[privateKey here]","[passphrase here]");
-var result = await OpenPGP.decryptSymmetricBytes(bytesSample,"[passphrase here]");
+    var bytesSample = Uint8List.fromList('data'.codeUnits);
+    
+    var result = await OpenPGP.decrypt("text encrypted","[privateKey here]","[passphrase here]");
+    var result = await OpenPGP.decryptSymmetric("text encrypted","[passphrase here]");
+    var result = await OpenPGP.decryptBytes(bytesSample,"[privateKey here]","[passphrase here]");
+    var result = await OpenPGP.decryptSymmetricBytes(bytesSample,"[passphrase here]");
 
 }
 ```
@@ -76,10 +76,10 @@ import 'package:fast_rsa/rsa.dart';
 
 void main() async {
 
-var bytesSample = Uint8List.fromList('data'.codeUnits);
-
-var result = await OpenPGP.sign("text","[publicKey here]","[privateKey here]","[passphrase here]");
-var result = await OpenPGP.signBytesToString(bytesSample,"[publicKey here]","[privateKey here]","[passphrase here]");
+    var bytesSample = Uint8List.fromList('data'.codeUnits);
+    
+    var result = await OpenPGP.sign("text","[publicKey here]","[privateKey here]","[passphrase here]");
+    var result = await OpenPGP.signBytesToString(bytesSample,"[publicKey here]","[privateKey here]","[passphrase here]");
 
 }
 
@@ -92,10 +92,10 @@ import 'package:fast_rsa/rsa.dart';
 
 void main() async {
 
-var bytesSample = Uint8List.fromList('data'.codeUnits);
-
-var result = await OpenPGP.verify("text signed","text","[publicKey here]");
-var result = await OpenPGP.verifyBytes("text signed", bytesSample,"[publicKey here]");
+    var bytesSample = Uint8List.fromList('data'.codeUnits);
+    
+    var result = await OpenPGP.verify("text signed","text","[publicKey here]");
+    var result = await OpenPGP.verifyBytes("text signed", bytesSample,"[publicKey here]");
 
 }
 
@@ -107,7 +107,7 @@ var result = await OpenPGP.verifyBytes("text signed", bytesSample,"[publicKey he
 
 #### ProGuard
 
-Add this lines to `android/app/proguard-rules.pro` for proguard support
+Add this lines to `android/app/proguard-rules.pro` for proguard support.
 
 ```proguard
 -keep class go.** { *; }
@@ -116,13 +116,13 @@ Add this lines to `android/app/proguard-rules.pro` for proguard support
 
 ### iOS
 
-no additional setup required
+No additional setup required.
 
 ### Web
 
     Web support right now is half progress, we need for support web workers. in order to make async calls.
 
-Add to you `pubspec.yaml`
+Add to you `pubspec.yaml`.
 
 ```yaml
 assets:
@@ -145,11 +145,11 @@ ref: https://github.com/jerson/flutter-openpgp/blob/master/example/web/index.htm
 
 ### MacOS
 
-No additional setup required
+No additional setup required.
 
 ### Hover
 
-Update your plugins
+Update your plugins.
 
 ```bash
 hover plugins get
@@ -170,15 +170,15 @@ void main() {
 
 ### Linux
 
-work in progress... now you can run but not build.. we need some help adding .so to CMakeFiles
+Work in progress... now you can run but not build.. we need some help adding .so to `CMakeFiles`
 
 ### Windows
 
-work in progress...
+Work in progress...
 
 ## Example
 
-Inside example folder
+Inside example folder.
 
 ```bash
 cd example && flutter run
@@ -186,6 +186,6 @@ cd example && flutter run
 
 ## Native Code
 
-the native library is made in Golang and build with gomobile for faster performance
+Native library is made in `Go` for faster performance.
 
-https://github.com/jerson/openpgp-mobile
+[https://github.com/jerson/openpgp-mobile]
