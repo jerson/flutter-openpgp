@@ -96,6 +96,7 @@ class Binding {
         Platform.isLinux ||
         Platform.isAndroid ||
         Platform.isMacOS ||
+        Platform.isFuchsia ||
         Platform.isIOS;
   }
 
@@ -105,8 +106,7 @@ class Binding {
       return ffi.DynamicLibrary.process();
     }
     if (Platform.isWindows) {
-      //  Platform.script.resolve("build/windows/x64/Debug/Runner/hello.dll").path
-      return ffi.DynamicLibrary.open("$baseDir/lib/$_libraryName.dll");
+      return ffi.DynamicLibrary.open("$baseDir/$_libraryName.dll");
     }
     if (Platform.isIOS) {
       return ffi.DynamicLibrary.process();
