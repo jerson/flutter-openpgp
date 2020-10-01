@@ -22,7 +22,13 @@ set(openpgp_bundled_libraries
   PARENT_SCOPE
 )
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/shared)
-add_library(libopenpgp_bridge SHARED IMPORTED)
-set_target_properties(libopenpgp_bridge PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/shared/libopenpgp_bridge.so)
-target_link_libraries(${PLUGIN_NAME} INTERFACE libopenpgp_bridge)
+set(BUILD_BUNDLE_DIR "${PROJECT_BINARY_DIR}/bundle")
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set(CMAKE_INSTALL_PREFIX "${BUILD_BUNDLE_DIR}" CACHE PATH "..." FORCE)
+endif()
+set(INSTALL_BUNDLE_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+set(LIBOPENPGP_BRIDGE "libopenpgp_bridge.so")
+set(LIBOPENPGP_BRIDGE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/shared/${LIBOPENPGP_BRIDGE}")
+install(CODE "file(REMOVE_RECURSE \"${INSTALL_BUNDLE_LIB_DIR}/${LIBOPENPGP_BRIDGE}\")" COMPONENT Runtime)
+install(FILES "${LIBOPENPGP_BRIDGE_PATH}" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)
+

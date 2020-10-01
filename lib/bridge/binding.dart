@@ -1,14 +1,13 @@
 import 'dart:async';
+import 'dart:ffi' as ffi;
+import 'dart:io' show Platform;
+import 'dart:io';
 import 'dart:isolate';
 import 'dart:typed_data';
 
-import 'dart:ffi' as ffi;
-import 'dart:io' show Platform;
-import 'package:openpgp/bridge/isolate.dart';
-import 'package:openpgp/bridge/ffi.dart';
-import 'dart:io';
-
 import 'package:ffi/ffi.dart';
+import 'package:openpgp/bridge/ffi.dart';
+import 'package:openpgp/bridge/isolate.dart';
 
 class Binding {
   static final String _callFuncName = 'OpenPGPBridgeCall';
@@ -101,19 +100,19 @@ class Binding {
   }
 
   ffi.DynamicLibrary openLib() {
+    var baseDir = Directory(Platform.resolvedExecutable).parent.path;
     if (Platform.isMacOS) {
       return ffi.DynamicLibrary.process();
-      // return ffi.DynamicLibrary.open("${_library_name}.dylib");
     }
     if (Platform.isWindows) {
       //  Platform.script.resolve("build/windows/x64/Debug/Runner/hello.dll").path
-      return ffi.DynamicLibrary.open("$_libraryName.dll");
+      return ffi.DynamicLibrary.open("$baseDir/lib/$_libraryName.dll");
     }
     if (Platform.isIOS) {
       return ffi.DynamicLibrary.process();
     }
-    if (Platform.isLinux) {
-      return ffi.DynamicLibrary.executable();
+    if (Platform.isLinux || Platform.isFuchsia) {
+      return ffi.DynamicLibrary.open("$baseDir/lib/$_libraryName.so");
     }
     return ffi.DynamicLibrary.open("$_libraryName.so");
   }

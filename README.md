@@ -170,7 +170,7 @@ void main() {
 
 ### Linux
 
-Work in progress... now you can run but not build.. we need some help adding .so to `CMakeFiles`
+No additional setup required.
 
 ### Windows
 
