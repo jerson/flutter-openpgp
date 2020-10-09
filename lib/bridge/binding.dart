@@ -65,7 +65,7 @@ class Binding {
     final voidStar = pointer.cast<ffi.Void>();
     final nameRef = toUtf8(name);
 
-    var result =
+    final result =
         callable(nameRef, voidStar, payload.length).cast<FFIBytesReturn>().ref;
 
     freeHere(nameRef);
@@ -73,7 +73,7 @@ class Binding {
 
     handleError(result.error, result.addressOf);
 
-    var output = result.message.cast<ffi.Uint8>().asTypedList(result.size);
+    final output = result.message.cast<ffi.Uint8>().asTypedList(result.size);
     freeHere(result.addressOf);
     return output;
   }
