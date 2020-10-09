@@ -174,7 +174,7 @@ No additional setup required.
 
 ### Windows
 
-Work in progress...
+No additional setup required.
 
 ## Example
 

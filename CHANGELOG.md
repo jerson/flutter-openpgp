@@ -1,9 +1,8 @@
 ## 1.0.0-alpha1
 
 - Replaced GoMobile with binding for mostly platforms, now should be more easier add new methods and support platforms
-- Platforms supported right now: MacOS, iOS, Android, Hover
+- Platforms supported right now: MacOS, iOS, Android, Hover, Windows
 - Platforms partial supported: Web (need web workers), Linux (need fix for build)
-- Platforms need for help: Windows
 
 ## 0.9.9
 
