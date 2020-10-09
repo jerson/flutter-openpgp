@@ -121,7 +121,7 @@ class Binding {
     if (Platform.isIOS) {
       return ffi.DynamicLibrary.process();
     }
-    if (Platform.isLinux || Platform.isFuchsia) {
+    if (Platform.isLinux) {
       var baseDir = Directory(Platform.resolvedExecutable).parent.path;
       return ffi.DynamicLibrary.open("$baseDir/lib/$_libraryName.so");
     }
