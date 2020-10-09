@@ -63,22 +63,25 @@ class Binding {
       pointer[i] = payload[i];
     }
     final voidStar = pointer.cast<ffi.Void>();
+    final nameRef = toUtf8(name);
 
-    var result = callable(toUtf8(name), voidStar, payload.length)
-        .cast<FFIBytesReturn>()
-        .ref;
+    var result =
+        callable(nameRef, voidStar, payload.length).cast<FFIBytesReturn>().ref;
+
+    freeHere(nameRef);
+    freeHere(voidStar);
 
     handleError(result.error, result.addressOf);
 
     var output = result.message.cast<ffi.Uint8>().asTypedList(result.size);
-    free(result.addressOf);
+    freeHere(result.addressOf);
     return output;
   }
 
   void handleError(ffi.Pointer<Utf8> error, ffi.Pointer pointer) {
     if (error.address != ffi.nullptr.address) {
       var message = fromUtf8(error);
-      free(pointer);
+      freeHere(pointer);
       throw message;
     }
   }
@@ -91,6 +94,13 @@ class Binding {
     return text == null ? "" : Utf8.fromUtf8(text);
   }
 
+  void freeHere(ffi.Pointer pointer) {
+    // FIXME by now i realize that free on windows is not working as expected
+    if (!Platform.isWindows) {
+      free(pointer);
+    }
+  }
+
   bool isSupported() {
     return Platform.isWindows ||
         Platform.isLinux ||
@@ -101,17 +111,18 @@ class Binding {
   }
 
   ffi.DynamicLibrary openLib() {
-    var baseDir = Directory(Platform.resolvedExecutable).parent.path;
     if (Platform.isMacOS) {
       return ffi.DynamicLibrary.process();
     }
     if (Platform.isWindows) {
-      return ffi.DynamicLibrary.open("$baseDir/$_libraryName.dll");
+      var baseDir = Directory(Platform.resolvedExecutable).parent.path;
+      return ffi.DynamicLibrary.open("$baseDir\\$_libraryName.dll");
     }
     if (Platform.isIOS) {
       return ffi.DynamicLibrary.process();
     }
     if (Platform.isLinux || Platform.isFuchsia) {
+      var baseDir = Directory(Platform.resolvedExecutable).parent.path;
       return ffi.DynamicLibrary.open("$baseDir/lib/$_libraryName.so");
     }
     return ffi.DynamicLibrary.open("$_libraryName.so");
