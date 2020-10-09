@@ -31,6 +31,8 @@ github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1 h1:EGx4pi6eqNxGa
 github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1/go.mod h1:wJfORRmW1u3UXTncJ5qlYoELFm8eSnnEO6hX4iZ3EWY=
 github.com/jerson/openpgp-mobile v0.8.0 h1:S+RcVPLHbfFJNQnVEb59bhxO9tejdPYKaVkUl1qOdK4=
 github.com/jerson/openpgp-mobile v0.8.0/go.mod h1:9gucrIcbU95NQEJFUNCH8fTm4WZoOTjBYirkCzNCo1g=
+github.com/jerson/openpgp-mobile v0.9.1 h1:nypSeFkyOytsGkNR0TRLagNbWCFPZDDqZsBWTo/w5Sk=
+github.com/jerson/openpgp-mobile v0.9.1/go.mod h1:MC9RaZOXIyRBNJD28qU2R1r3jOd5a9Ea2Yw36d5AqiA=
 github.com/jtolds/gls v4.20.0+incompatible h1:xdiiI2gbIgH/gLH7ADydsJ1uDOEzR8yvV7C0MuV77Wo=
 github.com/jtolds/gls v4.20.0+incompatible/go.mod h1:QJZ7F/aHp+rZTRtaJ1ow/lLfFfVYBRgL+9YlvaHOwJU=
 github.com/keybase/go-crypto v0.0.0-20200123153347-de78d2cb44f4 h1:cTxwSmnaqLoo+4tLukHoB9iqHOu3LmLhRmgUxZo6Vp4=
