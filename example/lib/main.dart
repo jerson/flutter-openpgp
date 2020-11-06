@@ -8,6 +8,7 @@ import 'package:openpgp/model/bridge.pb.dart';
 import 'package:openpgp/openpgp.dart';
 import 'package:openpgp_example/encrypt_decrypt.dart';
 import 'package:openpgp_example/encrypt_decrypt_bytes.dart';
+import 'package:openpgp_example/encrypt_decrypt_file.dart';
 import 'package:openpgp_example/encrypt_decrypt_symmetric.dart';
 import 'package:openpgp_example/encrypt_decrypt_symmetric_bytes.dart';
 import 'package:openpgp_example/generate.dart';
@@ -75,6 +76,11 @@ class _MyAppState extends State<MyApp> {
               title: "Encrypt And Decrypt",
               keyPair: _defaultKeyPair,
               key: Key("encrypt-decrypt"),
+            ),
+            if (false) EncryptAndDecryptFile(
+              title: "Encrypt And Decrypt file",
+              keyPair: _defaultKeyPair,
+              key: Key("encrypt-decrypt-file"),
             ),
             EncryptAndDecryptBytes(
               title: "Encrypt And Decrypt Bytes",

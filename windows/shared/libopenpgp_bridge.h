@@ -74,7 +74,8 @@ typedef struct { void *data; GoInt len; GoInt cap; } GoSlice;
 extern "C" {
 #endif
 
-extern BytesReturn* OpenPGPBridgeCall(char* name, void* payload, int payloadSize);
+
+extern BytesReturn* OpenPGPBridgeCall(char* p0, void* p1, int p2);
 
 #ifdef __cplusplus
 }

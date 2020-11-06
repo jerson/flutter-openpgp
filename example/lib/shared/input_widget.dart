@@ -5,14 +5,14 @@ class InputWidget extends StatefulWidget {
   const InputWidget({
     Key key,
     @required this.result,
-    @required String title,
-    @required Function(TextEditingController) onPressed,
-  })  : onPressed = onPressed,
-        title = title,
-        super(key: key);
+    @required this.title,
+    this.subtitle,
+    @required Function(TextEditingController) this.onPressed,
+  }) : super(key: key);
 
   final Function(TextEditingController) onPressed;
   final String title;
+  final String subtitle;
   final String result;
 
   @override
@@ -44,6 +44,7 @@ class _InputWidgetState extends State<InputWidget> {
       padding: const EdgeInsets.all(10),
       child: Column(
         children: <Widget>[
+          if (widget.subtitle != null) Text(widget.subtitle),
           TextField(
             autofocus: false,
             focusNode: _focusNode,
