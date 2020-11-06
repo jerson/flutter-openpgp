@@ -77,7 +77,7 @@ class _MyAppState extends State<MyApp> {
               keyPair: _defaultKeyPair,
               key: Key("encrypt-decrypt"),
             ),
-            if (true)
+            if (false)
               EncryptAndDecryptFile(
                 title: "Encrypt And Decrypt file",
                 keyPair: _defaultKeyPair,
