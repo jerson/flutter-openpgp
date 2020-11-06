@@ -77,11 +77,12 @@ class _MyAppState extends State<MyApp> {
               keyPair: _defaultKeyPair,
               key: Key("encrypt-decrypt"),
             ),
-            if (false) EncryptAndDecryptFile(
-              title: "Encrypt And Decrypt file",
-              keyPair: _defaultKeyPair,
-              key: Key("encrypt-decrypt-file"),
-            ),
+            if (false)
+              EncryptAndDecryptFile(
+                title: "Encrypt And Decrypt file",
+                keyPair: _defaultKeyPair,
+                key: Key("encrypt-decrypt-file"),
+              ),
             EncryptAndDecryptBytes(
               title: "Encrypt And Decrypt Bytes",
               keyPair: _defaultKeyPair,

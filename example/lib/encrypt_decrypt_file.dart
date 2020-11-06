@@ -42,7 +42,6 @@ class _EncryptAndDecryptFileState extends State<EncryptAndDecryptFile> {
     File output = File(outputPath);
     await output.writeAsBytes(encrypted);
 
-
     await File(inputPath + ".pub").writeAsString(widget.keyPair.publicKey);
     await File(inputPath + ".key").writeAsString(widget.keyPair.privateKey);
 
