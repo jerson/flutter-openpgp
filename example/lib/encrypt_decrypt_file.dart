@@ -35,6 +35,7 @@ class _EncryptAndDecryptFileState extends State<EncryptAndDecryptFile> {
     var encrypted = await OpenPGP.encryptBytes(
       input.readAsBytesSync(),
       widget.keyPair.publicKey,
+      fileHints: FileHints()..isBinary = true,
     );
     print("end");
     String outputPath = inputPath + ".encrypted";
