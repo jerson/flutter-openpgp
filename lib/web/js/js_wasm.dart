@@ -1,5 +1,5 @@
 @JS()
-library wasm;
+library js_wasm;
 
 import 'package:openpgp/web/js/js_promise.dart';
 import 'package:js/js.dart';

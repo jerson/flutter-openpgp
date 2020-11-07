@@ -1,5 +1,5 @@
 @JS()
-library openpgp;
+library js_openpgp_bridge;
 
 import 'package:js/js.dart';
 
