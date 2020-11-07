@@ -1,7 +1,7 @@
 @JS()
 library go;
 
-import 'package:openpgp/web/js/promise.dart';
+import 'package:openpgp/web/js/js_promise.dart';
 import 'package:js/js.dart';
 
 @JS()

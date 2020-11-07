@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:openpgp/web/js/go.dart';
-import 'package:openpgp/web/js/promise.dart';
-import 'package:openpgp/web/js/openpgp.dart';
-import 'package:openpgp/web/js/wasm.dart';
+import 'package:openpgp/web/js/js_go.dart';
+import 'package:openpgp/web/js/js_promise.dart';
+import 'package:openpgp/web/js/js_openpgp_bridge.dart';
+import 'package:openpgp/web/js/js_wasm.dart';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
