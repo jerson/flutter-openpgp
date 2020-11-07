@@ -1,3 +1,9 @@
+## 1.0.0-rc2
+
+- Added more options for encrypt and decrypt, including FileHints in order to encrypt files as binary
+- Fixed error in generate method that was returning invalid publicKey, sorry for that :/
+- Fixed typo on Cipher was Cypher before
+
 ## 1.0.0-rc1
 
 - Replaced GoMobile with binding for mostly platforms, now should be more easier add new methods and support platforms

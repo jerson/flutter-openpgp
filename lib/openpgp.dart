@@ -25,7 +25,7 @@ class OpenPGP {
     if (response.hasError()) {
       throw response.error;
     }
-    return response.output;
+    return Uint8List.fromList(response.output);
   }
 
   static Future<String> _stringResponse(String name, Uint8List payload) async {
@@ -57,65 +57,107 @@ class OpenPGP {
   }
 
   static Future<String> decrypt(
-      String message, String privateKey, String passphrase) async {
+      String message, String privateKey, String passphrase,
+      {KeyOptions options}) async {
     var request = DecryptRequest()
       ..message = message
       ..privateKey = privateKey
       ..passphrase = passphrase;
+
+    if (options != null) {
+      request.options = options;
+    }
     return await _stringResponse("decrypt", request.writeToBuffer());
   }
 
   static Future<Uint8List> decryptBytes(
-      Uint8List message, String privateKey, String passphrase) async {
+      Uint8List message, String privateKey, String passphrase,
+      {KeyOptions options}) async {
     var request = DecryptBytesRequest()
       ..message = message
       ..privateKey = privateKey
       ..passphrase = passphrase;
+
+    if (options != null) {
+      request.options = options;
+    }
     return await _bytesResponse("decryptBytes", request.writeToBuffer());
   }
 
-  static Future<String> encrypt(String message, String publicKey) async {
+  static Future<String> encrypt(String message, String publicKey,
+      {KeyOptions options, Entity signed, FileHints fileHints}) async {
     var request = EncryptRequest()
       ..message = message
       ..publicKey = publicKey;
+
+    if (options != null) {
+      request.options = options;
+    }
+    if (fileHints != null) {
+      request.fileHints = fileHints;
+    }
+    if (signed != null) {
+      request.signed = signed;
+    }
     return await _stringResponse("encrypt", request.writeToBuffer());
   }
 
-  static Future<Uint8List> encryptBytes(
-      Uint8List message, String publicKey) async {
+  static Future<Uint8List> encryptBytes(Uint8List message, String publicKey,
+      {KeyOptions options, Entity signed, FileHints fileHints}) async {
     var request = EncryptBytesRequest()
       ..message = message
       ..publicKey = publicKey;
+    if (options != null) {
+      request.options = options;
+    }
+    if (fileHints != null) {
+      request.fileHints = fileHints;
+    }
+    if (signed != null) {
+      request.signed = signed;
+    }
     return await _bytesResponse("encryptBytes", request.writeToBuffer());
   }
 
-  static Future<String> sign(String message, String publicKey,
-      String privateKey, String passphrase) async {
+  static Future<String> sign(
+      String message, String publicKey, String privateKey, String passphrase,
+      {KeyOptions options}) async {
     var request = SignRequest()
       ..message = message
       ..publicKey = publicKey
       ..privateKey = privateKey
       ..passphrase = passphrase;
+    if (options != null) {
+      request.options = options;
+    }
     return await _stringResponse("sign", request.writeToBuffer());
   }
 
-  static Future<Uint8List> signBytes(Uint8List message, String publicKey,
-      String privateKey, String passphrase) async {
+  static Future<Uint8List> signBytes(
+      Uint8List message, String publicKey, String privateKey, String passphrase,
+      {KeyOptions options}) async {
     var request = SignBytesRequest()
       ..message = message
       ..publicKey = publicKey
       ..privateKey = privateKey
       ..passphrase = passphrase;
+    if (options != null) {
+      request.options = options;
+    }
     return await _bytesResponse("signBytes", request.writeToBuffer());
   }
 
-  static Future<String> signBytesToString(Uint8List message, String publicKey,
-      String privateKey, String passphrase) async {
+  static Future<String> signBytesToString(
+      Uint8List message, String publicKey, String privateKey, String passphrase,
+      {KeyOptions options}) async {
     var request = SignBytesRequest()
       ..message = message
       ..publicKey = publicKey
       ..privateKey = privateKey
       ..passphrase = passphrase;
+    if (options != null) {
+      request.options = options;
+    }
     return await _stringResponse("signBytesToString", request.writeToBuffer());
   }
 
@@ -162,24 +204,30 @@ class OpenPGP {
   }
 
   static Future<String> encryptSymmetric(String message, String passphrase,
-      {KeyOptions options}) async {
+      {KeyOptions options, FileHints fileHints}) async {
     var request = EncryptSymmetricRequest()
       ..message = message
       ..passphrase = passphrase;
     if (options != null) {
       request.options = options;
     }
+    if (fileHints != null) {
+      request.fileHints = fileHints;
+    }
     return await _stringResponse("encryptSymmetric", request.writeToBuffer());
   }
 
   static Future<Uint8List> encryptSymmetricBytes(
       Uint8List message, String passphrase,
-      {KeyOptions options}) async {
+      {KeyOptions options, FileHints fileHints}) async {
     var request = EncryptSymmetricBytesRequest()
       ..message = message
       ..passphrase = passphrase;
     if (options != null) {
       request.options = options;
+    }
+    if (fileHints != null) {
+      request.fileHints = fileHints;
     }
     return await _bytesResponse(
         "encryptSymmetricBytes", request.writeToBuffer());

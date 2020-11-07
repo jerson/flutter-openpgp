@@ -55,22 +55,22 @@ class Compression extends $pb.ProtobufEnum {
   const Compression._($core.int v, $core.String n) : super(v, n);
 }
 
-class Cypher extends $pb.ProtobufEnum {
-  static const Cypher CYPHER_UNSPECIFIED = Cypher._(0, 'CYPHER_UNSPECIFIED');
-  static const Cypher CYPHER_AES128 = Cypher._(1, 'CYPHER_AES128');
-  static const Cypher CYPHER_AES192 = Cypher._(2, 'CYPHER_AES192');
-  static const Cypher CYPHER_AES256 = Cypher._(3, 'CYPHER_AES256');
+class Cipher extends $pb.ProtobufEnum {
+  static const Cipher CIPHER_UNSPECIFIED = Cipher._(0, 'CIPHER_UNSPECIFIED');
+  static const Cipher CIPHER_AES128 = Cipher._(1, 'CIPHER_AES128');
+  static const Cipher CIPHER_AES192 = Cipher._(2, 'CIPHER_AES192');
+  static const Cipher CIPHER_AES256 = Cipher._(3, 'CIPHER_AES256');
 
-  static const $core.List<Cypher> values = <Cypher>[
-    CYPHER_UNSPECIFIED,
-    CYPHER_AES128,
-    CYPHER_AES192,
-    CYPHER_AES256,
+  static const $core.List<Cipher> values = <Cipher>[
+    CIPHER_UNSPECIFIED,
+    CIPHER_AES128,
+    CIPHER_AES192,
+    CIPHER_AES256,
   ];
 
-  static final $core.Map<$core.int, Cypher> _byValue =
+  static final $core.Map<$core.int, Cipher> _byValue =
       $pb.ProtobufEnum.initByValue(values);
-  static Cypher valueOf($core.int value) => _byValue[value];
+  static Cipher valueOf($core.int value) => _byValue[value];
 
-  const Cypher._($core.int v, $core.String n) : super(v, n);
+  const Cipher._($core.int v, $core.String n) : super(v, n);
 }

@@ -18,6 +18,10 @@ class EncryptRequest extends $pb.GeneratedMessage {
       package: const $pb.PackageName('model'), createEmptyInstance: create)
     ..aOS(1, 'message')
     ..aOS(3, 'publicKey', protoName: 'publicKey')
+    ..aOM<KeyOptions>(5, 'options', subBuilder: KeyOptions.create)
+    ..aOM<Entity>(7, 'signed', subBuilder: Entity.create)
+    ..aOM<FileHints>(9, 'fileHints',
+        protoName: 'fileHints', subBuilder: FileHints.create)
     ..hasRequiredFields = false;
 
   EncryptRequest._() : super();
@@ -65,6 +69,48 @@ class EncryptRequest extends $pb.GeneratedMessage {
   $core.bool hasPublicKey() => $_has(1);
   @$pb.TagNumber(3)
   void clearPublicKey() => clearField(3);
+
+  @$pb.TagNumber(5)
+  KeyOptions get options => $_getN(2);
+  @$pb.TagNumber(5)
+  set options(KeyOptions v) {
+    setField(5, v);
+  }
+
+  @$pb.TagNumber(5)
+  $core.bool hasOptions() => $_has(2);
+  @$pb.TagNumber(5)
+  void clearOptions() => clearField(5);
+  @$pb.TagNumber(5)
+  KeyOptions ensureOptions() => $_ensure(2);
+
+  @$pb.TagNumber(7)
+  Entity get signed => $_getN(3);
+  @$pb.TagNumber(7)
+  set signed(Entity v) {
+    setField(7, v);
+  }
+
+  @$pb.TagNumber(7)
+  $core.bool hasSigned() => $_has(3);
+  @$pb.TagNumber(7)
+  void clearSigned() => clearField(7);
+  @$pb.TagNumber(7)
+  Entity ensureSigned() => $_ensure(3);
+
+  @$pb.TagNumber(9)
+  FileHints get fileHints => $_getN(4);
+  @$pb.TagNumber(9)
+  set fileHints(FileHints v) {
+    setField(9, v);
+  }
+
+  @$pb.TagNumber(9)
+  $core.bool hasFileHints() => $_has(4);
+  @$pb.TagNumber(9)
+  void clearFileHints() => clearField(9);
+  @$pb.TagNumber(9)
+  FileHints ensureFileHints() => $_ensure(4);
 }
 
 class EncryptBytesRequest extends $pb.GeneratedMessage {
@@ -72,6 +118,10 @@ class EncryptBytesRequest extends $pb.GeneratedMessage {
       package: const $pb.PackageName('model'), createEmptyInstance: create)
     ..a<$core.List<$core.int>>(1, 'message', $pb.PbFieldType.OY)
     ..aOS(3, 'publicKey', protoName: 'publicKey')
+    ..aOM<KeyOptions>(5, 'options', subBuilder: KeyOptions.create)
+    ..aOM<Entity>(7, 'signed', subBuilder: Entity.create)
+    ..aOM<FileHints>(9, 'fileHints',
+        protoName: 'fileHints', subBuilder: FileHints.create)
     ..hasRequiredFields = false;
 
   EncryptBytesRequest._() : super();
@@ -119,6 +169,48 @@ class EncryptBytesRequest extends $pb.GeneratedMessage {
   $core.bool hasPublicKey() => $_has(1);
   @$pb.TagNumber(3)
   void clearPublicKey() => clearField(3);
+
+  @$pb.TagNumber(5)
+  KeyOptions get options => $_getN(2);
+  @$pb.TagNumber(5)
+  set options(KeyOptions v) {
+    setField(5, v);
+  }
+
+  @$pb.TagNumber(5)
+  $core.bool hasOptions() => $_has(2);
+  @$pb.TagNumber(5)
+  void clearOptions() => clearField(5);
+  @$pb.TagNumber(5)
+  KeyOptions ensureOptions() => $_ensure(2);
+
+  @$pb.TagNumber(7)
+  Entity get signed => $_getN(3);
+  @$pb.TagNumber(7)
+  set signed(Entity v) {
+    setField(7, v);
+  }
+
+  @$pb.TagNumber(7)
+  $core.bool hasSigned() => $_has(3);
+  @$pb.TagNumber(7)
+  void clearSigned() => clearField(7);
+  @$pb.TagNumber(7)
+  Entity ensureSigned() => $_ensure(3);
+
+  @$pb.TagNumber(9)
+  FileHints get fileHints => $_getN(4);
+  @$pb.TagNumber(9)
+  set fileHints(FileHints v) {
+    setField(9, v);
+  }
+
+  @$pb.TagNumber(9)
+  $core.bool hasFileHints() => $_has(4);
+  @$pb.TagNumber(9)
+  void clearFileHints() => clearField(9);
+  @$pb.TagNumber(9)
+  FileHints ensureFileHints() => $_ensure(4);
 }
 
 class DecryptRequest extends $pb.GeneratedMessage {
@@ -127,6 +219,7 @@ class DecryptRequest extends $pb.GeneratedMessage {
     ..aOS(1, 'message')
     ..aOS(3, 'privateKey', protoName: 'privateKey')
     ..aOS(5, 'passphrase')
+    ..aOM<KeyOptions>(7, 'options', subBuilder: KeyOptions.create)
     ..hasRequiredFields = false;
 
   DecryptRequest._() : super();
@@ -186,6 +279,20 @@ class DecryptRequest extends $pb.GeneratedMessage {
   $core.bool hasPassphrase() => $_has(2);
   @$pb.TagNumber(5)
   void clearPassphrase() => clearField(5);
+
+  @$pb.TagNumber(7)
+  KeyOptions get options => $_getN(3);
+  @$pb.TagNumber(7)
+  set options(KeyOptions v) {
+    setField(7, v);
+  }
+
+  @$pb.TagNumber(7)
+  $core.bool hasOptions() => $_has(3);
+  @$pb.TagNumber(7)
+  void clearOptions() => clearField(7);
+  @$pb.TagNumber(7)
+  KeyOptions ensureOptions() => $_ensure(3);
 }
 
 class DecryptBytesRequest extends $pb.GeneratedMessage {
@@ -194,6 +301,7 @@ class DecryptBytesRequest extends $pb.GeneratedMessage {
     ..a<$core.List<$core.int>>(1, 'message', $pb.PbFieldType.OY)
     ..aOS(3, 'privateKey', protoName: 'privateKey')
     ..aOS(5, 'passphrase')
+    ..aOM<KeyOptions>(7, 'options', subBuilder: KeyOptions.create)
     ..hasRequiredFields = false;
 
   DecryptBytesRequest._() : super();
@@ -253,6 +361,20 @@ class DecryptBytesRequest extends $pb.GeneratedMessage {
   $core.bool hasPassphrase() => $_has(2);
   @$pb.TagNumber(5)
   void clearPassphrase() => clearField(5);
+
+  @$pb.TagNumber(7)
+  KeyOptions get options => $_getN(3);
+  @$pb.TagNumber(7)
+  set options(KeyOptions v) {
+    setField(7, v);
+  }
+
+  @$pb.TagNumber(7)
+  $core.bool hasOptions() => $_has(3);
+  @$pb.TagNumber(7)
+  void clearOptions() => clearField(7);
+  @$pb.TagNumber(7)
+  KeyOptions ensureOptions() => $_ensure(3);
 }
 
 class SignRequest extends $pb.GeneratedMessage {
@@ -262,6 +384,7 @@ class SignRequest extends $pb.GeneratedMessage {
     ..aOS(3, 'publicKey', protoName: 'publicKey')
     ..aOS(5, 'privateKey', protoName: 'privateKey')
     ..aOS(7, 'passphrase')
+    ..aOM<KeyOptions>(9, 'options', subBuilder: KeyOptions.create)
     ..hasRequiredFields = false;
 
   SignRequest._() : super();
@@ -332,6 +455,20 @@ class SignRequest extends $pb.GeneratedMessage {
   $core.bool hasPassphrase() => $_has(3);
   @$pb.TagNumber(7)
   void clearPassphrase() => clearField(7);
+
+  @$pb.TagNumber(9)
+  KeyOptions get options => $_getN(4);
+  @$pb.TagNumber(9)
+  set options(KeyOptions v) {
+    setField(9, v);
+  }
+
+  @$pb.TagNumber(9)
+  $core.bool hasOptions() => $_has(4);
+  @$pb.TagNumber(9)
+  void clearOptions() => clearField(9);
+  @$pb.TagNumber(9)
+  KeyOptions ensureOptions() => $_ensure(4);
 }
 
 class SignBytesRequest extends $pb.GeneratedMessage {
@@ -341,6 +478,7 @@ class SignBytesRequest extends $pb.GeneratedMessage {
     ..aOS(3, 'publicKey', protoName: 'publicKey')
     ..aOS(5, 'privateKey', protoName: 'privateKey')
     ..aOS(7, 'passphrase')
+    ..aOM<KeyOptions>(9, 'options', subBuilder: KeyOptions.create)
     ..hasRequiredFields = false;
 
   SignBytesRequest._() : super();
@@ -412,6 +550,20 @@ class SignBytesRequest extends $pb.GeneratedMessage {
   $core.bool hasPassphrase() => $_has(3);
   @$pb.TagNumber(7)
   void clearPassphrase() => clearField(7);
+
+  @$pb.TagNumber(9)
+  KeyOptions get options => $_getN(4);
+  @$pb.TagNumber(9)
+  set options(KeyOptions v) {
+    setField(9, v);
+  }
+
+  @$pb.TagNumber(9)
+  $core.bool hasOptions() => $_has(4);
+  @$pb.TagNumber(9)
+  void clearOptions() => clearField(9);
+  @$pb.TagNumber(9)
+  KeyOptions ensureOptions() => $_ensure(4);
 }
 
 class VerifyRequest extends $pb.GeneratedMessage {
@@ -554,6 +706,8 @@ class EncryptSymmetricRequest extends $pb.GeneratedMessage {
     ..aOS(1, 'message')
     ..aOS(3, 'passphrase')
     ..aOM<KeyOptions>(5, 'options', subBuilder: KeyOptions.create)
+    ..aOM<FileHints>(7, 'fileHints',
+        protoName: 'fileHints', subBuilder: FileHints.create)
     ..hasRequiredFields = false;
 
   EncryptSymmetricRequest._() : super();
@@ -617,6 +771,20 @@ class EncryptSymmetricRequest extends $pb.GeneratedMessage {
   void clearOptions() => clearField(5);
   @$pb.TagNumber(5)
   KeyOptions ensureOptions() => $_ensure(2);
+
+  @$pb.TagNumber(7)
+  FileHints get fileHints => $_getN(3);
+  @$pb.TagNumber(7)
+  set fileHints(FileHints v) {
+    setField(7, v);
+  }
+
+  @$pb.TagNumber(7)
+  $core.bool hasFileHints() => $_has(3);
+  @$pb.TagNumber(7)
+  void clearFileHints() => clearField(7);
+  @$pb.TagNumber(7)
+  FileHints ensureFileHints() => $_ensure(3);
 }
 
 class EncryptSymmetricBytesRequest extends $pb.GeneratedMessage {
@@ -627,6 +795,8 @@ class EncryptSymmetricBytesRequest extends $pb.GeneratedMessage {
     ..a<$core.List<$core.int>>(1, 'message', $pb.PbFieldType.OY)
     ..aOS(3, 'passphrase')
     ..aOM<KeyOptions>(5, 'options', subBuilder: KeyOptions.create)
+    ..aOM<FileHints>(7, 'fileHints',
+        protoName: 'fileHints', subBuilder: FileHints.create)
     ..hasRequiredFields = false;
 
   EncryptSymmetricBytesRequest._() : super();
@@ -692,6 +862,20 @@ class EncryptSymmetricBytesRequest extends $pb.GeneratedMessage {
   void clearOptions() => clearField(5);
   @$pb.TagNumber(5)
   KeyOptions ensureOptions() => $_ensure(2);
+
+  @$pb.TagNumber(7)
+  FileHints get fileHints => $_getN(3);
+  @$pb.TagNumber(7)
+  set fileHints(FileHints v) {
+    setField(7, v);
+  }
+
+  @$pb.TagNumber(7)
+  $core.bool hasFileHints() => $_has(3);
+  @$pb.TagNumber(7)
+  void clearFileHints() => clearField(7);
+  @$pb.TagNumber(7)
+  FileHints ensureFileHints() => $_ensure(3);
 }
 
 class DecryptSymmetricRequest extends $pb.GeneratedMessage {
@@ -890,10 +1074,10 @@ class KeyOptions extends $pb.GeneratedMessage {
         defaultOrMaker: Hash.HASH_UNSPECIFIED,
         valueOf: Hash.valueOf,
         enumValues: Hash.values)
-    ..e<Cypher>(3, 'cipher', $pb.PbFieldType.OE,
-        defaultOrMaker: Cypher.CYPHER_UNSPECIFIED,
-        valueOf: Cypher.valueOf,
-        enumValues: Cypher.values)
+    ..e<Cipher>(3, 'cipher', $pb.PbFieldType.OE,
+        defaultOrMaker: Cipher.CIPHER_UNSPECIFIED,
+        valueOf: Cipher.valueOf,
+        enumValues: Cipher.values)
     ..e<Compression>(5, 'compression', $pb.PbFieldType.OE,
         defaultOrMaker: Compression.COMPRESSION_UNSPECIFIED,
         valueOf: Compression.valueOf,
@@ -937,9 +1121,9 @@ class KeyOptions extends $pb.GeneratedMessage {
   void clearHash() => clearField(1);
 
   @$pb.TagNumber(3)
-  Cypher get cipher => $_getN(1);
+  Cipher get cipher => $_getN(1);
   @$pb.TagNumber(3)
-  set cipher(Cypher v) {
+  set cipher(Cipher v) {
     setField(3, v);
   }
 
@@ -1078,6 +1262,138 @@ class Options extends $pb.GeneratedMessage {
   void clearKeyOptions() => clearField(9);
   @$pb.TagNumber(9)
   KeyOptions ensureKeyOptions() => $_ensure(4);
+}
+
+class FileHints extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('FileHints',
+      package: const $pb.PackageName('model'), createEmptyInstance: create)
+    ..aOB(1, 'isBinary', protoName: 'isBinary')
+    ..aOS(3, 'fileName', protoName: 'fileName')
+    ..aOS(5, 'modTime', protoName: 'modTime')
+    ..hasRequiredFields = false;
+
+  FileHints._() : super();
+  factory FileHints() => create();
+  factory FileHints.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory FileHints.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
+  FileHints clone() => FileHints()..mergeFromMessage(this);
+  FileHints copyWith(void Function(FileHints) updates) =>
+      super.copyWith((message) => updates(message as FileHints));
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static FileHints create() => FileHints._();
+  FileHints createEmptyInstance() => create();
+  static $pb.PbList<FileHints> createRepeated() => $pb.PbList<FileHints>();
+  @$core.pragma('dart2js:noInline')
+  static FileHints getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<FileHints>(create);
+  static FileHints _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.bool get isBinary => $_getBF(0);
+  @$pb.TagNumber(1)
+  set isBinary($core.bool v) {
+    $_setBool(0, v);
+  }
+
+  @$pb.TagNumber(1)
+  $core.bool hasIsBinary() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearIsBinary() => clearField(1);
+
+  @$pb.TagNumber(3)
+  $core.String get fileName => $_getSZ(1);
+  @$pb.TagNumber(3)
+  set fileName($core.String v) {
+    $_setString(1, v);
+  }
+
+  @$pb.TagNumber(3)
+  $core.bool hasFileName() => $_has(1);
+  @$pb.TagNumber(3)
+  void clearFileName() => clearField(3);
+
+  @$pb.TagNumber(5)
+  $core.String get modTime => $_getSZ(2);
+  @$pb.TagNumber(5)
+  set modTime($core.String v) {
+    $_setString(2, v);
+  }
+
+  @$pb.TagNumber(5)
+  $core.bool hasModTime() => $_has(2);
+  @$pb.TagNumber(5)
+  void clearModTime() => clearField(5);
+}
+
+class Entity extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('Entity',
+      package: const $pb.PackageName('model'), createEmptyInstance: create)
+    ..aOS(1, 'publicKey', protoName: 'publicKey')
+    ..aOS(3, 'privateKey', protoName: 'privateKey')
+    ..aOS(5, 'passphrase')
+    ..hasRequiredFields = false;
+
+  Entity._() : super();
+  factory Entity() => create();
+  factory Entity.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory Entity.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
+  Entity clone() => Entity()..mergeFromMessage(this);
+  Entity copyWith(void Function(Entity) updates) =>
+      super.copyWith((message) => updates(message as Entity));
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static Entity create() => Entity._();
+  Entity createEmptyInstance() => create();
+  static $pb.PbList<Entity> createRepeated() => $pb.PbList<Entity>();
+  @$core.pragma('dart2js:noInline')
+  static Entity getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Entity>(create);
+  static Entity _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get publicKey => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set publicKey($core.String v) {
+    $_setString(0, v);
+  }
+
+  @$pb.TagNumber(1)
+  $core.bool hasPublicKey() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPublicKey() => clearField(1);
+
+  @$pb.TagNumber(3)
+  $core.String get privateKey => $_getSZ(1);
+  @$pb.TagNumber(3)
+  set privateKey($core.String v) {
+    $_setString(1, v);
+  }
+
+  @$pb.TagNumber(3)
+  $core.bool hasPrivateKey() => $_has(1);
+  @$pb.TagNumber(3)
+  void clearPrivateKey() => clearField(3);
+
+  @$pb.TagNumber(5)
+  $core.String get passphrase => $_getSZ(2);
+  @$pb.TagNumber(5)
+  set passphrase($core.String v) {
+    $_setString(2, v);
+  }
+
+  @$pb.TagNumber(5)
+  $core.bool hasPassphrase() => $_has(2);
+  @$pb.TagNumber(5)
+  void clearPassphrase() => clearField(5);
 }
 
 class StringResponse extends $pb.GeneratedMessage {
@@ -1349,4 +1665,229 @@ class KeyPair extends $pb.GeneratedMessage {
   $core.bool hasPrivateKey() => $_has(1);
   @$pb.TagNumber(3)
   void clearPrivateKey() => clearField(3);
+}
+
+class PublicKeyMetadata extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('PublicKeyMetadata',
+      package: const $pb.PackageName('model'), createEmptyInstance: create)
+    ..aOS(1, 'keyID', protoName: 'keyID')
+    ..aOS(3, 'keyIDShort', protoName: 'keyIDShort')
+    ..aOS(5, 'creationTime', protoName: 'creationTime')
+    ..aOS(7, 'fingerprint')
+    ..aOS(9, 'keyIDNumeric', protoName: 'keyIDNumeric')
+    ..aOB(11, 'isSubKey', protoName: 'isSubKey')
+    ..hasRequiredFields = false;
+
+  PublicKeyMetadata._() : super();
+  factory PublicKeyMetadata() => create();
+  factory PublicKeyMetadata.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory PublicKeyMetadata.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
+  PublicKeyMetadata clone() => PublicKeyMetadata()..mergeFromMessage(this);
+  PublicKeyMetadata copyWith(void Function(PublicKeyMetadata) updates) =>
+      super.copyWith((message) => updates(message as PublicKeyMetadata));
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static PublicKeyMetadata create() => PublicKeyMetadata._();
+  PublicKeyMetadata createEmptyInstance() => create();
+  static $pb.PbList<PublicKeyMetadata> createRepeated() =>
+      $pb.PbList<PublicKeyMetadata>();
+  @$core.pragma('dart2js:noInline')
+  static PublicKeyMetadata getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PublicKeyMetadata>(create);
+  static PublicKeyMetadata _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get keyID => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set keyID($core.String v) {
+    $_setString(0, v);
+  }
+
+  @$pb.TagNumber(1)
+  $core.bool hasKeyID() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearKeyID() => clearField(1);
+
+  @$pb.TagNumber(3)
+  $core.String get keyIDShort => $_getSZ(1);
+  @$pb.TagNumber(3)
+  set keyIDShort($core.String v) {
+    $_setString(1, v);
+  }
+
+  @$pb.TagNumber(3)
+  $core.bool hasKeyIDShort() => $_has(1);
+  @$pb.TagNumber(3)
+  void clearKeyIDShort() => clearField(3);
+
+  @$pb.TagNumber(5)
+  $core.String get creationTime => $_getSZ(2);
+  @$pb.TagNumber(5)
+  set creationTime($core.String v) {
+    $_setString(2, v);
+  }
+
+  @$pb.TagNumber(5)
+  $core.bool hasCreationTime() => $_has(2);
+  @$pb.TagNumber(5)
+  void clearCreationTime() => clearField(5);
+
+  @$pb.TagNumber(7)
+  $core.String get fingerprint => $_getSZ(3);
+  @$pb.TagNumber(7)
+  set fingerprint($core.String v) {
+    $_setString(3, v);
+  }
+
+  @$pb.TagNumber(7)
+  $core.bool hasFingerprint() => $_has(3);
+  @$pb.TagNumber(7)
+  void clearFingerprint() => clearField(7);
+
+  @$pb.TagNumber(9)
+  $core.String get keyIDNumeric => $_getSZ(4);
+  @$pb.TagNumber(9)
+  set keyIDNumeric($core.String v) {
+    $_setString(4, v);
+  }
+
+  @$pb.TagNumber(9)
+  $core.bool hasKeyIDNumeric() => $_has(4);
+  @$pb.TagNumber(9)
+  void clearKeyIDNumeric() => clearField(9);
+
+  @$pb.TagNumber(11)
+  $core.bool get isSubKey => $_getBF(5);
+  @$pb.TagNumber(11)
+  set isSubKey($core.bool v) {
+    $_setBool(5, v);
+  }
+
+  @$pb.TagNumber(11)
+  $core.bool hasIsSubKey() => $_has(5);
+  @$pb.TagNumber(11)
+  void clearIsSubKey() => clearField(11);
+}
+
+class PrivateKeyMetadata extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('PrivateKeyMetadata',
+      package: const $pb.PackageName('model'), createEmptyInstance: create)
+    ..aOS(1, 'keyID', protoName: 'keyID')
+    ..aOS(3, 'keyIDShort', protoName: 'keyIDShort')
+    ..aOS(5, 'creationTime', protoName: 'creationTime')
+    ..aOS(7, 'fingerprint')
+    ..aOS(9, 'keyIDNumeric', protoName: 'keyIDNumeric')
+    ..aOB(11, 'isSubKey', protoName: 'isSubKey')
+    ..aOB(13, 'encrypted')
+    ..hasRequiredFields = false;
+
+  PrivateKeyMetadata._() : super();
+  factory PrivateKeyMetadata() => create();
+  factory PrivateKeyMetadata.fromBuffer($core.List<$core.int> i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(i, r);
+  factory PrivateKeyMetadata.fromJson($core.String i,
+          [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(i, r);
+  PrivateKeyMetadata clone() => PrivateKeyMetadata()..mergeFromMessage(this);
+  PrivateKeyMetadata copyWith(void Function(PrivateKeyMetadata) updates) =>
+      super.copyWith((message) => updates(message as PrivateKeyMetadata));
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static PrivateKeyMetadata create() => PrivateKeyMetadata._();
+  PrivateKeyMetadata createEmptyInstance() => create();
+  static $pb.PbList<PrivateKeyMetadata> createRepeated() =>
+      $pb.PbList<PrivateKeyMetadata>();
+  @$core.pragma('dart2js:noInline')
+  static PrivateKeyMetadata getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<PrivateKeyMetadata>(create);
+  static PrivateKeyMetadata _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get keyID => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set keyID($core.String v) {
+    $_setString(0, v);
+  }
+
+  @$pb.TagNumber(1)
+  $core.bool hasKeyID() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearKeyID() => clearField(1);
+
+  @$pb.TagNumber(3)
+  $core.String get keyIDShort => $_getSZ(1);
+  @$pb.TagNumber(3)
+  set keyIDShort($core.String v) {
+    $_setString(1, v);
+  }
+
+  @$pb.TagNumber(3)
+  $core.bool hasKeyIDShort() => $_has(1);
+  @$pb.TagNumber(3)
+  void clearKeyIDShort() => clearField(3);
+
+  @$pb.TagNumber(5)
+  $core.String get creationTime => $_getSZ(2);
+  @$pb.TagNumber(5)
+  set creationTime($core.String v) {
+    $_setString(2, v);
+  }
+
+  @$pb.TagNumber(5)
+  $core.bool hasCreationTime() => $_has(2);
+  @$pb.TagNumber(5)
+  void clearCreationTime() => clearField(5);
+
+  @$pb.TagNumber(7)
+  $core.String get fingerprint => $_getSZ(3);
+  @$pb.TagNumber(7)
+  set fingerprint($core.String v) {
+    $_setString(3, v);
+  }
+
+  @$pb.TagNumber(7)
+  $core.bool hasFingerprint() => $_has(3);
+  @$pb.TagNumber(7)
+  void clearFingerprint() => clearField(7);
+
+  @$pb.TagNumber(9)
+  $core.String get keyIDNumeric => $_getSZ(4);
+  @$pb.TagNumber(9)
+  set keyIDNumeric($core.String v) {
+    $_setString(4, v);
+  }
+
+  @$pb.TagNumber(9)
+  $core.bool hasKeyIDNumeric() => $_has(4);
+  @$pb.TagNumber(9)
+  void clearKeyIDNumeric() => clearField(9);
+
+  @$pb.TagNumber(11)
+  $core.bool get isSubKey => $_getBF(5);
+  @$pb.TagNumber(11)
+  set isSubKey($core.bool v) {
+    $_setBool(5, v);
+  }
+
+  @$pb.TagNumber(11)
+  $core.bool hasIsSubKey() => $_has(5);
+  @$pb.TagNumber(11)
+  void clearIsSubKey() => clearField(11);
+
+  @$pb.TagNumber(13)
+  $core.bool get encrypted => $_getBF(6);
+  @$pb.TagNumber(13)
+  set encrypted($core.bool v) {
+    $_setBool(6, v);
+  }
+
+  @$pb.TagNumber(13)
+  $core.bool hasEncrypted() => $_has(6);
+  @$pb.TagNumber(13)
+  void clearEncrypted() => clearField(13);
 }

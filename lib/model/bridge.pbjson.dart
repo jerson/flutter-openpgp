@@ -26,13 +26,13 @@ const Compression$json = const {
   ],
 };
 
-const Cypher$json = const {
-  '1': 'Cypher',
+const Cipher$json = const {
+  '1': 'Cipher',
   '2': const [
-    const {'1': 'CYPHER_UNSPECIFIED', '2': 0},
-    const {'1': 'CYPHER_AES128', '2': 1},
-    const {'1': 'CYPHER_AES192', '2': 2},
-    const {'1': 'CYPHER_AES256', '2': 3},
+    const {'1': 'CIPHER_UNSPECIFIED', '2': 0},
+    const {'1': 'CIPHER_AES128', '2': 1},
+    const {'1': 'CIPHER_AES192', '2': 2},
+    const {'1': 'CIPHER_AES256', '2': 3},
   ],
 };
 
@@ -41,6 +41,30 @@ const EncryptRequest$json = const {
   '2': const [
     const {'1': 'message', '3': 1, '4': 1, '5': 9, '10': 'message'},
     const {'1': 'publicKey', '3': 3, '4': 1, '5': 9, '10': 'publicKey'},
+    const {
+      '1': 'options',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.model.KeyOptions',
+      '10': 'options'
+    },
+    const {
+      '1': 'signed',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.model.Entity',
+      '10': 'signed'
+    },
+    const {
+      '1': 'fileHints',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.model.FileHints',
+      '10': 'fileHints'
+    },
   ],
 };
 
@@ -49,6 +73,30 @@ const EncryptBytesRequest$json = const {
   '2': const [
     const {'1': 'message', '3': 1, '4': 1, '5': 12, '10': 'message'},
     const {'1': 'publicKey', '3': 3, '4': 1, '5': 9, '10': 'publicKey'},
+    const {
+      '1': 'options',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.model.KeyOptions',
+      '10': 'options'
+    },
+    const {
+      '1': 'signed',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.model.Entity',
+      '10': 'signed'
+    },
+    const {
+      '1': 'fileHints',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.model.FileHints',
+      '10': 'fileHints'
+    },
   ],
 };
 
@@ -58,6 +106,14 @@ const DecryptRequest$json = const {
     const {'1': 'message', '3': 1, '4': 1, '5': 9, '10': 'message'},
     const {'1': 'privateKey', '3': 3, '4': 1, '5': 9, '10': 'privateKey'},
     const {'1': 'passphrase', '3': 5, '4': 1, '5': 9, '10': 'passphrase'},
+    const {
+      '1': 'options',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.model.KeyOptions',
+      '10': 'options'
+    },
   ],
 };
 
@@ -67,6 +123,14 @@ const DecryptBytesRequest$json = const {
     const {'1': 'message', '3': 1, '4': 1, '5': 12, '10': 'message'},
     const {'1': 'privateKey', '3': 3, '4': 1, '5': 9, '10': 'privateKey'},
     const {'1': 'passphrase', '3': 5, '4': 1, '5': 9, '10': 'passphrase'},
+    const {
+      '1': 'options',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.model.KeyOptions',
+      '10': 'options'
+    },
   ],
 };
 
@@ -77,6 +141,14 @@ const SignRequest$json = const {
     const {'1': 'publicKey', '3': 3, '4': 1, '5': 9, '10': 'publicKey'},
     const {'1': 'privateKey', '3': 5, '4': 1, '5': 9, '10': 'privateKey'},
     const {'1': 'passphrase', '3': 7, '4': 1, '5': 9, '10': 'passphrase'},
+    const {
+      '1': 'options',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.model.KeyOptions',
+      '10': 'options'
+    },
   ],
 };
 
@@ -87,6 +159,14 @@ const SignBytesRequest$json = const {
     const {'1': 'publicKey', '3': 3, '4': 1, '5': 9, '10': 'publicKey'},
     const {'1': 'privateKey', '3': 5, '4': 1, '5': 9, '10': 'privateKey'},
     const {'1': 'passphrase', '3': 7, '4': 1, '5': 9, '10': 'passphrase'},
+    const {
+      '1': 'options',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.model.KeyOptions',
+      '10': 'options'
+    },
   ],
 };
 
@@ -121,6 +201,14 @@ const EncryptSymmetricRequest$json = const {
       '6': '.model.KeyOptions',
       '10': 'options'
     },
+    const {
+      '1': 'fileHints',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.model.FileHints',
+      '10': 'fileHints'
+    },
   ],
 };
 
@@ -136,6 +224,14 @@ const EncryptSymmetricBytesRequest$json = const {
       '5': 11,
       '6': '.model.KeyOptions',
       '10': 'options'
+    },
+    const {
+      '1': 'fileHints',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.model.FileHints',
+      '10': 'fileHints'
     },
   ],
 };
@@ -202,7 +298,7 @@ const KeyOptions$json = const {
       '3': 3,
       '4': 1,
       '5': 14,
-      '6': '.model.Cypher',
+      '6': '.model.Cipher',
       '10': 'cipher'
     },
     const {
@@ -239,6 +335,24 @@ const Options$json = const {
       '6': '.model.KeyOptions',
       '10': 'keyOptions'
     },
+  ],
+};
+
+const FileHints$json = const {
+  '1': 'FileHints',
+  '2': const [
+    const {'1': 'isBinary', '3': 1, '4': 1, '5': 8, '10': 'isBinary'},
+    const {'1': 'fileName', '3': 3, '4': 1, '5': 9, '10': 'fileName'},
+    const {'1': 'modTime', '3': 5, '4': 1, '5': 9, '10': 'modTime'},
+  ],
+};
+
+const Entity$json = const {
+  '1': 'Entity',
+  '2': const [
+    const {'1': 'publicKey', '3': 1, '4': 1, '5': 9, '10': 'publicKey'},
+    const {'1': 'privateKey', '3': 3, '4': 1, '5': 9, '10': 'privateKey'},
+    const {'1': 'passphrase', '3': 5, '4': 1, '5': 9, '10': 'passphrase'},
   ],
 };
 
@@ -286,5 +400,30 @@ const KeyPair$json = const {
   '2': const [
     const {'1': 'publicKey', '3': 1, '4': 1, '5': 9, '10': 'publicKey'},
     const {'1': 'privateKey', '3': 3, '4': 1, '5': 9, '10': 'privateKey'},
+  ],
+};
+
+const PublicKeyMetadata$json = const {
+  '1': 'PublicKeyMetadata',
+  '2': const [
+    const {'1': 'keyID', '3': 1, '4': 1, '5': 9, '10': 'keyID'},
+    const {'1': 'keyIDShort', '3': 3, '4': 1, '5': 9, '10': 'keyIDShort'},
+    const {'1': 'creationTime', '3': 5, '4': 1, '5': 9, '10': 'creationTime'},
+    const {'1': 'fingerprint', '3': 7, '4': 1, '5': 9, '10': 'fingerprint'},
+    const {'1': 'keyIDNumeric', '3': 9, '4': 1, '5': 9, '10': 'keyIDNumeric'},
+    const {'1': 'isSubKey', '3': 11, '4': 1, '5': 8, '10': 'isSubKey'},
+  ],
+};
+
+const PrivateKeyMetadata$json = const {
+  '1': 'PrivateKeyMetadata',
+  '2': const [
+    const {'1': 'keyID', '3': 1, '4': 1, '5': 9, '10': 'keyID'},
+    const {'1': 'keyIDShort', '3': 3, '4': 1, '5': 9, '10': 'keyIDShort'},
+    const {'1': 'creationTime', '3': 5, '4': 1, '5': 9, '10': 'creationTime'},
+    const {'1': 'fingerprint', '3': 7, '4': 1, '5': 9, '10': 'fingerprint'},
+    const {'1': 'keyIDNumeric', '3': 9, '4': 1, '5': 9, '10': 'keyIDNumeric'},
+    const {'1': 'isSubKey', '3': 11, '4': 1, '5': 8, '10': 'isSubKey'},
+    const {'1': 'encrypted', '3': 13, '4': 1, '5': 8, '10': 'encrypted'},
   ],
 };
