@@ -1,3 +1,7 @@
+## 1.0.0
+
+- just creating this version to replace old version
+
 ## 1.0.0-rc2
 
 - Added more options for encrypt and decrypt, including FileHints in order to encrypt files as binary
