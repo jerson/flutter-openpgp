@@ -124,7 +124,9 @@ Add to you `pubspec.yaml`.
 
 ```yaml
 assets:
-  - packages/openpgp/web/assets/
+    - packages/openpgp/web/assets/worker.js
+    - packages/openpgp/web/assets/wasm_exec.js
+    - packages/openpgp/web/assets/openpgp.wasm
 ```
 
 ref: https://github.com/jerson/flutter-openpgp/blob/master/example/pubspec.yaml

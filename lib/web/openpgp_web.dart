@@ -8,7 +8,7 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 class OpenpgpPlugin {
   var _counter = 0;
-  Worker worker = new Worker('packages/openpgp/web/assets/worker.js');
+  Worker worker = new Worker('assets/packages/openpgp/web/assets/worker.js');
   Map<String, Completer<Uint8List>> completers = {};
 
   static void registerWith(Registrar registrar) {
