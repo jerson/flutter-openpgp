@@ -126,22 +126,10 @@ Add to you `pubspec.yaml`.
 
 ```yaml
 assets:
-  - packages/openpgp/web/assets/wasm_exec.js
-  - packages/openpgp/web/assets/openpgp.wasm
+  - packages/openpgp/web/assets/
 ```
 
 ref: https://github.com/jerson/flutter-openpgp/blob/master/example/pubspec.yaml
-
-and in you `web/index.html`
-
-```html
-<script
-  src="assets/packages/openpgp/web/assets/wasm_exec.js"
-  type="application/javascript"
-></script>
-```
-
-ref: https://github.com/jerson/flutter-openpgp/blob/master/example/web/index.html
 
 ### MacOS
 
