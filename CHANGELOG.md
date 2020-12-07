@@ -1,3 +1,7 @@
+## 1.1.0
+
+- Added wasm + web worker support
+
 ## 1.0.0
 
 - just creating this version to replace old version
