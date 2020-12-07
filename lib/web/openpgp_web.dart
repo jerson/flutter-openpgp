@@ -13,7 +13,7 @@ class OpenpgpPlugin {
 
   static void registerWith(Registrar registrar) {
     final MethodChannel channel =
-        MethodChannel('openpgp', const StandardMethodCodec(), registrar);
+        MethodChannel('openpgp', const StandardMethodCodec(), registrar.messenger);
     final OpenpgpPlugin instance = OpenpgpPlugin();
     instance.listen();
     channel.setMethodCallHandler(instance.handleMethodCall);
