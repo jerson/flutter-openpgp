@@ -120,8 +120,6 @@ No additional setup required.
 
 ### Web
 
-    Web support right now is half progress, we need for support web workers. in order to make async calls.
-
 Add to you `pubspec.yaml`.
 
 ```yaml
