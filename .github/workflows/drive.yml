@@ -1,0 +1,29 @@
+on:
+  push:
+    branches: master
+
+#on: [push, pull_request]
+jobs:
+  drive:
+    strategy:
+      matrix:
+        device:
+          - "iPhone 8 (13.1)"
+      fail-fast: false
+    runs-on: macos-latest
+    steps:
+      - run: "xcrun instruments -s"
+      - run: |
+          UDID=$(
+            xcrun instruments -s |
+            awk \
+              -F ' *[][]' \
+              -v 'device=${{ matrix.device }}' \
+              '$1 == device { print $2 }'
+          )
+          xcrun simctl boot "${UDID:?No Simulator with this name found}"
+      - uses: actions/checkout@v1
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'dev'
+      - run: "flutter drive --target=test_driver/app.dart"
