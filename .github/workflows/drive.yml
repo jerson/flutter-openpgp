@@ -8,12 +8,14 @@ jobs:
     strategy:
       matrix:
         device:
-          - "iPhone 8 (13.1)"
+          - "iPhone 11 Pro"
       fail-fast: false
     runs-on: macos-latest
     steps:
-      - run: "xcrun instruments -s"
-      - run: |
+      - name: "List all simulators"
+        run: "xcrun instruments -s"
+      - name: "Start Simulator"
+        run: |
           UDID=$(
             xcrun instruments -s |
             awk \
