@@ -1,6 +1,9 @@
+name: Build Example Docker images
+
 on:
   push:
-    branches: master
+    tags:
+      - 'v*'
 
 jobs:
   web:
