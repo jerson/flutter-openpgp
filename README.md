@@ -17,10 +17,6 @@ Library for use openPGP with support for android, ios, macos, windows, linux, we
 - [Example](#example)
 - [Native Code](#native-code)
 
-## Example web
-
-check our web demo: [https://flutter-openpgp.jerson.dev/]
-
 ## Usage
 
 ## Generate methods
@@ -175,6 +171,8 @@ Inside example folder.
 ```bash
 cd example && flutter run
 ```
+
+check our web demo: [https://flutter-openpgp.jerson.dev/]
 
 ## Native Code
 
