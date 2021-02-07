@@ -7,6 +7,11 @@ import 'package:openpgp/bridge/binding_stub.dart'
     if (dart.library.js) 'package:openpgp/bridge/binding_stub.dart';
 import 'package:openpgp/model/bridge.pb.dart';
 
+class OpenPGPException implements Exception {
+  String cause;
+  OpenPGPException(this.cause);
+}
+
 class OpenPGP {
   static const MethodChannel _channel = const MethodChannel('openpgp');
   static bool bindingEnabled = Binding().isSupported();

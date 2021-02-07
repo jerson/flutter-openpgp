@@ -1,3 +1,7 @@
+## 1.1.3
+
+- Added OpenPGPException
+
 ## 1.1.2
 
 - Tests CI and github actions for drive

@@ -12,8 +12,11 @@ class OpenpgpPlugin {
   Map<String, Completer<Uint8List>> completers = {};
 
   static void registerWith(Registrar registrar) {
-    final MethodChannel channel =
-        MethodChannel('openpgp', const StandardMethodCodec(), registrar.messenger);
+    final MethodChannel channel = MethodChannel(
+        'openpgp',
+        const StandardMethodCodec(),
+        // ignore: deprecated_member_use
+        registrar.messenger);
     final OpenpgpPlugin instance = OpenpgpPlugin();
     instance.listen();
     channel.setMethodCallHandler(instance.handleMethodCall);

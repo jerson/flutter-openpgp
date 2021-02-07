@@ -8,6 +8,7 @@ import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
 import 'package:openpgp/bridge/ffi.dart';
 import 'package:openpgp/bridge/isolate.dart';
+import 'package:openpgp/openpgp.dart';
 
 class Binding {
   static final String _callFuncName = 'OpenPGPBridgeCall';
@@ -82,7 +83,7 @@ class Binding {
     if (error.address != ffi.nullptr.address) {
       var message = fromUtf8(error);
       freeHere(pointer);
-      throw message;
+      throw new OpenPGPException(message);
     }
   }
 
