@@ -16,7 +16,7 @@ class EncryptAndDecryptSymmetric extends StatefulWidget {
     Key? key,
     required this.title,
     required KeyPair? keyPair,
-  })  : keyPair = keyPair,
+  })   : keyPair = keyPair,
         super(key: key);
 
   final KeyPair? keyPair;
