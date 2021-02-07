@@ -14,7 +14,7 @@ class Binding {
   static final String _libraryName = 'libopenpgp_bridge';
   static final Binding _singleton = Binding._internal();
 
-  ffi.DynamicLibrary _library;
+  late ffi.DynamicLibrary _library;
 
   factory Binding() {
     return _singleton;
@@ -42,7 +42,7 @@ class Binding {
 
     Completer<Uint8List> completer = new Completer();
 
-    StreamSubscription subscription;
+    StreamSubscription?/*!*/ subscription;
     subscription = port.listen((message) async {
       await subscription?.cancel();
       completer.complete(message);
@@ -55,7 +55,7 @@ class Binding {
         .lookup<ffi.NativeFunction<call_func>>(_callFuncName)
         .asFunction<Call>();
 
-    final pointer = allocate<ffi.Uint8>(count: payload.length);
+    final pointer = malloc<ffi.Uint8>(payload.length);
 
     // https://github.com/dart-lang/ffi/issues/27
     // https://github.com/objectbox/objectbox-dart/issues/69
@@ -97,7 +97,7 @@ class Binding {
   void freeHere(ffi.Pointer pointer) {
     // FIXME by now i realize that free on windows is not working as expected
     if (!Platform.isWindows) {
-      free(pointer);
+      malloc.free(pointer);
     }
   }
 

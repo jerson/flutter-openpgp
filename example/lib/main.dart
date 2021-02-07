@@ -31,7 +31,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  KeyPair _defaultKeyPair;
+  KeyPair? _defaultKeyPair;
 
   @override
   void initState() {

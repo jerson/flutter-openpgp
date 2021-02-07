@@ -13,13 +13,13 @@ import 'package:openpgp_example/shared/title_widget.dart';
 
 class SignAndVerifyBytes extends StatefulWidget {
   const SignAndVerifyBytes({
-    Key key,
-    @required this.title,
-    @required KeyPair keyPair,
+    Key? key,
+    required this.title,
+    required KeyPair? keyPair,
   })  : keyPair = keyPair,
         super(key: key);
 
-  final KeyPair keyPair;
+  final KeyPair? keyPair;
   final String title;
 
   @override
@@ -47,8 +47,8 @@ class _SignAndVerifyBytesState extends State<SignAndVerifyBytes> {
               onPressed: (controller) async {
                 var result = await OpenPGP.signBytesToString(
                   Uint8List.fromList(controller.text.codeUnits),
-                  widget.keyPair.publicKey,
-                  widget.keyPair.privateKey,
+                  widget.keyPair!.publicKey,
+                  widget.keyPair!.privateKey,
                   passphrase,
                 );
                 setState(() {
@@ -65,7 +65,7 @@ class _SignAndVerifyBytesState extends State<SignAndVerifyBytes> {
                 var result = await OpenPGP.verifyBytes(
                   _signed,
                   Uint8List.fromList(_text.codeUnits),
-                  widget.keyPair.publicKey,
+                  widget.keyPair!.publicKey,
                 );
                 setState(() {
                   _verify = result ? "VALID" : "INVALID";
@@ -79,8 +79,8 @@ class _SignAndVerifyBytesState extends State<SignAndVerifyBytes> {
               onPressed: (controller) async {
                 var result = await OpenPGP.signBytes(
                   Uint8List.fromList(controller.text.codeUnits),
-                  widget.keyPair.publicKey,
-                  widget.keyPair.privateKey,
+                  widget.keyPair!.publicKey,
+                  widget.keyPair!.privateKey,
                   passphrase,
                 );
                 setState(() {

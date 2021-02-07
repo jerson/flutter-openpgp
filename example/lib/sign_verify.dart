@@ -10,13 +10,13 @@ import 'package:openpgp_example/shared/title_widget.dart';
 
 class SignAndVerify extends StatefulWidget {
   const SignAndVerify({
-    Key key,
-    @required this.title,
-    @required KeyPair keyPair,
+    Key? key,
+    required this.title,
+    required KeyPair? keyPair,
   })  : keyPair = keyPair,
         super(key: key);
 
-  final KeyPair keyPair;
+  final KeyPair? keyPair;
   final String title;
 
   @override
@@ -43,8 +43,8 @@ class _SignAndVerifyState extends State<SignAndVerify> {
               onPressed: (controller) async {
                 var result = await OpenPGP.sign(
                   controller.text,
-                  widget.keyPair.publicKey,
-                  widget.keyPair.privateKey,
+                  widget.keyPair!.publicKey,
+                  widget.keyPair!.privateKey,
                   passphrase,
                 );
                 setState(() {
@@ -61,7 +61,7 @@ class _SignAndVerifyState extends State<SignAndVerify> {
                 var result = await OpenPGP.verify(
                   _signed,
                   _text,
-                  widget.keyPair.publicKey,
+                  widget.keyPair!.publicKey,
                 );
                 setState(() {
                   _verify = result ? "VALID" : "INVALID";

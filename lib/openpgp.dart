@@ -58,7 +58,7 @@ class OpenPGP {
 
   static Future<String> decrypt(
       String message, String privateKey, String passphrase,
-      {KeyOptions options}) async {
+      {KeyOptions? options}) async {
     var request = DecryptRequest()
       ..message = message
       ..privateKey = privateKey
@@ -72,7 +72,7 @@ class OpenPGP {
 
   static Future<Uint8List> decryptBytes(
       Uint8List message, String privateKey, String passphrase,
-      {KeyOptions options}) async {
+      {KeyOptions? options}) async {
     var request = DecryptBytesRequest()
       ..message = message
       ..privateKey = privateKey
@@ -85,7 +85,7 @@ class OpenPGP {
   }
 
   static Future<String> encrypt(String message, String publicKey,
-      {KeyOptions options, Entity signed, FileHints fileHints}) async {
+      {KeyOptions? options, Entity? signed, FileHints? fileHints}) async {
     var request = EncryptRequest()
       ..message = message
       ..publicKey = publicKey;
@@ -103,7 +103,7 @@ class OpenPGP {
   }
 
   static Future<Uint8List> encryptBytes(Uint8List message, String publicKey,
-      {KeyOptions options, Entity signed, FileHints fileHints}) async {
+      {KeyOptions? options, Entity? signed, FileHints? fileHints}) async {
     var request = EncryptBytesRequest()
       ..message = message
       ..publicKey = publicKey;
@@ -121,7 +121,7 @@ class OpenPGP {
 
   static Future<String> sign(
       String message, String publicKey, String privateKey, String passphrase,
-      {KeyOptions options}) async {
+      {KeyOptions? options}) async {
     var request = SignRequest()
       ..message = message
       ..publicKey = publicKey
@@ -135,7 +135,7 @@ class OpenPGP {
 
   static Future<Uint8List> signBytes(
       Uint8List message, String publicKey, String privateKey, String passphrase,
-      {KeyOptions options}) async {
+      {KeyOptions? options}) async {
     var request = SignBytesRequest()
       ..message = message
       ..publicKey = publicKey
@@ -149,7 +149,7 @@ class OpenPGP {
 
   static Future<String> signBytesToString(
       Uint8List message, String publicKey, String privateKey, String passphrase,
-      {KeyOptions options}) async {
+      {KeyOptions? options}) async {
     var request = SignBytesRequest()
       ..message = message
       ..publicKey = publicKey
@@ -180,7 +180,7 @@ class OpenPGP {
   }
 
   static Future<String> decryptSymmetric(String message, String passphrase,
-      {KeyOptions options}) async {
+      {KeyOptions? options}) async {
     var request = DecryptSymmetricRequest()
       ..message = message
       ..passphrase = passphrase;
@@ -192,7 +192,7 @@ class OpenPGP {
 
   static Future<Uint8List> decryptSymmetricBytes(
       Uint8List message, String passphrase,
-      {KeyOptions options}) async {
+      {KeyOptions? options}) async {
     var request = DecryptSymmetricBytesRequest()
       ..message = message
       ..passphrase = passphrase;
@@ -204,7 +204,7 @@ class OpenPGP {
   }
 
   static Future<String> encryptSymmetric(String message, String passphrase,
-      {KeyOptions options, FileHints fileHints}) async {
+      {KeyOptions? options, FileHints? fileHints}) async {
     var request = EncryptSymmetricRequest()
       ..message = message
       ..passphrase = passphrase;
@@ -219,7 +219,7 @@ class OpenPGP {
 
   static Future<Uint8List> encryptSymmetricBytes(
       Uint8List message, String passphrase,
-      {KeyOptions options, FileHints fileHints}) async {
+      {KeyOptions? options, FileHints? fileHints}) async {
     var request = EncryptSymmetricBytesRequest()
       ..message = message
       ..passphrase = passphrase;
@@ -233,7 +233,7 @@ class OpenPGP {
         "encryptSymmetricBytes", request.writeToBuffer());
   }
 
-  static Future<KeyPair> generate({Options options}) async {
+  static Future<KeyPair> generate({Options? options}) async {
     var request = GenerateRequest();
     if (options != null) {
       request.options = options;

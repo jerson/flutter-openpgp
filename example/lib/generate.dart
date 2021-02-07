@@ -10,8 +10,8 @@ import 'package:openpgp_example/shared/title_widget.dart';
 
 class Generate extends StatefulWidget {
   const Generate({
-    Key key,
-    @required this.title,
+    Key? key,
+    required this.title,
   }) : super(key: key);
 
   final String title;

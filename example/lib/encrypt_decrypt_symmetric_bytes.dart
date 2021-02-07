@@ -13,13 +13,13 @@ import 'package:openpgp_example/shared/title_widget.dart';
 
 class EncryptAndDecryptSymmetricBytes extends StatefulWidget {
   const EncryptAndDecryptSymmetricBytes({
-    Key key,
-    @required this.title,
-    @required KeyPair keyPair,
+    Key? key,
+    required this.title,
+    required KeyPair? keyPair,
   })  : keyPair = keyPair,
         super(key: key);
 
-  final KeyPair keyPair;
+  final KeyPair? keyPair;
   final String title;
 
   @override

@@ -1,3 +1,7 @@
+## 1.2.0-nullsafety.1
+
+- First version with initial support working
+
 ## 1.1.2
 
 - Tests CI and github actions for drive

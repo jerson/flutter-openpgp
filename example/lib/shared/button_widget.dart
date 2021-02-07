@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 class ButtonWidget extends StatefulWidget {
   const ButtonWidget({
-    Key key,
-    @required this.result,
-    @required String title,
-    @required Function onPressed,
+    Key? key,
+    required this.result,
+    required String title,
+    required Function onPressed,
   })  : onPressed = onPressed,
         title = title,
         super(key: key);
