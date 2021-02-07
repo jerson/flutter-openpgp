@@ -1,3 +1,7 @@
+## 1.1.4
+
+- Added OpenPGPException to `openpgp.dart`
+
 ## 1.1.3
 
 - Added OpenPGPException
