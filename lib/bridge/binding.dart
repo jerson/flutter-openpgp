@@ -42,7 +42,7 @@ class Binding {
 
     Completer<Uint8List> completer = new Completer();
 
-    StreamSubscription?/*!*/ subscription;
+    StreamSubscription? subscription;
     subscription = port.listen((message) async {
       await subscription?.cancel();
       completer.complete(message);
@@ -86,11 +86,11 @@ class Binding {
     }
   }
 
-  ffi.Pointer<Utf8> toUtf8(String text) {
+  ffi.Pointer<Utf8> toUtf8(String? text) {
     return text == null ? Utf8.toUtf8("") : Utf8.toUtf8(text);
   }
 
-  String fromUtf8(ffi.Pointer<Utf8> text) {
+  String fromUtf8(ffi.Pointer<Utf8>? text) {
     return text == null ? "" : Utf8.fromUtf8(text);
   }
 
