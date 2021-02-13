@@ -1,3 +1,7 @@
+## 1.2.0-nullsafety.4
+
+- Updated FFI to latest and removed deprecated methods
+
 ## 1.2.0-nullsafety.3
 
 - Format only
@@ -9,6 +13,7 @@
 ## 1.2.0-nullsafety.1
 
 - First version with initial support working
+
 ## 1.1.4
 
 - Added OpenPGPException to `openpgp.dart`
