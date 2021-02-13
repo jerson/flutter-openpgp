@@ -7,6 +7,11 @@ import 'package:openpgp/bridge/binding_stub.dart'
     if (dart.library.js) 'package:openpgp/bridge/binding_stub.dart';
 import 'package:openpgp/model/bridge.pb.dart';
 
+class OpenPGPException implements Exception {
+  String cause;
+  OpenPGPException(this.cause);
+}
+
 class OpenPGP {
   static const MethodChannel _channel = const MethodChannel('openpgp');
   static bool bindingEnabled = Binding().isSupported();
@@ -23,7 +28,7 @@ class OpenPGP {
     var data = await _call(name, payload);
     var response = BytesResponse()..mergeFromBuffer(data);
     if (response.hasError()) {
-      throw response.error;
+      throw new OpenPGPException(response.error);
     }
     return Uint8List.fromList(response.output);
   }
@@ -32,7 +37,7 @@ class OpenPGP {
     var data = await _call(name, payload);
     var response = StringResponse()..mergeFromBuffer(data);
     if (response.hasError()) {
-      throw response.error;
+      throw new OpenPGPException(response.error);
     }
     return response.output;
   }
@@ -41,7 +46,7 @@ class OpenPGP {
     var data = await _call(name, payload);
     var response = BoolResponse()..mergeFromBuffer(data);
     if (response.hasError()) {
-      throw response.error;
+      throw new OpenPGPException(response.error);
     }
     return response.output;
   }
@@ -51,7 +56,7 @@ class OpenPGP {
     var data = await _call(name, payload);
     var response = KeyPairResponse()..mergeFromBuffer(data);
     if (response.hasError()) {
-      throw response.error;
+      throw new OpenPGPException(response.error);
     }
     return response.output;
   }

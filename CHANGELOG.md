@@ -9,6 +9,13 @@
 ## 1.2.0-nullsafety.1
 
 - First version with initial support working
+## 1.1.4
+
+- Added OpenPGPException to `openpgp.dart`
+
+## 1.1.3
+
+- Added OpenPGPException
 
 ## 1.1.2
 
