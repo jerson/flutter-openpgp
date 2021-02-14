@@ -1,3 +1,7 @@
+## 1.2.0-nullsafety.5
+
+- macOS now use dylib instead of .a 
+
 ## 1.2.0-nullsafety.4
 
 - Updated FFI to latest and removed deprecated methods

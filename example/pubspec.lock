@@ -249,7 +249,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.2.0-nullsafety.4"
+    version: "1.2.0-nullsafety.5"
   package_config:
     dependency: transitive
     description:
