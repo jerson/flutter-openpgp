@@ -2,7 +2,7 @@
 //  Generated code. Do not modify.
 //  source: bridge.proto
 //
-// @dart = 2.3
+
 // ignore_for_file: camel_case_types,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type
 
 // ignore_for_file: UNDEFINED_SHOWN_NAME,UNUSED_SHOWN_NAME
@@ -26,7 +26,7 @@ class Hash extends $pb.ProtobufEnum {
 
   static final $core.Map<$core.int, Hash> _byValue =
       $pb.ProtobufEnum.initByValue(values);
-  static Hash valueOf($core.int value) => _byValue[value];
+  static Hash? valueOf($core.int value) => _byValue[value];
 
   const Hash._($core.int v, $core.String n) : super(v, n);
 }
@@ -50,7 +50,7 @@ class Compression extends $pb.ProtobufEnum {
 
   static final $core.Map<$core.int, Compression> _byValue =
       $pb.ProtobufEnum.initByValue(values);
-  static Compression valueOf($core.int value) => _byValue[value];
+  static Compression? valueOf($core.int value) => _byValue[value];
 
   const Compression._($core.int v, $core.String n) : super(v, n);
 }
@@ -70,7 +70,7 @@ class Cipher extends $pb.ProtobufEnum {
 
   static final $core.Map<$core.int, Cipher> _byValue =
       $pb.ProtobufEnum.initByValue(values);
-  static Cipher valueOf($core.int value) => _byValue[value];
+  static Cipher? valueOf($core.int value) => _byValue[value];
 
   const Cipher._($core.int v, $core.String n) : super(v, n);
 }

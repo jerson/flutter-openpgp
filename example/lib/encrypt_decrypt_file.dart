@@ -11,13 +11,13 @@ import 'package:openpgp_example/shared/title_widget.dart';
 
 class EncryptAndDecryptFile extends StatefulWidget {
   const EncryptAndDecryptFile({
-    Key key,
-    @required this.title,
-    @required KeyPair keyPair,
-  })  : keyPair = keyPair,
+    Key? key,
+    required this.title,
+    required KeyPair? keyPair,
+  })   : keyPair = keyPair,
         super(key: key);
 
-  final KeyPair keyPair;
+  final KeyPair? keyPair;
   final String title;
 
   @override
@@ -34,7 +34,7 @@ class _EncryptAndDecryptFileState extends State<EncryptAndDecryptFile> {
     print("start");
     var encrypted = await OpenPGP.encryptBytes(
       input.readAsBytesSync(),
-      widget.keyPair.publicKey,
+      widget.keyPair!.publicKey,
       fileHints: FileHints()..isBinary = true,
     );
     print("end");
@@ -43,8 +43,8 @@ class _EncryptAndDecryptFileState extends State<EncryptAndDecryptFile> {
     File output = File(outputPath);
     await output.writeAsBytes(encrypted);
 
-    await File(inputPath + ".pub").writeAsString(widget.keyPair.publicKey);
-    await File(inputPath + ".key").writeAsString(widget.keyPair.privateKey);
+    await File(inputPath + ".pub").writeAsString(widget.keyPair!.publicKey);
+    await File(inputPath + ".key").writeAsString(widget.keyPair!.privateKey);
 
     print("saved");
     setState(() {
@@ -59,7 +59,7 @@ class _EncryptAndDecryptFileState extends State<EncryptAndDecryptFile> {
       print("start");
       var decrypted = await OpenPGP.decryptBytes(
         input.readAsBytesSync(),
-        widget.keyPair.privateKey,
+        widget.keyPair!.privateKey,
         passphrase,
       );
       print("end");

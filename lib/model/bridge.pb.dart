@@ -2,7 +2,7 @@
 //  Generated code. Do not modify.
 //  source: bridge.proto
 //
-// @dart = 2.3
+
 // ignore_for_file: camel_case_types,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type
 
 import 'dart:core' as $core;
@@ -34,7 +34,8 @@ class EncryptRequest extends $pb.GeneratedMessage {
       create()..mergeFromJson(i, r);
   EncryptRequest clone() => EncryptRequest()..mergeFromMessage(this);
   EncryptRequest copyWith(void Function(EncryptRequest) updates) =>
-      super.copyWith((message) => updates(message as EncryptRequest));
+      super.copyWith((message) => updates(message as EncryptRequest))
+          as EncryptRequest;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static EncryptRequest create() => EncryptRequest._();
@@ -44,7 +45,7 @@ class EncryptRequest extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static EncryptRequest getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<EncryptRequest>(create);
-  static EncryptRequest _defaultInstance;
+  static EncryptRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get message => $_getSZ(0);
@@ -134,7 +135,8 @@ class EncryptBytesRequest extends $pb.GeneratedMessage {
       create()..mergeFromJson(i, r);
   EncryptBytesRequest clone() => EncryptBytesRequest()..mergeFromMessage(this);
   EncryptBytesRequest copyWith(void Function(EncryptBytesRequest) updates) =>
-      super.copyWith((message) => updates(message as EncryptBytesRequest));
+      super.copyWith((message) => updates(message as EncryptBytesRequest))
+          as EncryptBytesRequest;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static EncryptBytesRequest create() => EncryptBytesRequest._();
@@ -144,7 +146,7 @@ class EncryptBytesRequest extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static EncryptBytesRequest getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<EncryptBytesRequest>(create);
-  static EncryptBytesRequest _defaultInstance;
+  static EncryptBytesRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.List<$core.int> get message => $_getN(0);
@@ -232,7 +234,8 @@ class DecryptRequest extends $pb.GeneratedMessage {
       create()..mergeFromJson(i, r);
   DecryptRequest clone() => DecryptRequest()..mergeFromMessage(this);
   DecryptRequest copyWith(void Function(DecryptRequest) updates) =>
-      super.copyWith((message) => updates(message as DecryptRequest));
+      super.copyWith((message) => updates(message as DecryptRequest))
+          as DecryptRequest;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static DecryptRequest create() => DecryptRequest._();
@@ -242,7 +245,7 @@ class DecryptRequest extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static DecryptRequest getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<DecryptRequest>(create);
-  static DecryptRequest _defaultInstance;
+  static DecryptRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get message => $_getSZ(0);
@@ -314,7 +317,8 @@ class DecryptBytesRequest extends $pb.GeneratedMessage {
       create()..mergeFromJson(i, r);
   DecryptBytesRequest clone() => DecryptBytesRequest()..mergeFromMessage(this);
   DecryptBytesRequest copyWith(void Function(DecryptBytesRequest) updates) =>
-      super.copyWith((message) => updates(message as DecryptBytesRequest));
+      super.copyWith((message) => updates(message as DecryptBytesRequest))
+          as DecryptBytesRequest;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static DecryptBytesRequest create() => DecryptBytesRequest._();
@@ -324,7 +328,7 @@ class DecryptBytesRequest extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static DecryptBytesRequest getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<DecryptBytesRequest>(create);
-  static DecryptBytesRequest _defaultInstance;
+  static DecryptBytesRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.List<$core.int> get message => $_getN(0);
@@ -397,7 +401,8 @@ class SignRequest extends $pb.GeneratedMessage {
       create()..mergeFromJson(i, r);
   SignRequest clone() => SignRequest()..mergeFromMessage(this);
   SignRequest copyWith(void Function(SignRequest) updates) =>
-      super.copyWith((message) => updates(message as SignRequest));
+      super.copyWith((message) => updates(message as SignRequest))
+          as SignRequest;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static SignRequest create() => SignRequest._();
@@ -406,7 +411,7 @@ class SignRequest extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static SignRequest getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<SignRequest>(create);
-  static SignRequest _defaultInstance;
+  static SignRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get message => $_getSZ(0);
@@ -491,7 +496,8 @@ class SignBytesRequest extends $pb.GeneratedMessage {
       create()..mergeFromJson(i, r);
   SignBytesRequest clone() => SignBytesRequest()..mergeFromMessage(this);
   SignBytesRequest copyWith(void Function(SignBytesRequest) updates) =>
-      super.copyWith((message) => updates(message as SignBytesRequest));
+      super.copyWith((message) => updates(message as SignBytesRequest))
+          as SignBytesRequest;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static SignBytesRequest create() => SignBytesRequest._();
@@ -501,7 +507,7 @@ class SignBytesRequest extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static SignBytesRequest getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<SignBytesRequest>(create);
-  static SignBytesRequest _defaultInstance;
+  static SignBytesRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.List<$core.int> get message => $_getN(0);
@@ -584,7 +590,8 @@ class VerifyRequest extends $pb.GeneratedMessage {
       create()..mergeFromJson(i, r);
   VerifyRequest clone() => VerifyRequest()..mergeFromMessage(this);
   VerifyRequest copyWith(void Function(VerifyRequest) updates) =>
-      super.copyWith((message) => updates(message as VerifyRequest));
+      super.copyWith((message) => updates(message as VerifyRequest))
+          as VerifyRequest;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static VerifyRequest create() => VerifyRequest._();
@@ -594,7 +601,7 @@ class VerifyRequest extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static VerifyRequest getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<VerifyRequest>(create);
-  static VerifyRequest _defaultInstance;
+  static VerifyRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get signature => $_getSZ(0);
@@ -651,7 +658,8 @@ class VerifyBytesRequest extends $pb.GeneratedMessage {
       create()..mergeFromJson(i, r);
   VerifyBytesRequest clone() => VerifyBytesRequest()..mergeFromMessage(this);
   VerifyBytesRequest copyWith(void Function(VerifyBytesRequest) updates) =>
-      super.copyWith((message) => updates(message as VerifyBytesRequest));
+      super.copyWith((message) => updates(message as VerifyBytesRequest))
+          as VerifyBytesRequest;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static VerifyBytesRequest create() => VerifyBytesRequest._();
@@ -661,7 +669,7 @@ class VerifyBytesRequest extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static VerifyBytesRequest getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<VerifyBytesRequest>(create);
-  static VerifyBytesRequest _defaultInstance;
+  static VerifyBytesRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get signature => $_getSZ(0);
@@ -722,7 +730,8 @@ class EncryptSymmetricRequest extends $pb.GeneratedMessage {
       EncryptSymmetricRequest()..mergeFromMessage(this);
   EncryptSymmetricRequest copyWith(
           void Function(EncryptSymmetricRequest) updates) =>
-      super.copyWith((message) => updates(message as EncryptSymmetricRequest));
+      super.copyWith((message) => updates(message as EncryptSymmetricRequest))
+          as EncryptSymmetricRequest;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static EncryptSymmetricRequest create() => EncryptSymmetricRequest._();
@@ -732,7 +741,7 @@ class EncryptSymmetricRequest extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static EncryptSymmetricRequest getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<EncryptSymmetricRequest>(create);
-  static EncryptSymmetricRequest _defaultInstance;
+  static EncryptSymmetricRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get message => $_getSZ(0);
@@ -812,7 +821,8 @@ class EncryptSymmetricBytesRequest extends $pb.GeneratedMessage {
   EncryptSymmetricBytesRequest copyWith(
           void Function(EncryptSymmetricBytesRequest) updates) =>
       super.copyWith(
-          (message) => updates(message as EncryptSymmetricBytesRequest));
+              (message) => updates(message as EncryptSymmetricBytesRequest))
+          as EncryptSymmetricBytesRequest;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static EncryptSymmetricBytesRequest create() =>
@@ -823,7 +833,7 @@ class EncryptSymmetricBytesRequest extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static EncryptSymmetricBytesRequest getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<EncryptSymmetricBytesRequest>(create);
-  static EncryptSymmetricBytesRequest _defaultInstance;
+  static EncryptSymmetricBytesRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.List<$core.int> get message => $_getN(0);
@@ -898,7 +908,8 @@ class DecryptSymmetricRequest extends $pb.GeneratedMessage {
       DecryptSymmetricRequest()..mergeFromMessage(this);
   DecryptSymmetricRequest copyWith(
           void Function(DecryptSymmetricRequest) updates) =>
-      super.copyWith((message) => updates(message as DecryptSymmetricRequest));
+      super.copyWith((message) => updates(message as DecryptSymmetricRequest))
+          as DecryptSymmetricRequest;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static DecryptSymmetricRequest create() => DecryptSymmetricRequest._();
@@ -908,7 +919,7 @@ class DecryptSymmetricRequest extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static DecryptSymmetricRequest getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<DecryptSymmetricRequest>(create);
-  static DecryptSymmetricRequest _defaultInstance;
+  static DecryptSymmetricRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get message => $_getSZ(0);
@@ -972,7 +983,8 @@ class DecryptSymmetricBytesRequest extends $pb.GeneratedMessage {
   DecryptSymmetricBytesRequest copyWith(
           void Function(DecryptSymmetricBytesRequest) updates) =>
       super.copyWith(
-          (message) => updates(message as DecryptSymmetricBytesRequest));
+              (message) => updates(message as DecryptSymmetricBytesRequest))
+          as DecryptSymmetricBytesRequest;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static DecryptSymmetricBytesRequest create() =>
@@ -983,7 +995,7 @@ class DecryptSymmetricBytesRequest extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static DecryptSymmetricBytesRequest getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<DecryptSymmetricBytesRequest>(create);
-  static DecryptSymmetricBytesRequest _defaultInstance;
+  static DecryptSymmetricBytesRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.List<$core.int> get message => $_getN(0);
@@ -1040,7 +1052,8 @@ class GenerateRequest extends $pb.GeneratedMessage {
       create()..mergeFromJson(i, r);
   GenerateRequest clone() => GenerateRequest()..mergeFromMessage(this);
   GenerateRequest copyWith(void Function(GenerateRequest) updates) =>
-      super.copyWith((message) => updates(message as GenerateRequest));
+      super.copyWith((message) => updates(message as GenerateRequest))
+          as GenerateRequest;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static GenerateRequest create() => GenerateRequest._();
@@ -1050,7 +1063,7 @@ class GenerateRequest extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static GenerateRequest getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<GenerateRequest>(create);
-  static GenerateRequest _defaultInstance;
+  static GenerateRequest? _defaultInstance;
 
   @$pb.TagNumber(5)
   Options get options => $_getN(0);
@@ -1097,7 +1110,7 @@ class KeyOptions extends $pb.GeneratedMessage {
       create()..mergeFromJson(i, r);
   KeyOptions clone() => KeyOptions()..mergeFromMessage(this);
   KeyOptions copyWith(void Function(KeyOptions) updates) =>
-      super.copyWith((message) => updates(message as KeyOptions));
+      super.copyWith((message) => updates(message as KeyOptions)) as KeyOptions;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static KeyOptions create() => KeyOptions._();
@@ -1106,7 +1119,7 @@ class KeyOptions extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static KeyOptions getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<KeyOptions>(create);
-  static KeyOptions _defaultInstance;
+  static KeyOptions? _defaultInstance;
 
   @$pb.TagNumber(1)
   Hash get hash => $_getN(0);
@@ -1190,7 +1203,7 @@ class Options extends $pb.GeneratedMessage {
       create()..mergeFromJson(i, r);
   Options clone() => Options()..mergeFromMessage(this);
   Options copyWith(void Function(Options) updates) =>
-      super.copyWith((message) => updates(message as Options));
+      super.copyWith((message) => updates(message as Options)) as Options;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static Options create() => Options._();
@@ -1199,7 +1212,7 @@ class Options extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static Options getDefault() =>
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Options>(create);
-  static Options _defaultInstance;
+  static Options? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get name => $_getSZ(0);
@@ -1282,7 +1295,7 @@ class FileHints extends $pb.GeneratedMessage {
       create()..mergeFromJson(i, r);
   FileHints clone() => FileHints()..mergeFromMessage(this);
   FileHints copyWith(void Function(FileHints) updates) =>
-      super.copyWith((message) => updates(message as FileHints));
+      super.copyWith((message) => updates(message as FileHints)) as FileHints;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static FileHints create() => FileHints._();
@@ -1291,7 +1304,7 @@ class FileHints extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static FileHints getDefault() =>
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<FileHints>(create);
-  static FileHints _defaultInstance;
+  static FileHints? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.bool get isBinary => $_getBF(0);
@@ -1348,7 +1361,7 @@ class Entity extends $pb.GeneratedMessage {
       create()..mergeFromJson(i, r);
   Entity clone() => Entity()..mergeFromMessage(this);
   Entity copyWith(void Function(Entity) updates) =>
-      super.copyWith((message) => updates(message as Entity));
+      super.copyWith((message) => updates(message as Entity)) as Entity;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static Entity create() => Entity._();
@@ -1357,7 +1370,7 @@ class Entity extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static Entity getDefault() =>
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Entity>(create);
-  static Entity _defaultInstance;
+  static Entity? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get publicKey => $_getSZ(0);
@@ -1413,7 +1426,8 @@ class StringResponse extends $pb.GeneratedMessage {
       create()..mergeFromJson(i, r);
   StringResponse clone() => StringResponse()..mergeFromMessage(this);
   StringResponse copyWith(void Function(StringResponse) updates) =>
-      super.copyWith((message) => updates(message as StringResponse));
+      super.copyWith((message) => updates(message as StringResponse))
+          as StringResponse;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static StringResponse create() => StringResponse._();
@@ -1423,7 +1437,7 @@ class StringResponse extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static StringResponse getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<StringResponse>(create);
-  static StringResponse _defaultInstance;
+  static StringResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get output => $_getSZ(0);
@@ -1467,7 +1481,8 @@ class BytesResponse extends $pb.GeneratedMessage {
       create()..mergeFromJson(i, r);
   BytesResponse clone() => BytesResponse()..mergeFromMessage(this);
   BytesResponse copyWith(void Function(BytesResponse) updates) =>
-      super.copyWith((message) => updates(message as BytesResponse));
+      super.copyWith((message) => updates(message as BytesResponse))
+          as BytesResponse;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static BytesResponse create() => BytesResponse._();
@@ -1477,7 +1492,7 @@ class BytesResponse extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static BytesResponse getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<BytesResponse>(create);
-  static BytesResponse _defaultInstance;
+  static BytesResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.List<$core.int> get output => $_getN(0);
@@ -1521,7 +1536,8 @@ class BoolResponse extends $pb.GeneratedMessage {
       create()..mergeFromJson(i, r);
   BoolResponse clone() => BoolResponse()..mergeFromMessage(this);
   BoolResponse copyWith(void Function(BoolResponse) updates) =>
-      super.copyWith((message) => updates(message as BoolResponse));
+      super.copyWith((message) => updates(message as BoolResponse))
+          as BoolResponse;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static BoolResponse create() => BoolResponse._();
@@ -1531,7 +1547,7 @@ class BoolResponse extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static BoolResponse getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<BoolResponse>(create);
-  static BoolResponse _defaultInstance;
+  static BoolResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.bool get output => $_getBF(0);
@@ -1575,7 +1591,8 @@ class KeyPairResponse extends $pb.GeneratedMessage {
       create()..mergeFromJson(i, r);
   KeyPairResponse clone() => KeyPairResponse()..mergeFromMessage(this);
   KeyPairResponse copyWith(void Function(KeyPairResponse) updates) =>
-      super.copyWith((message) => updates(message as KeyPairResponse));
+      super.copyWith((message) => updates(message as KeyPairResponse))
+          as KeyPairResponse;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static KeyPairResponse create() => KeyPairResponse._();
@@ -1585,7 +1602,7 @@ class KeyPairResponse extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static KeyPairResponse getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<KeyPairResponse>(create);
-  static KeyPairResponse _defaultInstance;
+  static KeyPairResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
   KeyPair get output => $_getN(0);
@@ -1631,7 +1648,7 @@ class KeyPair extends $pb.GeneratedMessage {
       create()..mergeFromJson(i, r);
   KeyPair clone() => KeyPair()..mergeFromMessage(this);
   KeyPair copyWith(void Function(KeyPair) updates) =>
-      super.copyWith((message) => updates(message as KeyPair));
+      super.copyWith((message) => updates(message as KeyPair)) as KeyPair;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static KeyPair create() => KeyPair._();
@@ -1640,7 +1657,7 @@ class KeyPair extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static KeyPair getDefault() =>
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<KeyPair>(create);
-  static KeyPair _defaultInstance;
+  static KeyPair? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get publicKey => $_getSZ(0);
@@ -1688,7 +1705,8 @@ class PublicKeyMetadata extends $pb.GeneratedMessage {
       create()..mergeFromJson(i, r);
   PublicKeyMetadata clone() => PublicKeyMetadata()..mergeFromMessage(this);
   PublicKeyMetadata copyWith(void Function(PublicKeyMetadata) updates) =>
-      super.copyWith((message) => updates(message as PublicKeyMetadata));
+      super.copyWith((message) => updates(message as PublicKeyMetadata))
+          as PublicKeyMetadata;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static PublicKeyMetadata create() => PublicKeyMetadata._();
@@ -1698,7 +1716,7 @@ class PublicKeyMetadata extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static PublicKeyMetadata getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<PublicKeyMetadata>(create);
-  static PublicKeyMetadata _defaultInstance;
+  static PublicKeyMetadata? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get keyID => $_getSZ(0);
@@ -1795,7 +1813,8 @@ class PrivateKeyMetadata extends $pb.GeneratedMessage {
       create()..mergeFromJson(i, r);
   PrivateKeyMetadata clone() => PrivateKeyMetadata()..mergeFromMessage(this);
   PrivateKeyMetadata copyWith(void Function(PrivateKeyMetadata) updates) =>
-      super.copyWith((message) => updates(message as PrivateKeyMetadata));
+      super.copyWith((message) => updates(message as PrivateKeyMetadata))
+          as PrivateKeyMetadata;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static PrivateKeyMetadata create() => PrivateKeyMetadata._();
@@ -1805,7 +1824,7 @@ class PrivateKeyMetadata extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static PrivateKeyMetadata getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<PrivateKeyMetadata>(create);
-  static PrivateKeyMetadata _defaultInstance;
+  static PrivateKeyMetadata? _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get keyID => $_getSZ(0);

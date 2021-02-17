@@ -10,13 +10,13 @@ import 'package:openpgp_example/shared/title_widget.dart';
 
 class EncryptAndDecrypt extends StatefulWidget {
   const EncryptAndDecrypt({
-    Key key,
-    @required this.title,
-    @required KeyPair keyPair,
-  })  : keyPair = keyPair,
+    Key? key,
+    required this.title,
+    required KeyPair? keyPair,
+  })   : keyPair = keyPair,
         super(key: key);
 
-  final KeyPair keyPair;
+  final KeyPair? keyPair;
   final String title;
 
   @override
@@ -43,7 +43,7 @@ class _EncryptAndDecryptState extends State<EncryptAndDecrypt> {
                 try {
                   var encrypted = await OpenPGP.encrypt(
                     controller.text,
-                    widget.keyPair.publicKey,
+                    widget.keyPair!.publicKey,
                   );
                   setState(() {
                     _encrypted = encrypted;
@@ -60,7 +60,7 @@ class _EncryptAndDecryptState extends State<EncryptAndDecrypt> {
               onPressed: () async {
                 var decrypted = await OpenPGP.decrypt(
                   _encrypted,
-                  widget.keyPair.privateKey,
+                  widget.keyPair!.privateKey,
                   passphrase,
                 );
                 setState(() {

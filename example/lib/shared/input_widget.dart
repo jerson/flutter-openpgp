@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 
 class InputWidget extends StatefulWidget {
   const InputWidget({
-    Key key,
-    @required this.result,
-    @required this.title,
+    Key? key,
+    required this.result,
+    required this.title,
     this.subtitle,
-    @required Function(TextEditingController) this.onPressed,
+    required Function(TextEditingController) this.onPressed,
   }) : super(key: key);
 
   final Function(TextEditingController) onPressed;
   final String title;
-  final String subtitle;
+  final String? subtitle;
   final String result;
 
   @override
@@ -21,7 +21,7 @@ class InputWidget extends StatefulWidget {
 
 class _InputWidgetState extends State<InputWidget> {
   final _controller = TextEditingController();
-  FocusNode _focusNode;
+  FocusNode? _focusNode;
   bool _loading = true;
 
   @override
@@ -33,7 +33,7 @@ class _InputWidgetState extends State<InputWidget> {
 
   @override
   void dispose() {
-    _focusNode.dispose();
+    _focusNode!.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -44,7 +44,7 @@ class _InputWidgetState extends State<InputWidget> {
       padding: const EdgeInsets.all(10),
       child: Column(
         children: <Widget>[
-          if (widget.subtitle != null) Text(widget.subtitle),
+          if (widget.subtitle != null) Text(widget.subtitle!),
           TextField(
             autofocus: false,
             focusNode: _focusNode,
@@ -55,7 +55,7 @@ class _InputWidgetState extends State<InputWidget> {
           RaisedButton(
             child: Text(widget.title),
             onPressed: () async {
-              _focusNode.unfocus();
+              _focusNode!.unfocus();
               await widget.onPressed(_controller);
               setState(() {
                 _loading = false;
