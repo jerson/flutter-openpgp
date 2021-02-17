@@ -1,3 +1,7 @@
+## 2.0.0
+
+- bump version to stable null_safety
+
 ## 1.2.0-nullsafety.5
 
 - macOS now use dylib instead of .a 
