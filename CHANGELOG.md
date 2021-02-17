@@ -18,6 +18,10 @@
 
 - First version with initial support working
 
+## 1.1.5
+
+- macOS now use dylib instead of .a 
+
 ## 1.1.4
 
 - Added OpenPGPException to `openpgp.dart`
