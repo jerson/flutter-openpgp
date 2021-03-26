@@ -3,13 +3,13 @@ default: test
 test:
 	cd example && flutter drive --target=test_driver/app.dart
 
-upgrade: upgrade-libs upgrade-protobuf
+upgrade: upgrade-libs upgrade-flatbuffers
 
 upgrade-libs:
 	./scripts/upgrade_bridge_libs.sh
 
-upgrade-protobuf:
-	./scripts/upgrade_bridge_protobuf.sh
+upgrade-flatbuffers:
+	./scripts/upgrade_bridge_flatbuffers.sh
 
 example-web:
 	docker build -t flutter-openpgp-web -f example/Dockerfile .
