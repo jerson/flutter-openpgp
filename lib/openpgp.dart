@@ -68,7 +68,7 @@ class OpenPGP {
       String name, Uint8List payload) async {
     var data = await _call(name, payload);
     var response = model.BytesResponse(data);
-    if (response.error != "") {
+    if (response.error != null && response.error != "") {
       throw new OpenPGPException(response.error!);
     }
     return Uint8List.fromList(response.output!);
@@ -77,7 +77,7 @@ class OpenPGP {
   static Future<String> _stringResponse(String name, Uint8List payload) async {
     var data = await _call(name, payload);
     var response = model.StringResponse(data);
-    if (response.error != "") {
+    if (response.error != null && response.error != "") {
       throw new OpenPGPException(response.error!);
     }
     return response.output!;
@@ -86,7 +86,7 @@ class OpenPGP {
   static Future<bool> _boolResponse(String name, Uint8List payload) async {
     var data = await _call(name, payload);
     var response = model.BoolResponse(data);
-    if (response.error != "") {
+    if (response.error != null && response.error != "") {
       throw new OpenPGPException(response.error!);
     }
     return response.output;
@@ -96,7 +96,7 @@ class OpenPGP {
       String name, Uint8List payload) async {
     var data = await _call(name, payload);
     var response = model.KeyPairResponse(data);
-    if (response.error != "") {
+    if (response.error != null && response.error != "") {
       throw new OpenPGPException(response.error!);
     }
     var keyPair = response.output!;
@@ -106,14 +106,12 @@ class OpenPGP {
   static Future<String> decrypt(
       String message, String privateKey, String passphrase,
       {KeyOptions? options}) async {
-    final builder = fb.Builder();
     var requestBuilder = model.DecryptRequestObjectBuilder(
       message: message,
       privateKey: privateKey,
       passphrase: passphrase,
       options: _keyOptionsBuilder(options),
     );
-    requestBuilder.finish(builder);
 
     return await _stringResponse("decrypt", requestBuilder.toBytes());
   }
@@ -121,21 +119,18 @@ class OpenPGP {
   static Future<Uint8List> decryptBytes(
       Uint8List message, String privateKey, String passphrase,
       {KeyOptions? options}) async {
-    final builder = fb.Builder();
     var requestBuilder = model.DecryptBytesRequestObjectBuilder(
       message: message,
       privateKey: privateKey,
       passphrase: passphrase,
       options: _keyOptionsBuilder(options),
     );
-    requestBuilder.finish(builder);
 
     return await _bytesResponse("decryptBytes", requestBuilder.toBytes());
   }
 
   static Future<String> encrypt(String message, String publicKey,
       {KeyOptions? options, Entity? signed, FileHints? fileHints}) async {
-    final builder = fb.Builder();
     var requestBuilder = model.EncryptRequestObjectBuilder(
       publicKey: publicKey,
       message: message,
@@ -143,14 +138,12 @@ class OpenPGP {
       signed: _entityBuilder(signed),
       fileHints: _fileHintsBuilder(fileHints),
     );
-    requestBuilder.finish(builder);
 
     return await _stringResponse("encrypt", requestBuilder.toBytes());
   }
 
   static Future<Uint8List> encryptBytes(Uint8List message, String publicKey,
       {KeyOptions? options, Entity? signed, FileHints? fileHints}) async {
-    final builder = fb.Builder();
     var requestBuilder = model.EncryptBytesRequestObjectBuilder(
       publicKey: publicKey,
       message: message,
@@ -158,14 +151,13 @@ class OpenPGP {
       signed: _entityBuilder(signed),
       fileHints: _fileHintsBuilder(fileHints),
     );
-    requestBuilder.finish(builder);
+
     return await _bytesResponse("encryptBytes", requestBuilder.toBytes());
   }
 
   static Future<String> sign(
       String message, String publicKey, String privateKey, String passphrase,
       {KeyOptions? options}) async {
-    final builder = fb.Builder();
     var requestBuilder = model.SignRequestObjectBuilder(
       publicKey: publicKey,
       message: message,
@@ -173,14 +165,13 @@ class OpenPGP {
       privateKey: privateKey,
       options: _keyOptionsBuilder(options),
     );
-    requestBuilder.finish(builder);
+
     return await _stringResponse("sign", requestBuilder.toBytes());
   }
 
   static Future<Uint8List> signBytes(
       Uint8List message, String publicKey, String privateKey, String passphrase,
       {KeyOptions? options}) async {
-    final builder = fb.Builder();
     var requestBuilder = model.SignBytesRequestObjectBuilder(
       publicKey: publicKey,
       message: message,
@@ -188,14 +179,13 @@ class OpenPGP {
       privateKey: privateKey,
       options: _keyOptionsBuilder(options),
     );
-    requestBuilder.finish(builder);
+
     return await _bytesResponse("signBytes", requestBuilder.toBytes());
   }
 
   static Future<String> signBytesToString(
       Uint8List message, String publicKey, String privateKey, String passphrase,
       {KeyOptions? options}) async {
-    final builder = fb.Builder();
     var requestBuilder = model.SignBytesRequestObjectBuilder(
       publicKey: publicKey,
       message: message,
@@ -203,94 +193,86 @@ class OpenPGP {
       privateKey: privateKey,
       options: _keyOptionsBuilder(options),
     );
-    requestBuilder.finish(builder);
+
     return await _stringResponse("signBytesToString", requestBuilder.toBytes());
   }
 
   static Future<bool> verify(
       String signature, String message, String publicKey) async {
-    final builder = fb.Builder();
     var requestBuilder = model.VerifyRequestObjectBuilder(
       publicKey: publicKey,
       message: message,
       signature: signature,
     );
-    requestBuilder.finish(builder);
+
     return await _boolResponse("verify", requestBuilder.toBytes());
   }
 
   static Future<bool> verifyBytes(
       String signature, Uint8List message, String publicKey) async {
-    final builder = fb.Builder();
     var requestBuilder = model.VerifyBytesRequestObjectBuilder(
       publicKey: publicKey,
       message: message,
       signature: signature,
     );
-    requestBuilder.finish(builder);
+
     return await _boolResponse("verifyBytes", requestBuilder.toBytes());
   }
 
   static Future<String> decryptSymmetric(String message, String passphrase,
       {KeyOptions? options}) async {
-    final builder = fb.Builder();
     var requestBuilder = model.DecryptSymmetricRequestObjectBuilder(
       message: message,
       passphrase: passphrase,
       options: _keyOptionsBuilder(options),
     );
-    requestBuilder.finish(builder);
+
     return await _stringResponse("decryptSymmetric", requestBuilder.toBytes());
   }
 
   static Future<Uint8List> decryptSymmetricBytes(
       Uint8List message, String passphrase,
       {KeyOptions? options}) async {
-    final builder = fb.Builder();
     var requestBuilder = model.DecryptSymmetricBytesRequestObjectBuilder(
       message: message,
       passphrase: passphrase,
       options: _keyOptionsBuilder(options),
     );
-    requestBuilder.finish(builder);
+
     return await _bytesResponse(
         "decryptSymmetricBytes", requestBuilder.toBytes());
   }
 
   static Future<String> encryptSymmetric(String message, String passphrase,
       {KeyOptions? options, FileHints? fileHints}) async {
-    final builder = fb.Builder();
     var requestBuilder = model.EncryptSymmetricRequestObjectBuilder(
       message: message,
       passphrase: passphrase,
       fileHints: _fileHintsBuilder(fileHints),
       options: _keyOptionsBuilder(options),
     );
-    requestBuilder.finish(builder);
+
     return await _stringResponse("encryptSymmetric", requestBuilder.toBytes());
   }
 
   static Future<Uint8List> encryptSymmetricBytes(
       Uint8List message, String passphrase,
       {KeyOptions? options, FileHints? fileHints}) async {
-    final builder = fb.Builder();
     var requestBuilder = model.EncryptSymmetricBytesRequestObjectBuilder(
       message: message,
       passphrase: passphrase,
       fileHints: _fileHintsBuilder(fileHints),
       options: _keyOptionsBuilder(options),
     );
-    requestBuilder.finish(builder);
+
     return await _bytesResponse(
         "encryptSymmetricBytes", requestBuilder.toBytes());
   }
 
   static Future<KeyPair> generate({Options? options}) async {
-    final builder = fb.Builder();
     var requestBuilder = model.GenerateRequestObjectBuilder(
       options: _optionsBuilder(options),
     );
-    requestBuilder.finish(builder);
     return await _keyPairResponse("generate", requestBuilder.toBytes());
   }
 
