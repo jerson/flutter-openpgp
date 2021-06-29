@@ -35,8 +35,8 @@ class KeyOptions {
 }
 
 class KeyPair {
-  String? publicKey;
-  String? privateKey;
+  String publicKey;
+  String privateKey;
 
   KeyPair(this.publicKey, this.privateKey);
 }
@@ -69,25 +69,25 @@ class OpenPGP {
     var data = await _call(name, payload);
     var response = model.BytesResponse(data);
     if (response.error != "") {
-      throw new OpenPGPException(response.error);
+      throw new OpenPGPException(response.error!);
     }
-    return Uint8List.fromList(response.output);
+    return Uint8List.fromList(response.output!);
   }
 
   static Future<String> _stringResponse(String name, Uint8List payload) async {
     var data = await _call(name, payload);
     var response = model.StringResponse(data);
     if (response.error != "") {
-      throw new OpenPGPException(response.error);
+      throw new OpenPGPException(response.error!);
     }
-    return response.output;
+    return response.output!;
   }
 
   static Future<bool> _boolResponse(String name, Uint8List payload) async {
     var data = await _call(name, payload);
     var response = model.BoolResponse(data);
     if (response.error != "") {
-      throw new OpenPGPException(response.error);
+      throw new OpenPGPException(response.error!);
     }
     return response.output;
   }
@@ -97,10 +97,10 @@ class OpenPGP {
     var data = await _call(name, payload);
     var response = model.KeyPairResponse(data);
     if (response.error != "") {
-      throw new OpenPGPException(response.error);
+      throw new OpenPGPException(response.error!);
     }
-    var keyPair = response.output;
-    return KeyPair(keyPair.publicKey, keyPair.privateKey);
+    var keyPair = response.output!;
+    return KeyPair(keyPair.publicKey!, keyPair.privateKey!);
   }
 
   static Future<String> decrypt(
