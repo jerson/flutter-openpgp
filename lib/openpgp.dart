@@ -276,8 +276,8 @@ class OpenPGP {
     return await _keyPairResponse("generate", requestBuilder.toBytes());
   }
 
-  static model.KeyOptionsObjectBuilder _keyOptionsBuilder(KeyOptions? input) {
-    model.KeyOptionsObjectBuilder builder;
+  static model.KeyOptionsObjectBuilder? _keyOptionsBuilder(KeyOptions? input) {
+    model.KeyOptionsObjectBuilder? builder;
     if (input != null) {
       builder = model.KeyOptionsObjectBuilder(
         cipher: input.cipher != null
@@ -290,52 +290,44 @@ class OpenPGP {
         hash: input.hash != null ? model.Hash.values[input.hash!.index] : null,
         rsaBits: input.rsaBits ?? 0,
       );
-    } else {
-      builder = model.KeyOptionsObjectBuilder();
     }
     return builder;
   }
 
-  static model.OptionsObjectBuilder _optionsBuilder(Options? input) {
-    model.OptionsObjectBuilder buildr;
+  static model.OptionsObjectBuilder? _optionsBuilder(Options? input) {
+    model.OptionsObjectBuilder? builder;
     if (input != null) {
-      buildr = model.OptionsObjectBuilder(
+      builder = model.OptionsObjectBuilder(
         passphrase: input.passphrase ?? "",
         comment: input.comment ?? "",
         email: input.email ?? "",
         name: input.name ?? "",
         keyOptions: _keyOptionsBuilder(input.keyOptions),
       );
-    } else {
-      buildr = model.OptionsObjectBuilder();
     }
-    return buildr;
+    return builder;
   }
 
-  static model.EntityObjectBuilder _entityBuilder(Entity? input) {
-    model.EntityObjectBuilder builder;
+  static model.EntityObjectBuilder? _entityBuilder(Entity? input) {
+    model.EntityObjectBuilder? builder;
     if (input != null) {
       builder = model.EntityObjectBuilder(
         passphrase: input.passphrase ?? "",
         privateKey: input.privateKey ?? "",
         publicKey: input.publicKey ?? "",
       );
-    } else {
-      builder = model.EntityObjectBuilder();
     }
     return builder;
   }
 
-  static model.FileHintsObjectBuilder _fileHintsBuilder(FileHints? input) {
-    model.FileHintsObjectBuilder builder;
+  static model.FileHintsObjectBuilder? _fileHintsBuilder(FileHints? input) {
+    model.FileHintsObjectBuilder? builder;
     if (input != null) {
       builder = model.FileHintsObjectBuilder(
         fileName: input.fileName ?? "",
         isBinary: input.isBinary ?? false,
         modTime: input.modTime ?? "",
       );
-    } else {
-      builder = model.FileHintsObjectBuilder();
     }
     return builder;
   }

@@ -21,7 +21,7 @@ class Generate extends StatefulWidget {
 }
 
 class _GenerateState extends State<Generate> {
-  KeyPair _keyPair = KeyPair("","");
+  KeyPair _keyPair = KeyPair("", "");
 
   @override
   Widget build(BuildContext context) {
