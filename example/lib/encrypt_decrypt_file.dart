@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:openpgp/model/bridge.pb.dart';
+
 import 'package:openpgp/openpgp.dart';
 import 'package:openpgp_example/main.dart';
 import 'package:openpgp_example/shared/button_widget.dart';
@@ -14,7 +14,7 @@ class EncryptAndDecryptFile extends StatefulWidget {
     Key? key,
     required this.title,
     required KeyPair? keyPair,
-  })   : keyPair = keyPair,
+  })  : keyPair = keyPair,
         super(key: key);
 
   final KeyPair? keyPair;
