@@ -1,3 +1,6 @@
+## 3.0.1
+
+- Fixed path import with spaces in cocoapods for ios
 ## 3.0.0
 
 - First version with flatbuffers, smaller binaries, please take a look
