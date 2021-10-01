@@ -4,9 +4,6 @@ import (
 	flutter "github.com/go-flutter-desktop/go-flutter"
 	"github.com/go-flutter-desktop/go-flutter/plugin"
 	openPGPBridge "github.com/jerson/openpgp-mobile/bridge"
-
-	// this is a temporary fix to add missing crypto
-	_ "golang.org/x/crypto/ripemd160"
 )
 
 const channelName = "openpgp"

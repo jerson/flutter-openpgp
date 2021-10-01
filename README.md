@@ -16,6 +16,8 @@ Library for use openPGP with support for android, ios, macos, windows, linux, we
   - [Windows](#windows)
 - [Example](#example)
 - [Native Code](#native-code)
+- [Upgrade Library](#upgrade-library)
+- [Tests](#tests)
 
 ## Usage
 
@@ -172,3 +174,17 @@ check our web demo: [https://flutter-openpgp.jerson.dev/]
 Native library is made in `Go` for faster performance.
 
 [https://github.com/jerson/openpgp-mobile]
+
+## Upgrade Library
+
+You need to run 
+```bash
+make upgrade
+```
+
+## Tests
+
+You need to run 
+```bash
+make test
+```

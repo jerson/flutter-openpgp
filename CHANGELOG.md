@@ -1,3 +1,7 @@
+## 3.1.0
+
+- Updated core library for openpgp
+
 ## 3.0.1
 
 - Fixed path import with spaces in cocoapods for ios
