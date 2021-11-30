@@ -1,3 +1,7 @@
+## 3.1.1
+
+- Updated BUILD_BUNDLE_DIR for linux, using relative dir
+
 ## 3.1.0
 
 - Updated core library for openpgp
