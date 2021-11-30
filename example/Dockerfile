@@ -3,7 +3,7 @@ FROM jerson/flutter:web AS build-env
 WORKDIR  /app
 COPY . .
 RUN flutter upgrade
-RUN cd example && flutter build web --ignore-deprecation
+RUN cd example && flutter build web
 
 FROM nginx
 
