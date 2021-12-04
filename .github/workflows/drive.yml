@@ -19,12 +19,9 @@ jobs:
       - uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: '13.0'
-      - name: "List all simulators"
-        run: "xcrun xctrace list devices"
-      - name: "Start Simulator"
-        run: |
-          UDID=$(xcrun instruments -s | awk -F ' *[][]' '/${{ matrix.device }}/ { print $2; exit }')
-          xcrun simctl boot "${UDID:?No Simulator with this name found}"
+      - uses: futureware-tech/simulator-action@v1
+        with:
+          model: ${{ matrix.device }}
       - uses: actions/checkout@v1
       - uses: subosito/flutter-action@v1
         with:
