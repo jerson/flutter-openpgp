@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:openpgp/bridge/binding_stub.dart'
     if (dart.library.io) 'package:openpgp/bridge/binding.dart'
     if (dart.library.js) 'package:openpgp/bridge/binding_stub.dart';
-import 'package:openpgp/flatbuffers/flat_buffers.dart' as fb;
 import 'package:openpgp/model/bridge_model_generated.dart' as model;
 
 class OpenPGPException implements Exception {
