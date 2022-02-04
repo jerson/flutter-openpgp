@@ -45,5 +45,5 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    compile fileTree(dir: "$buildDir/native-libs", include: 'native-libs.jar')
+    api fileTree(dir: "$buildDir/native-libs", include: 'native-libs.jar')
 }
