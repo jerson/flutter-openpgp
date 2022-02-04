@@ -1,3 +1,7 @@
+## 3.2.0
+
+- Updated example and android requirements
+
 ## 3.1.1
 
 - Updated BUILD_BUNDLE_DIR for linux, using relative dir
