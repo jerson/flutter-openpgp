@@ -37,7 +37,7 @@ void main() {
           find.descendant(
               of: container, matching: find.byKey(ValueKey("button"))),
         );
-        await tester.pumpAndSettle(Duration(seconds: 1));
+        await tester.pumpAndSettle(Duration(seconds: 3));
         var resultSelector = find.descendant(
             of: container, matching: find.byKey(ValueKey("result")));
 
@@ -56,7 +56,7 @@ void main() {
           find.descendant(
               of: container, matching: find.byKey(ValueKey("button"))),
         );
-        await tester.pumpAndSettle(Duration(seconds: 1));
+        await tester.pumpAndSettle(Duration(seconds: 3));
         resultSelector = find.descendant(
             of: container, matching: find.byKey(ValueKey("result")));
         await expectLater(resultSelector, findsWidgets);
@@ -89,7 +89,7 @@ void main() {
           find.descendant(
               of: container, matching: find.byKey(ValueKey("button"))),
         );
-        await tester.pumpAndSettle(Duration(seconds: 1));
+        await tester.pumpAndSettle(Duration(seconds: 3));
 
         var resultSelector = find.descendant(
             of: container, matching: find.byKey(ValueKey("result")));
@@ -108,7 +108,7 @@ void main() {
           find.descendant(
               of: container, matching: find.byKey(ValueKey("button"))),
         );
-        await tester.pumpAndSettle(Duration(seconds: 1));
+        await tester.pumpAndSettle(Duration(seconds: 3));
         resultSelector = find.descendant(
             of: container, matching: find.byKey(ValueKey("result")));
         expect(resultSelector, findsOneWidget);
@@ -140,7 +140,7 @@ void main() {
           find.descendant(
               of: container, matching: find.byKey(ValueKey("button"))),
         );
-        await tester.pumpAndSettle(Duration(seconds: 1));
+        await tester.pumpAndSettle(Duration(seconds: 3));
 
         var resultSelector = find.descendant(
             of: container, matching: find.byKey(ValueKey("result")));
@@ -159,7 +159,7 @@ void main() {
           find.descendant(
               of: container, matching: find.byKey(ValueKey("button"))),
         );
-        await tester.pumpAndSettle(Duration(seconds: 1));
+        await tester.pumpAndSettle(Duration(seconds: 3));
         resultSelector = find.descendant(
             of: container, matching: find.byKey(ValueKey("result")));
         expect(resultSelector, findsOneWidget);
@@ -191,7 +191,7 @@ void main() {
           find.descendant(
               of: container, matching: find.byKey(ValueKey("button"))),
         );
-        await tester.pumpAndSettle(Duration(seconds: 1));
+        await tester.pumpAndSettle(Duration(seconds: 3));
         var resultSelector = find.descendant(
             of: container, matching: find.byKey(ValueKey("result")));
         expect(resultSelector, findsOneWidget);
@@ -209,7 +209,7 @@ void main() {
           find.descendant(
               of: container, matching: find.byKey(ValueKey("button"))),
         );
-        await tester.pumpAndSettle(Duration(seconds: 1));
+        await tester.pumpAndSettle(Duration(seconds: 3));
         resultSelector = find.descendant(
             of: container, matching: find.byKey(ValueKey("result")));
         expect(resultSelector, findsOneWidget);
@@ -241,7 +241,7 @@ void main() {
           find.descendant(
               of: container, matching: find.byKey(ValueKey("button"))),
         );
-        await tester.pumpAndSettle(Duration(seconds: 1));
+        await tester.pumpAndSettle(Duration(seconds: 3));
         var resultSelector = find.descendant(
             of: container, matching: find.byKey(ValueKey("result")));
         expect(resultSelector, findsOneWidget);
@@ -259,7 +259,7 @@ void main() {
           find.descendant(
               of: container, matching: find.byKey(ValueKey("button"))),
         );
-        await tester.pumpAndSettle(Duration(seconds: 1));
+        await tester.pumpAndSettle(Duration(seconds: 3));
         resultSelector = find.descendant(
             of: container, matching: find.byKey(ValueKey("result")));
         expect(resultSelector, findsOneWidget);
@@ -291,7 +291,7 @@ void main() {
           find.descendant(
               of: container, matching: find.byKey(ValueKey("button"))),
         );
-        await tester.pumpAndSettle(Duration(seconds: 1));
+        await tester.pumpAndSettle(Duration(seconds: 3));
         var resultSelector = find.descendant(
             of: container, matching: find.byKey(ValueKey("result")));
         expect(resultSelector, findsOneWidget);
@@ -309,7 +309,7 @@ void main() {
           find.descendant(
               of: container, matching: find.byKey(ValueKey("button"))),
         );
-        await tester.pumpAndSettle(Duration(seconds: 1));
+        await tester.pumpAndSettle(Duration(seconds: 3));
         resultSelector = find.descendant(
             of: container, matching: find.byKey(ValueKey("result")));
         expect(resultSelector, findsOneWidget);
