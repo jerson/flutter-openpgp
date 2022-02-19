@@ -2,22 +2,37 @@
 
 Library for use openPGP with support for android, ios, macos, windows, linux, web and hover
 
+[![Integration Tests Android](https://github.com/jerson/flutter-openpgp/actions/workflows/tests_android.yml/badge.svg)](https://github.com/jerson/flutter-openpgp/actions/workflows/tests_android.yml)
+
+[![Integration Tests Linux](https://github.com/jerson/flutter-openpgp/actions/workflows/tests_linux.yml/badge.svg)](https://github.com/jerson/flutter-openpgp/actions/workflows/tests_linux.yml)
+
+[![Integration Tests Windows](https://github.com/jerson/flutter-openpgp/actions/workflows/tests_windows.yml/badge.svg)](https://github.com/jerson/flutter-openpgp/actions/workflows/tests_windows.yml)
+
+[![Integration Tests iOS](https://github.com/jerson/flutter-openpgp/actions/workflows/tests_ios.yml/badge.svg)](https://github.com/jerson/flutter-openpgp/actions/workflows/tests_ios.yml)
+
+[![Integration Tests macOS](https://github.com/jerson/flutter-openpgp/actions/workflows/tests_macos.yml/badge.svg)](https://github.com/jerson/flutter-openpgp/actions/workflows/tests_macos.yml)
 ## Contents
 
-- [Usage](#usage)
-- [Setup](#setup)
-  - [Android](#android)
-    - [ProGuard](#proguard)
-  - [iOS](#ios)
-  - [Web](#web)
-  - [MacOS](#macos)
-  - [Hover](#hover)
-  - [Linux](#linux)
-  - [Windows](#windows)
-- [Example](#example)
-- [Native Code](#native-code)
-- [Upgrade Library](#upgrade-library)
-- [Tests](#tests)
+- [OpenPGP](#openpgp)
+  - [Contents](#contents)
+  - [Usage](#usage)
+  - [Generate methods](#generate-methods)
+    - [Encrypt methods](#encrypt-methods)
+    - [Decrypt methods](#decrypt-methods)
+    - [Sign methods](#sign-methods)
+    - [Verify methods](#verify-methods)
+  - [Setup](#setup)
+    - [Android](#android)
+    - [iOS](#ios)
+    - [Web](#web)
+    - [MacOS](#macos)
+    - [Hover](#hover)
+    - [Linux](#linux)
+    - [Windows](#windows)
+  - [Example](#example)
+  - [Native Code](#native-code)
+  - [Upgrade Library](#upgrade-library)
+  - [Tests](#tests)
 
 ## Usage
 
