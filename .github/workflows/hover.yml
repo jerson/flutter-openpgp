@@ -1,0 +1,20 @@
+name: Hover
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v1
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'dev'
+      - uses: actions/setup-go@v2
+      - run: GO111MODULE=on go get -u -a github.com/go-flutter-desktop/hover@latest
+      - run: yes | `go env GOPATH`/bin/hover publish-plugin
