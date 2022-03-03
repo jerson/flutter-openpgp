@@ -1,3 +1,7 @@
+## 3.2.2
+
+- Updated hover deps
+  
 ## 3.2.1
 
 - Updated binaries to 1.3.0 using flatbuffers 2.0
