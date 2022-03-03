@@ -3285,22 +3285,22 @@ class PublicKeyMetadata {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  String? get keyID =>
+  String? get keyId =>
       const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get keyIDShort =>
+  String? get keyIdShort =>
       const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   String? get creationTime =>
       const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   String? get fingerprint =>
       const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get keyIDNumeric =>
+  String? get keyIdNumeric =>
       const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   bool get isSubKey =>
       const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
 
   @override
   String toString() {
-    return 'PublicKeyMetadata{keyID: $keyID, keyIDShort: $keyIDShort, creationTime: $creationTime, fingerprint: $fingerprint, keyIDNumeric: $keyIDNumeric, isSubKey: $isSubKey}';
+    return 'PublicKeyMetadata{keyId: $keyId, keyIdShort: $keyIdShort, creationTime: $creationTime, fingerprint: $fingerprint, keyIdNumeric: $keyIdNumeric, isSubKey: $isSubKey}';
   }
 }
 
@@ -3321,12 +3321,12 @@ class PublicKeyMetadataBuilder {
     fbBuilder.startTable(6);
   }
 
-  int addKeyIDOffset(int? offset) {
+  int addKeyIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
 
-  int addKeyIDShortOffset(int? offset) {
+  int addKeyIdShortOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
@@ -3341,7 +3341,7 @@ class PublicKeyMetadataBuilder {
     return fbBuilder.offset;
   }
 
-  int addKeyIDNumericOffset(int? offset) {
+  int addKeyIdNumericOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
@@ -3357,46 +3357,46 @@ class PublicKeyMetadataBuilder {
 }
 
 class PublicKeyMetadataObjectBuilder extends fb.ObjectBuilder {
-  final String? _keyID;
-  final String? _keyIDShort;
+  final String? _keyId;
+  final String? _keyIdShort;
   final String? _creationTime;
   final String? _fingerprint;
-  final String? _keyIDNumeric;
+  final String? _keyIdNumeric;
   final bool? _isSubKey;
 
   PublicKeyMetadataObjectBuilder({
-    String? keyID,
-    String? keyIDShort,
+    String? keyId,
+    String? keyIdShort,
     String? creationTime,
     String? fingerprint,
-    String? keyIDNumeric,
+    String? keyIdNumeric,
     bool? isSubKey,
-  })  : _keyID = keyID,
-        _keyIDShort = keyIDShort,
+  })  : _keyId = keyId,
+        _keyIdShort = keyIdShort,
         _creationTime = creationTime,
         _fingerprint = fingerprint,
-        _keyIDNumeric = keyIDNumeric,
+        _keyIdNumeric = keyIdNumeric,
         _isSubKey = isSubKey;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? keyIDOffset =
-        _keyID == null ? null : fbBuilder.writeString(_keyID!);
-    final int? keyIDShortOffset =
-        _keyIDShort == null ? null : fbBuilder.writeString(_keyIDShort!);
+    final int? keyIdOffset =
+        _keyId == null ? null : fbBuilder.writeString(_keyId!);
+    final int? keyIdShortOffset =
+        _keyIdShort == null ? null : fbBuilder.writeString(_keyIdShort!);
     final int? creationTimeOffset =
         _creationTime == null ? null : fbBuilder.writeString(_creationTime!);
     final int? fingerprintOffset =
         _fingerprint == null ? null : fbBuilder.writeString(_fingerprint!);
-    final int? keyIDNumericOffset =
-        _keyIDNumeric == null ? null : fbBuilder.writeString(_keyIDNumeric!);
+    final int? keyIdNumericOffset =
+        _keyIdNumeric == null ? null : fbBuilder.writeString(_keyIdNumeric!);
     fbBuilder.startTable(6);
-    fbBuilder.addOffset(0, keyIDOffset);
-    fbBuilder.addOffset(1, keyIDShortOffset);
+    fbBuilder.addOffset(0, keyIdOffset);
+    fbBuilder.addOffset(1, keyIdShortOffset);
     fbBuilder.addOffset(2, creationTimeOffset);
     fbBuilder.addOffset(3, fingerprintOffset);
-    fbBuilder.addOffset(4, keyIDNumericOffset);
+    fbBuilder.addOffset(4, keyIdNumericOffset);
     fbBuilder.addBool(5, _isSubKey);
     return fbBuilder.endTable();
   }
@@ -3423,15 +3423,15 @@ class PrivateKeyMetadata {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  String? get keyID =>
+  String? get keyId =>
       const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get keyIDShort =>
+  String? get keyIdShort =>
       const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   String? get creationTime =>
       const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   String? get fingerprint =>
       const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get keyIDNumeric =>
+  String? get keyIdNumeric =>
       const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   bool get isSubKey =>
       const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
@@ -3440,7 +3440,7 @@ class PrivateKeyMetadata {
 
   @override
   String toString() {
-    return 'PrivateKeyMetadata{keyID: $keyID, keyIDShort: $keyIDShort, creationTime: $creationTime, fingerprint: $fingerprint, keyIDNumeric: $keyIDNumeric, isSubKey: $isSubKey, encrypted: $encrypted}';
+    return 'PrivateKeyMetadata{keyId: $keyId, keyIdShort: $keyIdShort, creationTime: $creationTime, fingerprint: $fingerprint, keyIdNumeric: $keyIdNumeric, isSubKey: $isSubKey, encrypted: $encrypted}';
   }
 }
 
@@ -3461,12 +3461,12 @@ class PrivateKeyMetadataBuilder {
     fbBuilder.startTable(7);
   }
 
-  int addKeyIDOffset(int? offset) {
+  int addKeyIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
 
-  int addKeyIDShortOffset(int? offset) {
+  int addKeyIdShortOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
@@ -3481,7 +3481,7 @@ class PrivateKeyMetadataBuilder {
     return fbBuilder.offset;
   }
 
-  int addKeyIDNumericOffset(int? offset) {
+  int addKeyIdNumericOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
@@ -3502,49 +3502,49 @@ class PrivateKeyMetadataBuilder {
 }
 
 class PrivateKeyMetadataObjectBuilder extends fb.ObjectBuilder {
-  final String? _keyID;
-  final String? _keyIDShort;
+  final String? _keyId;
+  final String? _keyIdShort;
   final String? _creationTime;
   final String? _fingerprint;
-  final String? _keyIDNumeric;
+  final String? _keyIdNumeric;
   final bool? _isSubKey;
   final bool? _encrypted;
 
   PrivateKeyMetadataObjectBuilder({
-    String? keyID,
-    String? keyIDShort,
+    String? keyId,
+    String? keyIdShort,
     String? creationTime,
     String? fingerprint,
-    String? keyIDNumeric,
+    String? keyIdNumeric,
     bool? isSubKey,
     bool? encrypted,
-  })  : _keyID = keyID,
-        _keyIDShort = keyIDShort,
+  })  : _keyId = keyId,
+        _keyIdShort = keyIdShort,
         _creationTime = creationTime,
         _fingerprint = fingerprint,
-        _keyIDNumeric = keyIDNumeric,
+        _keyIdNumeric = keyIdNumeric,
         _isSubKey = isSubKey,
         _encrypted = encrypted;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? keyIDOffset =
-        _keyID == null ? null : fbBuilder.writeString(_keyID!);
-    final int? keyIDShortOffset =
-        _keyIDShort == null ? null : fbBuilder.writeString(_keyIDShort!);
+    final int? keyIdOffset =
+        _keyId == null ? null : fbBuilder.writeString(_keyId!);
+    final int? keyIdShortOffset =
+        _keyIdShort == null ? null : fbBuilder.writeString(_keyIdShort!);
     final int? creationTimeOffset =
         _creationTime == null ? null : fbBuilder.writeString(_creationTime!);
     final int? fingerprintOffset =
         _fingerprint == null ? null : fbBuilder.writeString(_fingerprint!);
-    final int? keyIDNumericOffset =
-        _keyIDNumeric == null ? null : fbBuilder.writeString(_keyIDNumeric!);
+    final int? keyIdNumericOffset =
+        _keyIdNumeric == null ? null : fbBuilder.writeString(_keyIdNumeric!);
     fbBuilder.startTable(7);
-    fbBuilder.addOffset(0, keyIDOffset);
-    fbBuilder.addOffset(1, keyIDShortOffset);
+    fbBuilder.addOffset(0, keyIdOffset);
+    fbBuilder.addOffset(1, keyIdShortOffset);
     fbBuilder.addOffset(2, creationTimeOffset);
     fbBuilder.addOffset(3, fingerprintOffset);
-    fbBuilder.addOffset(4, keyIDNumericOffset);
+    fbBuilder.addOffset(4, keyIdNumericOffset);
     fbBuilder.addBool(5, _isSubKey);
     fbBuilder.addBool(6, _encrypted);
     return fbBuilder.endTable();

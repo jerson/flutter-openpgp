@@ -1,3 +1,7 @@
+## 3.2.1
+
+- Updated binaries to 1.3.0 using flatbuffers 2.0
+
 ## 3.2.0
 
 - Updated example and android requirements
