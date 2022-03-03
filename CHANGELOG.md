@@ -1,3 +1,7 @@
+## 3.2.3
+
+- Added false_secrets to pubspec
+
 ## 3.2.2
 
 - Updated hover deps
