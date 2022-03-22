@@ -14,7 +14,9 @@ class OpenPGPException implements Exception {
 }
 
 enum Hash { SHA256, SHA224, SHA384, SHA512 }
+
 enum Cipher { AES128, AES192, AES256 }
+
 enum Compression { NONE, ZLIB, ZIP }
 
 class Options {
