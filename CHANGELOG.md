@@ -1,3 +1,7 @@
+## 3.2.8
+
+- Added fallback option when instantiateStreaming is not available
+
 ## 3.2.7
 
 - Updated binaries to 1.3.4
