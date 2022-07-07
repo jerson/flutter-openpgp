@@ -1,3 +1,7 @@
+## 3.3.0
+
+- Added new methods: armorEncode, convertPrivateKeyToPublicKey, getPrivateKeyMetadata, getPublicKeyMetadata
+
 ## 3.2.8
 
 - Added fallback option when instantiateStreaming is not available
@@ -27,7 +31,6 @@
 - Updated hover deps
   
 ## 3.2.1
-
 - Updated binaries to 1.3.0 using flatbuffers 2.0
 
 ## 3.2.0

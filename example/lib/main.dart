@@ -13,6 +13,9 @@ import 'package:openpgp_example/encrypt_decrypt_symmetric.dart';
 import 'package:openpgp_example/encrypt_decrypt_symmetric_bytes.dart';
 import 'package:openpgp_example/generate.dart';
 import 'package:openpgp_example/sign_verify.dart';
+import 'package:openpgp_example/metadata.dart';
+import 'package:openpgp_example/armor.dart';
+import 'package:openpgp_example/convert.dart';
 import 'package:openpgp_example/sign_verify_bytes.dart';
 
 const passphrase = 'test';
@@ -154,6 +157,20 @@ class _MyAppState extends State<MyApp> {
             Generate(
               title: "Generate",
               key: Key("generate"),
+            ),
+            Convert(
+              title: "Convert",
+              key: Key("convert"),
+              keyPair: _defaultKeyPair,
+            ),
+            Metadata(
+              title: "Metadata",
+              key: Key("metadata"),
+              keyPair: _defaultKeyPair,
+            ),
+            Armor(
+              title: "Armor",
+              key: Key("armor"),
             ),
           ],
         ),

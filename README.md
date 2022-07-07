@@ -12,7 +12,7 @@ Library for use openPGP with support for android, ios, macos, windows, linux, we
 
 [![Integration Tests macOS](https://github.com/jerson/flutter-openpgp/actions/workflows/tests_macos.yml/badge.svg)](https://github.com/jerson/flutter-openpgp/actions/workflows/tests_macos.yml)
 ## Contents
-
+ 
 - [OpenPGP](#openpgp)
   - [Contents](#contents)
   - [Usage](#usage)
@@ -21,6 +21,9 @@ Library for use openPGP with support for android, ios, macos, windows, linux, we
     - [Decrypt methods](#decrypt-methods)
     - [Sign methods](#sign-methods)
     - [Verify methods](#verify-methods)
+    - [Encode methods](#encode-methods)
+    - [Metadata methods](#metadata-methods)
+    - [Convert methods](#convert-methods)
   - [Setup](#setup)
     - [Android](#android)
     - [iOS](#ios)
@@ -57,7 +60,6 @@ void main() async {
 import 'package:fast_rsa/rsa.dart';
 
 void main() async {
-
     var bytesSample = Uint8List.fromList('data'.codeUnits);
     
     var result = await OpenPGP.encrypt("text","[publicKey here]");
@@ -75,7 +77,6 @@ void main() async {
 import 'package:fast_rsa/rsa.dart';
 
 void main() async {
-
     var bytesSample = Uint8List.fromList('data'.codeUnits);
     
     var result = await OpenPGP.decrypt("text encrypted","[privateKey here]","[passphrase here]");
@@ -92,7 +93,6 @@ void main() async {
 import 'package:fast_rsa/rsa.dart';
 
 void main() async {
-
     var bytesSample = Uint8List.fromList('data'.codeUnits);
     
     var result = await OpenPGP.sign("text","[publicKey here]","[privateKey here]","[passphrase here]");
@@ -108,12 +108,49 @@ void main() async {
 import 'package:fast_rsa/rsa.dart';
 
 void main() async {
-
     var bytesSample = Uint8List.fromList('data'.codeUnits);
     
     var result = await OpenPGP.verify("text signed","text","[publicKey here]");
     var result = await OpenPGP.verifyBytes("text signed", bytesSample,"[publicKey here]");
 
+}
+
+```
+
+### Encode methods
+
+```dart
+import 'package:fast_rsa/rsa.dart';
+
+void main() async {
+    var bytesSample = Uint8List.fromList('data'.codeUnits);
+    
+    var result = await OpenPGP.armorEncode(bytesSample);
+}
+
+```
+
+
+### Metadata methods
+
+```dart
+import 'package:fast_rsa/rsa.dart';
+
+void main() async {
+    var result = await OpenPGP.getPrivateKeyMetadata("[privateKey here]");
+    var result = await OpenPGP.getPublicKeyMetadata("[publicKey here]");
+}
+
+```
+
+
+### Convert methods
+
+```dart
+import 'package:fast_rsa/rsa.dart';
+
+void main() async {
+    var result = await OpenPGP.convertPrivateKeyToPublicKey("[privateKey here]");
 }
 
 ```

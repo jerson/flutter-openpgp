@@ -42,6 +42,50 @@ class KeyPair {
   KeyPair(this.publicKey, this.privateKey);
 }
 
+class PublicKeyMetadata {
+  String keyId;
+  String keyIdShort;
+  String creationTime;
+  String fingerprint;
+  String keyIdNumeric;
+  bool isSubKey;
+
+  PublicKeyMetadata(this.keyId, this.keyIdShort, this.creationTime,
+      this.fingerprint, this.keyIdNumeric, this.isSubKey);
+
+  Map toJson() => {
+        'keyId': keyId,
+        'keyIdShort': keyIdShort,
+        'creationTime': creationTime,
+        'fingerprint': fingerprint,
+        'keyIdNumeric': keyIdNumeric,
+        'isSubKey': isSubKey,
+      };
+}
+
+class PrivateKeyMetadata {
+  String keyId;
+  String keyIdShort;
+  String creationTime;
+  String fingerprint;
+  String keyIdNumeric;
+  bool isSubKey;
+  bool encrypted;
+
+  PrivateKeyMetadata(this.keyId, this.keyIdShort, this.creationTime,
+      this.fingerprint, this.keyIdNumeric, this.isSubKey, this.encrypted);
+
+  Map toJson() => {
+        'keyId': keyId,
+        'keyIdShort': keyIdShort,
+        'creationTime': creationTime,
+        'fingerprint': fingerprint,
+        'keyIdNumeric': keyIdNumeric,
+        'isSubKey': isSubKey,
+        'encrypted': encrypted,
+      };
+}
+
 class Entity {
   String? publicKey;
   String? privateKey;
@@ -91,6 +135,41 @@ class OpenPGP {
       throw new OpenPGPException(response.error!);
     }
     return response.output;
+  }
+
+  static Future<PublicKeyMetadata> _publicKeyMetadataResponse(
+      String name, Uint8List payload) async {
+    var data = await _call(name, payload);
+    var response = model.PublicKeyMetadataResponse(data);
+    if (response.error != null && response.error != "") {
+      throw new OpenPGPException(response.error!);
+    }
+    var metadata = response.output!;
+    return PublicKeyMetadata(
+        metadata.keyId!,
+        metadata.keyIdShort!,
+        metadata.creationTime!,
+        metadata.fingerprint!,
+        metadata.keyIdNumeric!,
+        metadata.isSubKey);
+  }
+
+  static Future<PrivateKeyMetadata> _privateKeyMetadataResponse(
+      String name, Uint8List payload) async {
+    var data = await _call(name, payload);
+    var response = model.PrivateKeyMetadataResponse(data);
+    if (response.error != null && response.error != "") {
+      throw new OpenPGPException(response.error!);
+    }
+    var metadata = response.output!;
+    return PrivateKeyMetadata(
+        metadata.keyId!,
+        metadata.keyIdShort!,
+        metadata.creationTime!,
+        metadata.fingerprint!,
+        metadata.keyIdNumeric!,
+        metadata.isSubKey,
+        metadata.encrypted);
   }
 
   static Future<KeyPair> _keyPairResponse(
@@ -268,6 +347,43 @@ class OpenPGP {
 
     return await _bytesResponse(
         "encryptSymmetricBytes", requestBuilder.toBytes());
+  }
+
+  static Future<String> armorEncode(Uint8List data) async {
+    var requestBuilder = model.ArmorEncodeRequestObjectBuilder(
+      packet: data,
+    );
+
+    return await _stringResponse("armorEncode", requestBuilder.toBytes());
+  }
+
+  static Future<String> convertPrivateKeyToPublicKey(String privateKey) async {
+    var requestBuilder = model.ConvertPrivateKeyToPublicKeyRequestObjectBuilder(
+      privateKey: privateKey,
+    );
+
+    return await _stringResponse(
+        "convertPrivateKeyToPublicKey", requestBuilder.toBytes());
+  }
+
+  static Future<PrivateKeyMetadata> getPrivateKeyMetadata(
+      String privateKey) async {
+    var requestBuilder = model.GetPrivateKeyMetadataRequestObjectBuilder(
+      privateKey: privateKey,
+    );
+
+    return await _privateKeyMetadataResponse(
+        "getPrivateKeyMetadata", requestBuilder.toBytes());
+  }
+
+  static Future<PublicKeyMetadata> getPublicKeyMetadata(
+      String publicKey) async {
+    var requestBuilder = model.GetPublicKeyMetadataRequestObjectBuilder(
+      publicKey: publicKey,
+    );
+
+    return await _publicKeyMetadataResponse(
+        "getPublicKeyMetadata", requestBuilder.toBytes());
   }
 
   static Future<KeyPair> generate({Options? options}) async {
