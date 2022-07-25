@@ -1,3 +1,7 @@
+## 3.4.0
+
+- Updated ffi to 2.0 and min sdk version to 2.17.0
+
 ## 3.3.0
 
 - Added new methods: armorEncode, convertPrivateKeyToPublicKey, getPrivateKeyMetadata, getPublicKeyMetadata
