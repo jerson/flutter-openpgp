@@ -44,7 +44,7 @@ Library for use openPGP with support for android, ios, macos, windows, linux, we
 import 'package:openpgp/openpgp.dart';
 
 void main() async {
-    var keyOptions = KeyOptions()..rsaBits = 1024;
+    var keyOptions = KeyOptions()..rsaBits = 2048;
     var keyPair = await OpenPGP.generate(
             options: Options()
               ..name = 'test'
