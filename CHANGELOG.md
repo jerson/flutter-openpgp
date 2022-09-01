@@ -1,3 +1,7 @@
+## 3.4.1
+
+- Updated binaries to 1.5.2
+  
 ## 3.4.0
 
 - Updated ffi to 2.0 and min sdk version to 2.17.0

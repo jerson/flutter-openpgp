@@ -39,7 +39,7 @@ class _ConvertState extends State<Convert> {
               result: _result,
               onPressed: () async {
                 var result = await OpenPGP.convertPrivateKeyToPublicKey(
-                    widget.keyPair!.privateKey,
+                  widget.keyPair!.privateKey,
                 );
 
                 setState(() {
