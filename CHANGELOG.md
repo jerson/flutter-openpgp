@@ -1,3 +1,8 @@
+## 3.4.2
+
+- Added Identities(email, name, comment) to Metadata Private and Public
+- Updated binaries to 1.5.4
+
 ## 3.4.1
 
 - Updated binaries to 1.5.2

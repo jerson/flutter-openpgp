@@ -42,6 +42,22 @@ class KeyPair {
   KeyPair(this.publicKey, this.privateKey);
 }
 
+class Identity {
+  String id;
+  String name;
+  String comment;
+  String email;
+
+  Identity(this.id, this.name, this.comment, this.email);
+
+  Map toJson() => {
+        'id': id,
+        'name': name,
+        'comment': comment,
+        'email': email,
+      };
+}
+
 class PublicKeyMetadata {
   String keyId;
   String keyIdShort;
@@ -49,9 +65,10 @@ class PublicKeyMetadata {
   String fingerprint;
   String keyIdNumeric;
   bool isSubKey;
+  List<Identity> identities;
 
   PublicKeyMetadata(this.keyId, this.keyIdShort, this.creationTime,
-      this.fingerprint, this.keyIdNumeric, this.isSubKey);
+      this.fingerprint, this.keyIdNumeric, this.isSubKey, this.identities);
 
   Map toJson() => {
         'keyId': keyId,
@@ -60,6 +77,7 @@ class PublicKeyMetadata {
         'fingerprint': fingerprint,
         'keyIdNumeric': keyIdNumeric,
         'isSubKey': isSubKey,
+        'identities': identities,
       };
 }
 
@@ -71,9 +89,17 @@ class PrivateKeyMetadata {
   String keyIdNumeric;
   bool isSubKey;
   bool encrypted;
+  List<Identity> identities;
 
-  PrivateKeyMetadata(this.keyId, this.keyIdShort, this.creationTime,
-      this.fingerprint, this.keyIdNumeric, this.isSubKey, this.encrypted);
+  PrivateKeyMetadata(
+      this.keyId,
+      this.keyIdShort,
+      this.creationTime,
+      this.fingerprint,
+      this.keyIdNumeric,
+      this.isSubKey,
+      this.encrypted,
+      this.identities);
 
   Map toJson() => {
         'keyId': keyId,
@@ -83,6 +109,7 @@ class PrivateKeyMetadata {
         'keyIdNumeric': keyIdNumeric,
         'isSubKey': isSubKey,
         'encrypted': encrypted,
+        'identities': identities,
       };
 }
 
@@ -146,12 +173,14 @@ class OpenPGP {
     }
     var metadata = response.output!;
     return PublicKeyMetadata(
-        metadata.keyId!,
-        metadata.keyIdShort!,
-        metadata.creationTime!,
-        metadata.fingerprint!,
-        metadata.keyIdNumeric!,
-        metadata.isSubKey);
+      metadata.keyId!,
+      metadata.keyIdShort!,
+      metadata.creationTime!,
+      metadata.fingerprint!,
+      metadata.keyIdNumeric!,
+      metadata.isSubKey,
+      _identities(metadata.identities),
+    );
   }
 
   static Future<PrivateKeyMetadata> _privateKeyMetadataResponse(
@@ -163,13 +192,33 @@ class OpenPGP {
     }
     var metadata = response.output!;
     return PrivateKeyMetadata(
-        metadata.keyId!,
-        metadata.keyIdShort!,
-        metadata.creationTime!,
-        metadata.fingerprint!,
-        metadata.keyIdNumeric!,
-        metadata.isSubKey,
-        metadata.encrypted);
+      metadata.keyId!,
+      metadata.keyIdShort!,
+      metadata.creationTime!,
+      metadata.fingerprint!,
+      metadata.keyIdNumeric!,
+      metadata.isSubKey,
+      metadata.encrypted,
+      _identities(metadata.identities),
+    );
+  }
+
+  static List<Identity> _identities(List<model.Identity>? identities) {
+    List<Identity> list = [];
+    if (identities == null) {
+      return list;
+    }
+
+    identities.forEach((element) {
+      list.add(Identity(
+        element.id!,
+        element.name!,
+        element.comment!,
+        element.email!,
+      ));
+    });
+
+    return list;
   }
 
   static Future<KeyPair> _keyPairResponse(
