@@ -1,3 +1,8 @@
+
+## 3.4.3
+
+- Updated binaries to v1.5.5 to support mixed go libraries (openpgp and fast-rsa)
+
 ## 3.4.2
 
 - Added Identities(email, name, comment) to Metadata Private and Public
