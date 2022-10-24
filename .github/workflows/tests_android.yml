@@ -12,13 +12,13 @@ jobs:
     runs-on: macos-11
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
           key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         id: avd-cache
         with:
           path: |
@@ -32,7 +32,7 @@ jobs:
       - uses: android-actions/setup-android@v2
       - uses: subosito/flutter-action@main
         with:
-          flutter-version: '3.x.x'
+          flutter-version: '3.x'
           channel: 'stable'
       - run: flutter pub get
       - if: steps.avd-cache.outputs.cache-hit != 'true'
