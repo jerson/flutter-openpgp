@@ -32,6 +32,7 @@ jobs:
       - uses: android-actions/setup-android@v2
       - uses: subosito/flutter-action@main
         with:
+          flutter-version: '3.x.x'
           channel: 'stable'
       - run: flutter pub get
       - if: steps.avd-cache.outputs.cache-hit != 'true'
