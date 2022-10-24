@@ -9,7 +9,7 @@ on:
 
 jobs:
   e2e:
-    runs-on: macos-11
+    runs-on: macos-latest
     steps:
       - uses: futureware-tech/simulator-action@v1
         with:
