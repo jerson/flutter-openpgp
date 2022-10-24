@@ -28,11 +28,11 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '8'
+          java-version: '11'
       - uses: android-actions/setup-android@v2
       - uses: subosito/flutter-action@main
         with:
-          channel: 'dev'
+          channel: 'stable'
       - run: flutter pub get
       - if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
