@@ -1,7 +1,7 @@
 
 ## 3.5.0
 
-- Updated binaries to v1.6.6 to support ECC Key generation, see KeyOptions: Algorithm and Curve
+- Updated binaries to v1.6.0 to support ECC Key generation, see KeyOptions: Algorithm and Curve
   
 ## 3.4.3
 
