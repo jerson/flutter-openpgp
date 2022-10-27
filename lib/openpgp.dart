@@ -15,7 +15,21 @@ class OpenPGPException implements Exception {
 
 enum Hash { SHA256, SHA224, SHA384, SHA512 }
 
-enum Cipher { AES128, AES192, AES256 }
+enum Algorithm { RSA, ECDSA, EDDSA, ECHD, DSA, ELGAMAL }
+
+enum Curve {
+  CURVE25519,
+  CURVE448,
+  P256,
+  P384,
+  P521,
+  SECP256K1,
+  BRAINPOOLP256,
+  BRAINPOOLP384,
+  BRAINPOOLP512,
+}
+
+enum Cipher { AES128, AES192, AES256, DES, CAST5 }
 
 enum Compression { NONE, ZLIB, ZIP }
 
@@ -28,6 +42,8 @@ class Options {
 }
 
 class KeyOptions {
+  Curve? curve;
+  Algorithm? algorithm;
   Hash? hash;
   Cipher? cipher;
   Compression? compression;
@@ -59,24 +75,39 @@ class Identity {
 }
 
 class PublicKeyMetadata {
+  String algorithm;
   String keyId;
   String keyIdShort;
   String creationTime;
   String fingerprint;
   String keyIdNumeric;
   bool isSubKey;
+  bool canSign;
+  bool canEncrypt;
   List<Identity> identities;
 
-  PublicKeyMetadata(this.keyId, this.keyIdShort, this.creationTime,
-      this.fingerprint, this.keyIdNumeric, this.isSubKey, this.identities);
+  PublicKeyMetadata(
+      this.algorithm,
+      this.keyId,
+      this.keyIdShort,
+      this.creationTime,
+      this.fingerprint,
+      this.keyIdNumeric,
+      this.isSubKey,
+      this.canSign,
+      this.canEncrypt,
+      this.identities);
 
   Map toJson() => {
+        'algorithm': algorithm,
         'keyId': keyId,
         'keyIdShort': keyIdShort,
         'creationTime': creationTime,
         'fingerprint': fingerprint,
         'keyIdNumeric': keyIdNumeric,
         'isSubKey': isSubKey,
+        'canSign': canSign,
+        'canEncrypt': canEncrypt,
         'identities': identities,
       };
 }
@@ -89,6 +120,7 @@ class PrivateKeyMetadata {
   String keyIdNumeric;
   bool isSubKey;
   bool encrypted;
+  bool canSign;
   List<Identity> identities;
 
   PrivateKeyMetadata(
@@ -99,6 +131,7 @@ class PrivateKeyMetadata {
       this.keyIdNumeric,
       this.isSubKey,
       this.encrypted,
+      this.canSign,
       this.identities);
 
   Map toJson() => {
@@ -109,6 +142,7 @@ class PrivateKeyMetadata {
         'keyIdNumeric': keyIdNumeric,
         'isSubKey': isSubKey,
         'encrypted': encrypted,
+        'canSign': canSign,
         'identities': identities,
       };
 }
@@ -173,12 +207,15 @@ class OpenPGP {
     }
     var metadata = response.output!;
     return PublicKeyMetadata(
+      metadata.algorithm!,
       metadata.keyId!,
       metadata.keyIdShort!,
       metadata.creationTime!,
       metadata.fingerprint!,
       metadata.keyIdNumeric!,
       metadata.isSubKey,
+      metadata.canSign,
+      metadata.canEncrypt,
       _identities(metadata.identities),
     );
   }
@@ -199,6 +236,7 @@ class OpenPGP {
       metadata.keyIdNumeric!,
       metadata.isSubKey,
       metadata.encrypted,
+      metadata.canSign,
       _identities(metadata.identities),
     );
   }
@@ -452,6 +490,11 @@ class OpenPGP {
         compression: input.compression != null
             ? model.Compression.values[input.compression!.index]
             : null,
+        algorithm: input.algorithm != null
+            ? model.Algorithm.values[input.algorithm!.index]
+            : null,
+        curve:
+            input.curve != null ? model.Curve.values[input.curve!.index] : null,
         compressionLevel: input.compressionLevel ?? 0,
         hash: input.hash != null ? model.Hash.values[input.hash!.index] : null,
         rsaBits: input.rsaBits ?? 0,

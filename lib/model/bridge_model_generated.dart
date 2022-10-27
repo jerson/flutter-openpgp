@@ -6,6 +6,118 @@ library model;
 import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
+class Algorithm {
+  final int value;
+  const Algorithm._(this.value);
+
+  factory Algorithm.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+      throw StateError('Invalid value $value for bit flag enum Algorithm');
+    }
+    return result;
+  }
+
+  static Algorithm? _createOrNull(int? value) =>
+      value == null ? null : Algorithm.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const Algorithm RSA = Algorithm._(0);
+  static const Algorithm ECDSA = Algorithm._(1);
+  static const Algorithm EDDSA = Algorithm._(2);
+  static const Algorithm ECHD = Algorithm._(3);
+  static const Algorithm DSA = Algorithm._(4);
+  static const Algorithm ELGAMAL = Algorithm._(5);
+  static const Map<int, Algorithm> values = {
+    0: RSA,
+    1: ECDSA,
+    2: EDDSA,
+    3: ECHD,
+    4: DSA,
+    5: ELGAMAL
+  };
+
+  static const fb.Reader<Algorithm> reader = _AlgorithmReader();
+
+  @override
+  String toString() {
+    return 'Algorithm{value: $value}';
+  }
+}
+
+class _AlgorithmReader extends fb.Reader<Algorithm> {
+  const _AlgorithmReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  Algorithm read(fb.BufferContext bc, int offset) =>
+      Algorithm.fromValue(const fb.Int32Reader().read(bc, offset));
+}
+
+class Curve {
+  final int value;
+  const Curve._(this.value);
+
+  factory Curve.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+      throw StateError('Invalid value $value for bit flag enum Curve');
+    }
+    return result;
+  }
+
+  static Curve? _createOrNull(int? value) =>
+      value == null ? null : Curve.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 8;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const Curve CURVE25519 = Curve._(0);
+  static const Curve CURVE448 = Curve._(1);
+  static const Curve P256 = Curve._(2);
+  static const Curve P384 = Curve._(3);
+  static const Curve P521 = Curve._(4);
+  static const Curve SECP256K1 = Curve._(5);
+  static const Curve BRAINPOOLP256 = Curve._(6);
+  static const Curve BRAINPOOLP384 = Curve._(7);
+  static const Curve BRAINPOOLP512 = Curve._(8);
+  static const Map<int, Curve> values = {
+    0: CURVE25519,
+    1: CURVE448,
+    2: P256,
+    3: P384,
+    4: P521,
+    5: SECP256K1,
+    6: BRAINPOOLP256,
+    7: BRAINPOOLP384,
+    8: BRAINPOOLP512
+  };
+
+  static const fb.Reader<Curve> reader = _CurveReader();
+
+  @override
+  String toString() {
+    return 'Curve{value: $value}';
+  }
+}
+
+class _CurveReader extends fb.Reader<Curve> {
+  const _CurveReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  Curve read(fb.BufferContext bc, int offset) =>
+      Curve.fromValue(const fb.Int32Reader().read(bc, offset));
+}
+
 class Hash {
   final int value;
   const Hash._(this.value);
@@ -114,13 +226,21 @@ class Cipher {
       value == null ? null : Cipher.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 2;
+  static const int maxValue = 4;
   static bool containsValue(int value) => values.containsKey(value);
 
   static const Cipher AES128 = Cipher._(0);
   static const Cipher AES192 = Cipher._(1);
   static const Cipher AES256 = Cipher._(2);
-  static const Map<int, Cipher> values = {0: AES128, 1: AES192, 2: AES256};
+  static const Cipher DES = Cipher._(3);
+  static const Cipher CAST5 = Cipher._(4);
+  static const Map<int, Cipher> values = {
+    0: AES128,
+    1: AES192,
+    2: AES256,
+    3: DES,
+    4: CAST5
+  };
 
   static const fb.Reader<Cipher> reader = _CipherReader();
 
@@ -2607,21 +2727,31 @@ class KeyOptions {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  The public key algorithm to use - will always create a signing primary
+  ///  key and encryption subkey.
+  Algorithm get algorithm => Algorithm.fromValue(
+      const fb.Int32Reader().vTableGet(_bc, _bcOffset, 4, 0));
+
+  ///  Curve configures the desired packet.Curve if the Algorithm is PubKeyAlgoECDSA,
+  ///  PubKeyAlgoEdDSA, or PubKeyAlgoECDH. If empty Curve25519 is used.
+  Curve get curve =>
+      Curve.fromValue(const fb.Int32Reader().vTableGet(_bc, _bcOffset, 6, 0));
+
   ///  Hash is the default hash function to be used.
   ///  If zero, SHA-256 is used.
   Hash get hash =>
-      Hash.fromValue(const fb.Int32Reader().vTableGet(_bc, _bcOffset, 4, 0));
+      Hash.fromValue(const fb.Int32Reader().vTableGet(_bc, _bcOffset, 8, 0));
 
   ///  Cipher is the cipher to be used.
   ///  If zero, AES-128 is used.
   Cipher get cipher =>
-      Cipher.fromValue(const fb.Int32Reader().vTableGet(_bc, _bcOffset, 6, 0));
+      Cipher.fromValue(const fb.Int32Reader().vTableGet(_bc, _bcOffset, 10, 0));
 
   ///  Compression is the compression algorithm to be
   ///  applied to the plaintext before encryption. If zero, no
   ///  compression is done.
   Compression get compression => Compression.fromValue(
-      const fb.Int32Reader().vTableGet(_bc, _bcOffset, 8, 0));
+      const fb.Int32Reader().vTableGet(_bc, _bcOffset, 12, 0));
 
   ///  CompressionLevel is the compression level to use. It must be set to
   ///  between -1 and 9, with -1 causing the compressor to use the
@@ -2632,15 +2762,15 @@ class KeyOptions {
   ///  encryption. See the constants above for convenient common
   ///  settings for Level.
   int get compressionLevel =>
-      const fb.Int32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+      const fb.Int32Reader().vTableGet(_bc, _bcOffset, 14, 0);
 
   ///  RSABits is the number of bits in new RSA keys made with NewEntity.
   ///  If zero, then 2048 bit keys are created.
-  int get rsaBits => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get rsaBits => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 16, 0);
 
   @override
   String toString() {
-    return 'KeyOptions{hash: $hash, cipher: $cipher, compression: $compression, compressionLevel: $compressionLevel, rsaBits: $rsaBits}';
+    return 'KeyOptions{algorithm: $algorithm, curve: $curve, hash: $hash, cipher: $cipher, compression: $compression, compressionLevel: $compressionLevel, rsaBits: $rsaBits}';
   }
 }
 
@@ -2658,31 +2788,41 @@ class KeyOptionsBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(5);
+    fbBuilder.startTable(7);
+  }
+
+  int addAlgorithm(Algorithm? algorithm) {
+    fbBuilder.addInt32(0, algorithm?.value);
+    return fbBuilder.offset;
+  }
+
+  int addCurve(Curve? curve) {
+    fbBuilder.addInt32(1, curve?.value);
+    return fbBuilder.offset;
   }
 
   int addHash(Hash? hash) {
-    fbBuilder.addInt32(0, hash?.value);
+    fbBuilder.addInt32(2, hash?.value);
     return fbBuilder.offset;
   }
 
   int addCipher(Cipher? cipher) {
-    fbBuilder.addInt32(1, cipher?.value);
+    fbBuilder.addInt32(3, cipher?.value);
     return fbBuilder.offset;
   }
 
   int addCompression(Compression? compression) {
-    fbBuilder.addInt32(2, compression?.value);
+    fbBuilder.addInt32(4, compression?.value);
     return fbBuilder.offset;
   }
 
   int addCompressionLevel(int? compressionLevel) {
-    fbBuilder.addInt32(3, compressionLevel);
+    fbBuilder.addInt32(5, compressionLevel);
     return fbBuilder.offset;
   }
 
   int addRsaBits(int? rsaBits) {
-    fbBuilder.addInt32(4, rsaBits);
+    fbBuilder.addInt32(6, rsaBits);
     return fbBuilder.offset;
   }
 
@@ -2692,6 +2832,8 @@ class KeyOptionsBuilder {
 }
 
 class KeyOptionsObjectBuilder extends fb.ObjectBuilder {
+  final Algorithm? _algorithm;
+  final Curve? _curve;
   final Hash? _hash;
   final Cipher? _cipher;
   final Compression? _compression;
@@ -2699,12 +2841,16 @@ class KeyOptionsObjectBuilder extends fb.ObjectBuilder {
   final int? _rsaBits;
 
   KeyOptionsObjectBuilder({
+    Algorithm? algorithm,
+    Curve? curve,
     Hash? hash,
     Cipher? cipher,
     Compression? compression,
     int? compressionLevel,
     int? rsaBits,
-  })  : _hash = hash,
+  })  : _algorithm = algorithm,
+        _curve = curve,
+        _hash = hash,
         _cipher = cipher,
         _compression = compression,
         _compressionLevel = compressionLevel,
@@ -2713,12 +2859,14 @@ class KeyOptionsObjectBuilder extends fb.ObjectBuilder {
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(5);
-    fbBuilder.addInt32(0, _hash?.value);
-    fbBuilder.addInt32(1, _cipher?.value);
-    fbBuilder.addInt32(2, _compression?.value);
-    fbBuilder.addInt32(3, _compressionLevel);
-    fbBuilder.addInt32(4, _rsaBits);
+    fbBuilder.startTable(7);
+    fbBuilder.addInt32(0, _algorithm?.value);
+    fbBuilder.addInt32(1, _curve?.value);
+    fbBuilder.addInt32(2, _hash?.value);
+    fbBuilder.addInt32(3, _cipher?.value);
+    fbBuilder.addInt32(4, _compression?.value);
+    fbBuilder.addInt32(5, _compressionLevel);
+    fbBuilder.addInt32(6, _rsaBits);
     return fbBuilder.endTable();
   }
 
@@ -3878,25 +4026,31 @@ class PublicKeyMetadata {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  String? get keyId =>
+  String? get algorithm =>
       const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get keyIdShort =>
+  String? get keyId =>
       const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get creationTime =>
+  String? get keyIdShort =>
       const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get fingerprint =>
+  String? get creationTime =>
       const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get keyIdNumeric =>
+  String? get fingerprint =>
       const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get keyIdNumeric =>
+      const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
   bool get isSubKey =>
-      const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
+      const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
+  bool get canSign =>
+      const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
+  bool get canEncrypt =>
+      const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
   List<Identity>? get identities =>
       const fb.ListReader<Identity>(Identity.reader)
-          .vTableGetNullable(_bc, _bcOffset, 16);
+          .vTableGetNullable(_bc, _bcOffset, 22);
 
   @override
   String toString() {
-    return 'PublicKeyMetadata{keyId: $keyId, keyIdShort: $keyIdShort, creationTime: $creationTime, fingerprint: $fingerprint, keyIdNumeric: $keyIdNumeric, isSubKey: $isSubKey, identities: $identities}';
+    return 'PublicKeyMetadata{algorithm: $algorithm, keyId: $keyId, keyIdShort: $keyIdShort, creationTime: $creationTime, fingerprint: $fingerprint, keyIdNumeric: $keyIdNumeric, isSubKey: $isSubKey, canSign: $canSign, canEncrypt: $canEncrypt, identities: $identities}';
   }
 }
 
@@ -3914,41 +4068,56 @@ class PublicKeyMetadataBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(7);
+    fbBuilder.startTable(10);
   }
 
-  int addKeyIdOffset(int? offset) {
+  int addAlgorithmOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
 
-  int addKeyIdShortOffset(int? offset) {
+  int addKeyIdOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
 
-  int addCreationTimeOffset(int? offset) {
+  int addKeyIdShortOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
 
-  int addFingerprintOffset(int? offset) {
+  int addCreationTimeOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
 
-  int addKeyIdNumericOffset(int? offset) {
+  int addFingerprintOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
 
+  int addKeyIdNumericOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+
   int addIsSubKey(bool? isSubKey) {
-    fbBuilder.addBool(5, isSubKey);
+    fbBuilder.addBool(6, isSubKey);
+    return fbBuilder.offset;
+  }
+
+  int addCanSign(bool? canSign) {
+    fbBuilder.addBool(7, canSign);
+    return fbBuilder.offset;
+  }
+
+  int addCanEncrypt(bool? canEncrypt) {
+    fbBuilder.addBool(8, canEncrypt);
     return fbBuilder.offset;
   }
 
   int addIdentitiesOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
+    fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
 
@@ -3958,33 +4127,44 @@ class PublicKeyMetadataBuilder {
 }
 
 class PublicKeyMetadataObjectBuilder extends fb.ObjectBuilder {
+  final String? _algorithm;
   final String? _keyId;
   final String? _keyIdShort;
   final String? _creationTime;
   final String? _fingerprint;
   final String? _keyIdNumeric;
   final bool? _isSubKey;
+  final bool? _canSign;
+  final bool? _canEncrypt;
   final List<IdentityObjectBuilder>? _identities;
 
   PublicKeyMetadataObjectBuilder({
+    String? algorithm,
     String? keyId,
     String? keyIdShort,
     String? creationTime,
     String? fingerprint,
     String? keyIdNumeric,
     bool? isSubKey,
+    bool? canSign,
+    bool? canEncrypt,
     List<IdentityObjectBuilder>? identities,
-  })  : _keyId = keyId,
+  })  : _algorithm = algorithm,
+        _keyId = keyId,
         _keyIdShort = keyIdShort,
         _creationTime = creationTime,
         _fingerprint = fingerprint,
         _keyIdNumeric = keyIdNumeric,
         _isSubKey = isSubKey,
+        _canSign = canSign,
+        _canEncrypt = canEncrypt,
         _identities = identities;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
+    final int? algorithmOffset =
+        _algorithm == null ? null : fbBuilder.writeString(_algorithm!);
     final int? keyIdOffset =
         _keyId == null ? null : fbBuilder.writeString(_keyId!);
     final int? keyIdShortOffset =
@@ -3999,14 +4179,17 @@ class PublicKeyMetadataObjectBuilder extends fb.ObjectBuilder {
         ? null
         : fbBuilder.writeList(
             _identities!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(7);
-    fbBuilder.addOffset(0, keyIdOffset);
-    fbBuilder.addOffset(1, keyIdShortOffset);
-    fbBuilder.addOffset(2, creationTimeOffset);
-    fbBuilder.addOffset(3, fingerprintOffset);
-    fbBuilder.addOffset(4, keyIdNumericOffset);
-    fbBuilder.addBool(5, _isSubKey);
-    fbBuilder.addOffset(6, identitiesOffset);
+    fbBuilder.startTable(10);
+    fbBuilder.addOffset(0, algorithmOffset);
+    fbBuilder.addOffset(1, keyIdOffset);
+    fbBuilder.addOffset(2, keyIdShortOffset);
+    fbBuilder.addOffset(3, creationTimeOffset);
+    fbBuilder.addOffset(4, fingerprintOffset);
+    fbBuilder.addOffset(5, keyIdNumericOffset);
+    fbBuilder.addBool(6, _isSubKey);
+    fbBuilder.addBool(7, _canSign);
+    fbBuilder.addBool(8, _canEncrypt);
+    fbBuilder.addOffset(9, identitiesOffset);
     return fbBuilder.endTable();
   }
 
@@ -4046,13 +4229,15 @@ class PrivateKeyMetadata {
       const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
   bool get encrypted =>
       const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
+  bool get canSign =>
+      const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
   List<Identity>? get identities =>
       const fb.ListReader<Identity>(Identity.reader)
-          .vTableGetNullable(_bc, _bcOffset, 18);
+          .vTableGetNullable(_bc, _bcOffset, 20);
 
   @override
   String toString() {
-    return 'PrivateKeyMetadata{keyId: $keyId, keyIdShort: $keyIdShort, creationTime: $creationTime, fingerprint: $fingerprint, keyIdNumeric: $keyIdNumeric, isSubKey: $isSubKey, encrypted: $encrypted, identities: $identities}';
+    return 'PrivateKeyMetadata{keyId: $keyId, keyIdShort: $keyIdShort, creationTime: $creationTime, fingerprint: $fingerprint, keyIdNumeric: $keyIdNumeric, isSubKey: $isSubKey, encrypted: $encrypted, canSign: $canSign, identities: $identities}';
   }
 }
 
@@ -4070,7 +4255,7 @@ class PrivateKeyMetadataBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(8);
+    fbBuilder.startTable(9);
   }
 
   int addKeyIdOffset(int? offset) {
@@ -4108,8 +4293,13 @@ class PrivateKeyMetadataBuilder {
     return fbBuilder.offset;
   }
 
+  int addCanSign(bool? canSign) {
+    fbBuilder.addBool(7, canSign);
+    return fbBuilder.offset;
+  }
+
   int addIdentitiesOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
+    fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
 
@@ -4126,6 +4316,7 @@ class PrivateKeyMetadataObjectBuilder extends fb.ObjectBuilder {
   final String? _keyIdNumeric;
   final bool? _isSubKey;
   final bool? _encrypted;
+  final bool? _canSign;
   final List<IdentityObjectBuilder>? _identities;
 
   PrivateKeyMetadataObjectBuilder({
@@ -4136,6 +4327,7 @@ class PrivateKeyMetadataObjectBuilder extends fb.ObjectBuilder {
     String? keyIdNumeric,
     bool? isSubKey,
     bool? encrypted,
+    bool? canSign,
     List<IdentityObjectBuilder>? identities,
   })  : _keyId = keyId,
         _keyIdShort = keyIdShort,
@@ -4144,6 +4336,7 @@ class PrivateKeyMetadataObjectBuilder extends fb.ObjectBuilder {
         _keyIdNumeric = keyIdNumeric,
         _isSubKey = isSubKey,
         _encrypted = encrypted,
+        _canSign = canSign,
         _identities = identities;
 
   /// Finish building, and store into the [fbBuilder].
@@ -4163,7 +4356,7 @@ class PrivateKeyMetadataObjectBuilder extends fb.ObjectBuilder {
         ? null
         : fbBuilder.writeList(
             _identities!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(8);
+    fbBuilder.startTable(9);
     fbBuilder.addOffset(0, keyIdOffset);
     fbBuilder.addOffset(1, keyIdShortOffset);
     fbBuilder.addOffset(2, creationTimeOffset);
@@ -4171,7 +4364,8 @@ class PrivateKeyMetadataObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(4, keyIdNumericOffset);
     fbBuilder.addBool(5, _isSubKey);
     fbBuilder.addBool(6, _encrypted);
-    fbBuilder.addOffset(7, identitiesOffset);
+    fbBuilder.addBool(7, _canSign);
+    fbBuilder.addOffset(8, identitiesOffset);
     return fbBuilder.endTable();
   }
 
