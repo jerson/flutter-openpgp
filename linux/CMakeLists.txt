@@ -16,19 +16,13 @@ target_include_directories(${PLUGIN_NAME} INTERFACE
 target_link_libraries(${PLUGIN_NAME} PRIVATE flutter)
 target_link_libraries(${PLUGIN_NAME} PRIVATE PkgConfig::GTK)
 
+set(LIBOPENPGP_BRIDGE "libopenpgp_bridge.so")
+set(LIBOPENPGP_BRIDGE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/shared/${LIBOPENPGP_BRIDGE}")
+
 # List of absolute paths to libraries that should be bundled with the plugin
 set(openpgp_bundled_libraries
-  ""
+  ${LIBOPENPGP_BRIDGE_PATH}
   PARENT_SCOPE
 )
 
-set(BUILD_BUNDLE_DIR "${PROJECT_BINARY_DIR}/../../bundle")
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set(CMAKE_INSTALL_PREFIX "${BUILD_BUNDLE_DIR}" CACHE PATH "..." FORCE)
-endif()
-set(INSTALL_BUNDLE_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib")
-set(LIBOPENPGP_BRIDGE "libopenpgp_bridge.so")
-set(LIBOPENPGP_BRIDGE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/shared/${LIBOPENPGP_BRIDGE}")
-install(CODE "file(REMOVE_RECURSE \"${INSTALL_BUNDLE_LIB_DIR}/${LIBOPENPGP_BRIDGE}\")" COMPONENT Runtime)
-install(FILES "${LIBOPENPGP_BRIDGE_PATH}" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)
 

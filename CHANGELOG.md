@@ -1,4 +1,8 @@
 
+## 3.5.1
+
+- Fixed linux DynamicLibrary detection
+
 ## 3.5.0
 
 - Updated binaries to v1.6.0 to support ECC Key generation, see KeyOptions: Algorithm and Curve
