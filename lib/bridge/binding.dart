@@ -14,6 +14,7 @@ import 'package:path/path.dart' as Path;
 class Binding {
   static final String _callFuncName = 'OpenPGPBridgeCall';
   static final String _libraryName = 'libopenpgp_bridge';
+  static final String _packageName = 'openpgp';
   static final Binding _singleton = Binding._internal();
 
   late ffi.DynamicLibrary _library;
@@ -113,38 +114,68 @@ class Binding {
   }
 
   ffi.DynamicLibrary openLib() {
-    if (Platform.isMacOS) {
-      return ffi.DynamicLibrary.open("$_libraryName.dylib");
-    }
-    if (Platform.isWindows) {
-      return ffi.DynamicLibrary.open("$_libraryName.dll");
-    }
-    if (Platform.isIOS) {
-      return ffi.DynamicLibrary.process();
-    }
-    if (Platform.isLinux || Platform.isFuchsia) {
-      try {
-        return ffi.DynamicLibrary.open("$_libraryName.so");
-      } catch (_) {
-        var binary = File("/proc/self/cmdline").readAsStringSync();
-        var suggestedFile =
-            Path.join(Path.dirname(binary), "lib", "$_libraryName.so");
-        return ffi.DynamicLibrary.open(suggestedFile);
+    var isFlutterTest = Platform.environment.containsKey('FLUTTER_TEST');
+
+    if (Platform.isMacOS || Platform.isIOS) {
+      if (isFlutterTest) {
+        return ffi.DynamicLibrary.open('build/macos/Build/Products/Debug'
+            '/$_packageName/$_packageName.framework/Resources/$_libraryName.dylib');
+      }
+      if (Platform.isMacOS) {
+        return ffi.DynamicLibrary.open("$_libraryName.dylib");
+      }
+      if (Platform.isIOS) {
+        return ffi.DynamicLibrary.process();
       }
     }
-    try {
-      return ffi.DynamicLibrary.open("$_libraryName.so");
-    } catch (e) {
-      print("fallback to open DynamicLibrary on older devices");
-      //fallback for devices that cannot load dynamic libraries by name: load the library with an absolute path
-      //read the app id
-      var appid = File("/proc/self/cmdline").readAsStringSync();
-      // the file /proc/self/cmdline returns a string with many trailing \0 characters, which makes the string pretty useless for dart, many
-      // operations will not work correctly. remove these trailing zero bytes.
-      appid = String.fromCharCodes(
-          appid.codeUnits.where((element) => element != 0));
-      final loadPath = "/data/data/$appid/lib/$_libraryName.so";
-      return ffi.DynamicLibrary.open(loadPath);
+
+    if (Platform.isAndroid || Platform.isLinux) {
+      if (isFlutterTest) {
+        var arch = Platform.resolvedExecutable.contains("linux-arm64")
+            ? "arm64"
+            : "x64";
+        return ffi.DynamicLibrary.open(
+            'build/linux/$arch/debug/bundle/lib/$_libraryName.so');
+      }
+
+      if (Platform.isLinux) {
+        try {
+          return ffi.DynamicLibrary.open("$_libraryName.so");
+        } catch (e) {
+          print(e);
+          var binary = File("/proc/self/cmdline").readAsStringSync();
+          var suggestedFile =
+              Path.join(Path.dirname(binary), "lib", "$_libraryName.so");
+          return ffi.DynamicLibrary.open(suggestedFile);
+        }
+      }
+
+      if (Platform.isAndroid) {
+        try {
+          return ffi.DynamicLibrary.open("$_libraryName.so");
+        } catch (e) {
+          print("fallback to open DynamicLibrary on older devices");
+          //fallback for devices that cannot load dynamic libraries by name: load the library with an absolute path
+          //read the app id
+          var appid = File("/proc/self/cmdline").readAsStringSync();
+          // the file /proc/self/cmdline returns a string with many trailing \0 characters, which makes the string pretty useless for dart, many
+          // operations will not work correctly. remove these trailing zero bytes.
+          appid = String.fromCharCodes(
+              appid.codeUnits.where((element) => element != 0));
+          final loadPath = "/data/data/$appid/lib/$_libraryName.so";
+          return ffi.DynamicLibrary.open(loadPath);
+        }
+      }
     }
+
+    if (Platform.isWindows) {
+      if (isFlutterTest) {
+        return ffi.DynamicLibrary.open(Path.canonicalize(
+            Path.join(r'build\windows\runner\Debug', '$_libraryName.dll')));
+      }
+      return ffi.DynamicLibrary.open("$_libraryName.dll");
+    }
+
+    throw UnsupportedError('Unknown platform: ${Platform.operatingSystem}');
   }
 }
