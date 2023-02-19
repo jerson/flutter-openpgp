@@ -17,7 +17,7 @@ target_link_libraries(${PLUGIN_NAME} PRIVATE flutter)
 target_link_libraries(${PLUGIN_NAME} PRIVATE PkgConfig::GTK)
 
 set(LIBOPENPGP_BRIDGE "libopenpgp_bridge.so")
-set(LIBOPENPGP_BRIDGE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/shared/${LIBOPENPGP_BRIDGE}")
+set(LIBOPENPGP_BRIDGE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/shared/${CMAKE_SYSTEM_PROCESSOR}/${LIBOPENPGP_BRIDGE}")
 
 # List of absolute paths to libraries that should be bundled with the plugin
 set(openpgp_bundled_libraries
