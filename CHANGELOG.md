@@ -1,3 +1,6 @@
+## 3.5.2
+
+- Added unit test support macos, linux and windows
 
 ## 3.5.1
 
