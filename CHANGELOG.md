@@ -1,3 +1,7 @@
+## 3.5.4
+
+- Added support to linux ARM64 devices
+
 ## 3.5.3
 
 - Removed Hover support

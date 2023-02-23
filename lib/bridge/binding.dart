@@ -9,6 +9,7 @@ import 'package:ffi/ffi.dart';
 import 'package:openpgp/bridge/ffi.dart';
 import 'package:openpgp/bridge/isolate.dart';
 import 'package:openpgp/openpgp.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as Path;
 
 class Binding {
@@ -113,13 +114,23 @@ class Binding {
         Platform.isIOS;
   }
 
+  void validateTestFFIFile(String path) {
+    if (!File(path).existsSync()) {
+      debugPrint('dynamic library not found: $path');
+      throw Exception(
+          '''In order to be able to run unit tests, you need to run the project first: "flutter run -d ${Platform.operatingSystem}"''');
+    }
+  }
+
   ffi.DynamicLibrary openLib() {
     var isFlutterTest = Platform.environment.containsKey('FLUTTER_TEST');
 
     if (Platform.isMacOS || Platform.isIOS) {
       if (isFlutterTest) {
-        return ffi.DynamicLibrary.open('build/macos/Build/Products/Debug'
-            '/$_packageName/$_packageName.framework/Resources/$_libraryName.dylib');
+        var ffiFile =
+            'build/macos/Build/Products/Debug/$_packageName/$_packageName.framework/Resources/$_libraryName.dylib';
+        validateTestFFIFile(ffiFile);
+        return ffi.DynamicLibrary.open(ffiFile);
       }
       if (Platform.isMacOS) {
         return ffi.DynamicLibrary.open("$_libraryName.dylib");
@@ -131,11 +142,12 @@ class Binding {
 
     if (Platform.isAndroid || Platform.isLinux) {
       if (isFlutterTest) {
-        var arch = Platform.resolvedExecutable.contains("linux-arm64")
-            ? "arm64"
-            : "x64";
-        return ffi.DynamicLibrary.open(
-            'build/linux/$arch/debug/bundle/lib/$_libraryName.so');
+        var arch =
+            Platform.resolvedExecutable.contains("linux-x64") ? "x64" : "arm64";
+
+        var ffiFile = 'build/linux/$arch/debug/bundle/lib/$_libraryName.so';
+        validateTestFFIFile(ffiFile);
+        return ffi.DynamicLibrary.open(ffiFile);
       }
 
       if (Platform.isLinux) {
@@ -170,8 +182,10 @@ class Binding {
 
     if (Platform.isWindows) {
       if (isFlutterTest) {
-        return ffi.DynamicLibrary.open(Path.canonicalize(
-            Path.join(r'build\windows\runner\Debug', '$_libraryName.dll')));
+        var ffiFile = Path.canonicalize(
+            Path.join(r'build\windows\runner\Debug', '$_libraryName.dll'));
+        validateTestFFIFile(ffiFile);
+        return ffi.DynamicLibrary.open(ffiFile);
       }
       return ffi.DynamicLibrary.open("$_libraryName.dll");
     }
