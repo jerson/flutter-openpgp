@@ -277,7 +277,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "3.5.3"
+    version: "3.5.4"
   package_config:
     dependency: transitive
     description:
