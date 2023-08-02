@@ -1,3 +1,7 @@
+## 3.6.0
+
+- Updated binaries to v1.8.0
+  
 ## 3.5.4
 
 - Added support to linux ARM64 devices
