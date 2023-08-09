@@ -4047,10 +4047,13 @@ class PublicKeyMetadata {
   List<Identity>? get identities =>
       const fb.ListReader<Identity>(Identity.reader)
           .vTableGetNullable(_bc, _bcOffset, 22);
+  List<PublicKeyMetadata>? get subKeys =>
+      const fb.ListReader<PublicKeyMetadata>(PublicKeyMetadata.reader)
+          .vTableGetNullable(_bc, _bcOffset, 24);
 
   @override
   String toString() {
-    return 'PublicKeyMetadata{algorithm: $algorithm, keyId: $keyId, keyIdShort: $keyIdShort, creationTime: $creationTime, fingerprint: $fingerprint, keyIdNumeric: $keyIdNumeric, isSubKey: $isSubKey, canSign: $canSign, canEncrypt: $canEncrypt, identities: $identities}';
+    return 'PublicKeyMetadata{algorithm: $algorithm, keyId: $keyId, keyIdShort: $keyIdShort, creationTime: $creationTime, fingerprint: $fingerprint, keyIdNumeric: $keyIdNumeric, isSubKey: $isSubKey, canSign: $canSign, canEncrypt: $canEncrypt, identities: $identities, subKeys: $subKeys}';
   }
 }
 
@@ -4068,7 +4071,7 @@ class PublicKeyMetadataBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(10);
+    fbBuilder.startTable(11);
   }
 
   int addAlgorithmOffset(int? offset) {
@@ -4121,6 +4124,11 @@ class PublicKeyMetadataBuilder {
     return fbBuilder.offset;
   }
 
+  int addSubKeysOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+
   int finish() {
     return fbBuilder.endTable();
   }
@@ -4137,6 +4145,7 @@ class PublicKeyMetadataObjectBuilder extends fb.ObjectBuilder {
   final bool? _canSign;
   final bool? _canEncrypt;
   final List<IdentityObjectBuilder>? _identities;
+  final List<PublicKeyMetadataObjectBuilder>? _subKeys;
 
   PublicKeyMetadataObjectBuilder({
     String? algorithm,
@@ -4149,6 +4158,7 @@ class PublicKeyMetadataObjectBuilder extends fb.ObjectBuilder {
     bool? canSign,
     bool? canEncrypt,
     List<IdentityObjectBuilder>? identities,
+    List<PublicKeyMetadataObjectBuilder>? subKeys,
   })  : _algorithm = algorithm,
         _keyId = keyId,
         _keyIdShort = keyIdShort,
@@ -4158,7 +4168,8 @@ class PublicKeyMetadataObjectBuilder extends fb.ObjectBuilder {
         _isSubKey = isSubKey,
         _canSign = canSign,
         _canEncrypt = canEncrypt,
-        _identities = identities;
+        _identities = identities,
+        _subKeys = subKeys;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -4179,7 +4190,11 @@ class PublicKeyMetadataObjectBuilder extends fb.ObjectBuilder {
         ? null
         : fbBuilder.writeList(
             _identities!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(10);
+    final int? subKeysOffset = _subKeys == null
+        ? null
+        : fbBuilder.writeList(
+            _subKeys!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(11);
     fbBuilder.addOffset(0, algorithmOffset);
     fbBuilder.addOffset(1, keyIdOffset);
     fbBuilder.addOffset(2, keyIdShortOffset);
@@ -4190,6 +4205,7 @@ class PublicKeyMetadataObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addBool(7, _canSign);
     fbBuilder.addBool(8, _canEncrypt);
     fbBuilder.addOffset(9, identitiesOffset);
+    fbBuilder.addOffset(10, subKeysOffset);
     return fbBuilder.endTable();
   }
 
@@ -4234,10 +4250,13 @@ class PrivateKeyMetadata {
   List<Identity>? get identities =>
       const fb.ListReader<Identity>(Identity.reader)
           .vTableGetNullable(_bc, _bcOffset, 20);
+  List<PrivateKeyMetadata>? get subKeys =>
+      const fb.ListReader<PrivateKeyMetadata>(PrivateKeyMetadata.reader)
+          .vTableGetNullable(_bc, _bcOffset, 22);
 
   @override
   String toString() {
-    return 'PrivateKeyMetadata{keyId: $keyId, keyIdShort: $keyIdShort, creationTime: $creationTime, fingerprint: $fingerprint, keyIdNumeric: $keyIdNumeric, isSubKey: $isSubKey, encrypted: $encrypted, canSign: $canSign, identities: $identities}';
+    return 'PrivateKeyMetadata{keyId: $keyId, keyIdShort: $keyIdShort, creationTime: $creationTime, fingerprint: $fingerprint, keyIdNumeric: $keyIdNumeric, isSubKey: $isSubKey, encrypted: $encrypted, canSign: $canSign, identities: $identities, subKeys: $subKeys}';
   }
 }
 
@@ -4255,7 +4274,7 @@ class PrivateKeyMetadataBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(9);
+    fbBuilder.startTable(10);
   }
 
   int addKeyIdOffset(int? offset) {
@@ -4303,6 +4322,11 @@ class PrivateKeyMetadataBuilder {
     return fbBuilder.offset;
   }
 
+  int addSubKeysOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+
   int finish() {
     return fbBuilder.endTable();
   }
@@ -4318,6 +4342,7 @@ class PrivateKeyMetadataObjectBuilder extends fb.ObjectBuilder {
   final bool? _encrypted;
   final bool? _canSign;
   final List<IdentityObjectBuilder>? _identities;
+  final List<PrivateKeyMetadataObjectBuilder>? _subKeys;
 
   PrivateKeyMetadataObjectBuilder({
     String? keyId,
@@ -4329,6 +4354,7 @@ class PrivateKeyMetadataObjectBuilder extends fb.ObjectBuilder {
     bool? encrypted,
     bool? canSign,
     List<IdentityObjectBuilder>? identities,
+    List<PrivateKeyMetadataObjectBuilder>? subKeys,
   })  : _keyId = keyId,
         _keyIdShort = keyIdShort,
         _creationTime = creationTime,
@@ -4337,7 +4363,8 @@ class PrivateKeyMetadataObjectBuilder extends fb.ObjectBuilder {
         _isSubKey = isSubKey,
         _encrypted = encrypted,
         _canSign = canSign,
-        _identities = identities;
+        _identities = identities,
+        _subKeys = subKeys;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -4356,7 +4383,11 @@ class PrivateKeyMetadataObjectBuilder extends fb.ObjectBuilder {
         ? null
         : fbBuilder.writeList(
             _identities!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(9);
+    final int? subKeysOffset = _subKeys == null
+        ? null
+        : fbBuilder.writeList(
+            _subKeys!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(10);
     fbBuilder.addOffset(0, keyIdOffset);
     fbBuilder.addOffset(1, keyIdShortOffset);
     fbBuilder.addOffset(2, creationTimeOffset);
@@ -4366,6 +4397,7 @@ class PrivateKeyMetadataObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addBool(6, _encrypted);
     fbBuilder.addBool(7, _canSign);
     fbBuilder.addOffset(8, identitiesOffset);
+    fbBuilder.addOffset(9, subKeysOffset);
     return fbBuilder.endTable();
   }
 
