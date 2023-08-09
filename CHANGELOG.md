@@ -1,6 +1,6 @@
 ## 3.6.0
 
-- Updated binaries to v1.8.0
+- Updated binaries to v1.8.1
   
 ## 3.5.4
 
