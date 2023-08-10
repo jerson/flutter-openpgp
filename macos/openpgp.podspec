@@ -18,8 +18,7 @@ library for use OpenPGP.
   s.platform = :osx, '10.11'
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
   s.swift_version = '5.0'
-  #s.vendored_libraries  = 'libopenpgp_bridge.dylib'
-  s.resources = ['libopenpgp_bridge.dylib']
-  s.xcconfig = { 'LD_RUNPATH_SEARCH_PATHS' => '@loader_path/../Frameworks/openpgp.framework/Resources' }
-
+  s.preserve_paths   = 'libopenpgp_bridge.dylib'
+  s.vendored_libraries = 'libopenpgp_bridge.dylib'
+  s.xcconfig         = { 'LD_RUNPATH_SEARCH_PATHS' => '@loader_path/../Frameworks' }
 end
