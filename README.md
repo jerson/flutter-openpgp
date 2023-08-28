@@ -94,8 +94,12 @@ import 'package:fast_rsa/rsa.dart';
 void main() async {
     var bytesSample = Uint8List.fromList('data'.codeUnits);
     
-    var result = await OpenPGP.sign("text","[publicKey here]","[privateKey here]","[passphrase here]");
-    var result = await OpenPGP.signBytesToString(bytesSample,"[publicKey here]","[privateKey here]","[passphrase here]");
+    var result = await OpenPGP.sign("text","[privateKey here]","[passphrase here]");
+    var result = await OpenPGP.signBytesToString(bytesSample,"[privateKey here]","[passphrase here]");
+    
+    // sign including data
+    var result = await OpenPGP.signData("text","[privateKey here]","[passphrase here]");
+    var result = await OpenPGP.signDataBytesToString(bytesSample,"[privateKey here]","[passphrase here]");
 
 }
 
@@ -111,6 +115,10 @@ void main() async {
     
     var result = await OpenPGP.verify("text signed","text","[publicKey here]");
     var result = await OpenPGP.verifyBytes("text signed", bytesSample,"[publicKey here]");
+    
+    // verify signed with data
+    var result = await OpenPGP.verifyData("text signed","[publicKey here]");
+    var result = await OpenPGP.verifyDataBytes(bytesSample,"[publicKey here]");
 
 }
 
