@@ -13,10 +13,12 @@ import 'package:openpgp_example/encrypt_decrypt_symmetric.dart';
 import 'package:openpgp_example/encrypt_decrypt_symmetric_bytes.dart';
 import 'package:openpgp_example/generate.dart';
 import 'package:openpgp_example/sign_verify.dart';
+import 'package:openpgp_example/sign_verify_data.dart';
 import 'package:openpgp_example/metadata.dart';
 import 'package:openpgp_example/armor.dart';
 import 'package:openpgp_example/convert.dart';
 import 'package:openpgp_example/sign_verify_bytes.dart';
+import 'package:openpgp_example/sign_verify_data_bytes.dart';
 
 const passphrase = 'test';
 
@@ -149,10 +151,20 @@ class _MyAppState extends State<MyApp> {
               keyPair: _defaultKeyPair,
               key: Key("sign-verify"),
             ),
+            SignAndVerifyData(
+              title: "Sign And Verify Data",
+              keyPair: _defaultKeyPair,
+              key: Key("sign-verify-data"),
+            ),
             SignAndVerifyBytes(
               title: "Sign And Verify Bytes",
               keyPair: _defaultKeyPair,
               key: Key("sign-verify-bytes"),
+            ),
+            SignAndVerifyDataBytes(
+              title: "Sign And Verify Data Bytes",
+              keyPair: _defaultKeyPair,
+              key: Key("sign-verify-data-bytes"),
             ),
             Generate(
               title: "Generate",

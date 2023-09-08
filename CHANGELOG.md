@@ -1,3 +1,9 @@
+## 3.7.0
+
+- Add SignData methods for compatibility with other platform implementations
+- Updated binaries to v1.9.0
+
+
 ## 3.6.1
 
 - Fixed macOS podspec issue when signing apps 

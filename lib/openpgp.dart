@@ -322,10 +322,9 @@ class OpenPGP {
   }
 
   static Future<String> sign(
-      String message, String publicKey, String privateKey, String passphrase,
+      String message, String privateKey, String passphrase,
       {KeyOptions? options}) async {
     var requestBuilder = model.SignRequestObjectBuilder(
-      publicKey: publicKey,
       message: message,
       passphrase: passphrase,
       privateKey: privateKey,
@@ -336,10 +335,9 @@ class OpenPGP {
   }
 
   static Future<Uint8List> signBytes(
-      Uint8List message, String publicKey, String privateKey, String passphrase,
+      Uint8List message, String privateKey, String passphrase,
       {KeyOptions? options}) async {
     var requestBuilder = model.SignBytesRequestObjectBuilder(
-      publicKey: publicKey,
       message: message,
       passphrase: passphrase,
       privateKey: privateKey,
@@ -350,10 +348,9 @@ class OpenPGP {
   }
 
   static Future<String> signBytesToString(
-      Uint8List message, String publicKey, String privateKey, String passphrase,
+      Uint8List message, String privateKey, String passphrase,
       {KeyOptions? options}) async {
     var requestBuilder = model.SignBytesRequestObjectBuilder(
-      publicKey: publicKey,
       message: message,
       passphrase: passphrase,
       privateKey: privateKey,
@@ -361,6 +358,46 @@ class OpenPGP {
     );
 
     return await _stringResponse("signBytesToString", requestBuilder.toBytes());
+  }
+
+  static Future<String> signData(
+      String message, String privateKey, String passphrase,
+      {KeyOptions? options}) async {
+    var requestBuilder = model.SignDataRequestObjectBuilder(
+      message: message,
+      passphrase: passphrase,
+      privateKey: privateKey,
+      options: _keyOptionsBuilder(options),
+    );
+
+    return await _stringResponse("signData", requestBuilder.toBytes());
+  }
+
+  static Future<Uint8List> signDataBytes(
+      Uint8List message, String privateKey, String passphrase,
+      {KeyOptions? options}) async {
+    var requestBuilder = model.SignDataBytesRequestObjectBuilder(
+      message: message,
+      passphrase: passphrase,
+      privateKey: privateKey,
+      options: _keyOptionsBuilder(options),
+    );
+
+    return await _bytesResponse("signDataBytes", requestBuilder.toBytes());
+  }
+
+  static Future<String> signDataBytesToString(
+      Uint8List message, String privateKey, String passphrase,
+      {KeyOptions? options}) async {
+    var requestBuilder = model.SignDataBytesRequestObjectBuilder(
+      message: message,
+      passphrase: passphrase,
+      privateKey: privateKey,
+      options: _keyOptionsBuilder(options),
+    );
+
+    return await _stringResponse(
+        "signDataBytesToString", requestBuilder.toBytes());
   }
 
   static Future<bool> verify(
@@ -383,6 +420,25 @@ class OpenPGP {
     );
 
     return await _boolResponse("verifyBytes", requestBuilder.toBytes());
+  }
+
+  static Future<bool> verifyData(String signature, String publicKey) async {
+    var requestBuilder = model.VerifyDataRequestObjectBuilder(
+      publicKey: publicKey,
+      signature: signature,
+    );
+
+    return await _boolResponse("verifyData", requestBuilder.toBytes());
+  }
+
+  static Future<bool> verifyDataBytes(
+      Uint8List signature, String publicKey) async {
+    var requestBuilder = model.VerifyDataBytesRequestObjectBuilder(
+      publicKey: publicKey,
+      signature: signature,
+    );
+
+    return await _boolResponse("verifyDataBytes", requestBuilder.toBytes());
   }
 
   static Future<String> decryptSymmetric(String message, String passphrase,

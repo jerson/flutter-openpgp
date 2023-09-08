@@ -43,7 +43,6 @@ class _SignAndVerifyState extends State<SignAndVerify> {
               onPressed: (controller) async {
                 var result = await OpenPGP.sign(
                   controller.text,
-                  widget.keyPair!.publicKey,
                   widget.keyPair!.privateKey,
                   passphrase,
                 );

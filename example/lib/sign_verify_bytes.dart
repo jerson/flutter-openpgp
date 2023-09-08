@@ -47,7 +47,6 @@ class _SignAndVerifyBytesState extends State<SignAndVerifyBytes> {
               onPressed: (controller) async {
                 var result = await OpenPGP.signBytesToString(
                   Uint8List.fromList(controller.text.codeUnits),
-                  widget.keyPair!.publicKey,
                   widget.keyPair!.privateKey,
                   passphrase,
                 );
@@ -79,7 +78,6 @@ class _SignAndVerifyBytesState extends State<SignAndVerifyBytes> {
               onPressed: (controller) async {
                 var result = await OpenPGP.signBytes(
                   Uint8List.fromList(controller.text.codeUnits),
-                  widget.keyPair!.publicKey,
                   widget.keyPair!.privateKey,
                   passphrase,
                 );
