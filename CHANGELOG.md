@@ -1,3 +1,9 @@
+## 3.7.1
+
+- Updated binaries to v1.9.2
+- Fixed issue with bad armor encode
+- Add ArmorDecode method
+  
 ## 3.7.0
 
 - Add SignData methods for compatibility with other platform implementations

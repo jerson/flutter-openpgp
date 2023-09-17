@@ -158,6 +158,13 @@ class FileHints {
   String? modTime;
 }
 
+class ArmorMetadata {
+  String type;
+  Uint8List body;
+
+  ArmorMetadata(this.type, this.body);
+}
+
 class OpenPGP {
   static const MethodChannel _channel = const MethodChannel('openpgp');
   static bool bindingEnabled = Binding().isSupported();
@@ -237,6 +244,20 @@ class OpenPGP {
       metadata.encrypted,
       metadata.canSign,
       _identities(metadata.identities),
+    );
+  }
+
+  static Future<ArmorMetadata> _armorDecodeResponse(
+      String name, Uint8List payload) async {
+    var data = await _call(name, payload);
+    var response = model.ArmorDecodeResponse(data);
+    if (response.error != null && response.error != "") {
+      throw new OpenPGPException(response.error!);
+    }
+    var metadata = response.output!;
+    return ArmorMetadata(
+      metadata.type!,
+      Uint8List.fromList(metadata.body!),
     );
   }
 
@@ -491,12 +512,21 @@ class OpenPGP {
         "encryptSymmetricBytes", requestBuilder.toBytes());
   }
 
-  static Future<String> armorEncode(Uint8List data) async {
+  static Future<String> armorEncode(String type, Uint8List data) async {
     var requestBuilder = model.ArmorEncodeRequestObjectBuilder(
       packet: data,
+      type: type,
     );
 
     return await _stringResponse("armorEncode", requestBuilder.toBytes());
+  }
+
+  static Future<ArmorMetadata> armorDecode(String message) async {
+    var requestBuilder = model.ArmorDecodeRequestObjectBuilder(
+      message: message,
+    );
+
+    return await _armorDecodeResponse("armorDecode", requestBuilder.toBytes());
   }
 
   static Future<String> convertPrivateKeyToPublicKey(String privateKey) async {

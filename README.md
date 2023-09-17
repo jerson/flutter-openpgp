@@ -22,6 +22,7 @@ Library for use openPGP with support for android, ios, macos, windows, linux and
     - [Sign methods](#sign-methods)
     - [Verify methods](#verify-methods)
     - [Encode methods](#encode-methods)
+    - [Decode methods](#decode-methods)
     - [Metadata methods](#metadata-methods)
     - [Convert methods](#convert-methods)
   - [Setup](#setup)
@@ -132,7 +133,17 @@ import 'package:fast_rsa/rsa.dart';
 void main() async {
     var bytesSample = Uint8List.fromList('data'.codeUnits);
     
-    var result = await OpenPGP.armorEncode(bytesSample);
+    var result = await OpenPGP.armorEncode("PGP MESSAGE", bytesSample);
+}
+
+```
+### Decode methods
+
+```dart
+import 'package:fast_rsa/rsa.dart';
+
+void main() async {    
+    var result = await OpenPGP.armorDecode("message here");
 }
 
 ```

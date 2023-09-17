@@ -23,7 +23,8 @@ class Armor extends StatefulWidget {
 }
 
 class _ArmorState extends State<Armor> {
-  String _result = "";
+  String _encoded = "";
+  String _decoded = "";
 
   @override
   Widget build(BuildContext context) {
@@ -36,15 +37,34 @@ class _ArmorState extends State<Armor> {
             InputWidget(
               title: "Armor encode",
               key: Key("encode"),
-              result: _result,
+              result: _encoded,
               onPressed: (controller) async {
                 var result = await OpenPGP.armorEncode(
+                  "PGP MESSAGE",
                   Uint8List.fromList(controller.text.codeUnits),
                 );
 
                 setState(() {
-                  _result = result;
+                  _encoded = result;
                 });
+              },
+            ),
+            ButtonWidget(
+              title: "Decode",
+              key: Key("decode"),
+              result: _decoded,
+              onPressed: () async {
+                try {
+                  var decoded = await OpenPGP.armorDecode(
+                    _encoded,
+                  );
+
+                  setState(() {
+                    _decoded = "${decoded.type}: ${utf8.decode(decoded.body)}";
+                  });
+                } on OpenPGPException catch (e) {
+                  print(e);
+                }
               },
             ),
           ],
