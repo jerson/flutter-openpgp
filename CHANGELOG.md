@@ -1,6 +1,6 @@
 ## 3.7.2
 
-- Updated binaries to v1.9.3
+- Updated binaries to v1.9.4
 - Fixed issue with invalid generated keys
 
 
