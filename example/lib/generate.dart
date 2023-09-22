@@ -45,7 +45,6 @@ class _GenerateState extends State<Generate> {
                       ..email = 'test@test.com'
                       ..passphrase = 'test'
                       ..keyOptions = keyOptions);
-
                 setState(() {
                   _keyPair = keyPair;
                 });
