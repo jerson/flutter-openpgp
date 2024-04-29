@@ -1,3 +1,7 @@
+## 3.7.3
+
+- Add android Namespace
+
 ## 3.7.2
 
 - Updated binaries to v1.9.4
