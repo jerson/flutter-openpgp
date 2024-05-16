@@ -662,10 +662,11 @@ class DecryptRequest {
       const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   KeyOptions? get options =>
       KeyOptions.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  Entity? get signed => Entity.reader.vTableGetNullable(_bc, _bcOffset, 12);
 
   @override
   String toString() {
-    return 'DecryptRequest{message: $message, privateKey: $privateKey, passphrase: $passphrase, options: $options}';
+    return 'DecryptRequest{message: $message, privateKey: $privateKey, passphrase: $passphrase, options: $options, signed: $signed}';
   }
 }
 
@@ -683,7 +684,7 @@ class DecryptRequestBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(5);
   }
 
   int addMessageOffset(int? offset) {
@@ -706,6 +707,11 @@ class DecryptRequestBuilder {
     return fbBuilder.offset;
   }
 
+  int addSignedOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+
   int finish() {
     return fbBuilder.endTable();
   }
@@ -716,16 +722,19 @@ class DecryptRequestObjectBuilder extends fb.ObjectBuilder {
   final String? _privateKey;
   final String? _passphrase;
   final KeyOptionsObjectBuilder? _options;
+  final EntityObjectBuilder? _signed;
 
   DecryptRequestObjectBuilder({
     String? message,
     String? privateKey,
     String? passphrase,
     KeyOptionsObjectBuilder? options,
+    EntityObjectBuilder? signed,
   })  : _message = message,
         _privateKey = privateKey,
         _passphrase = passphrase,
-        _options = options;
+        _options = options,
+        _signed = signed;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -737,11 +746,13 @@ class DecryptRequestObjectBuilder extends fb.ObjectBuilder {
     final int? passphraseOffset =
         _passphrase == null ? null : fbBuilder.writeString(_passphrase!);
     final int? optionsOffset = _options?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(4);
+    final int? signedOffset = _signed?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(5);
     fbBuilder.addOffset(0, messageOffset);
     fbBuilder.addOffset(1, privateKeyOffset);
     fbBuilder.addOffset(2, passphraseOffset);
     fbBuilder.addOffset(3, optionsOffset);
+    fbBuilder.addOffset(4, signedOffset);
     return fbBuilder.endTable();
   }
 
@@ -777,10 +788,11 @@ class DecryptFileRequest {
       const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
   KeyOptions? get options =>
       KeyOptions.reader.vTableGetNullable(_bc, _bcOffset, 12);
+  Entity? get signed => Entity.reader.vTableGetNullable(_bc, _bcOffset, 14);
 
   @override
   String toString() {
-    return 'DecryptFileRequest{input: $input, output: $output, privateKey: $privateKey, passphrase: $passphrase, options: $options}';
+    return 'DecryptFileRequest{input: $input, output: $output, privateKey: $privateKey, passphrase: $passphrase, options: $options, signed: $signed}';
   }
 }
 
@@ -798,7 +810,7 @@ class DecryptFileRequestBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(5);
+    fbBuilder.startTable(6);
   }
 
   int addInputOffset(int? offset) {
@@ -826,6 +838,11 @@ class DecryptFileRequestBuilder {
     return fbBuilder.offset;
   }
 
+  int addSignedOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+
   int finish() {
     return fbBuilder.endTable();
   }
@@ -837,6 +854,7 @@ class DecryptFileRequestObjectBuilder extends fb.ObjectBuilder {
   final String? _privateKey;
   final String? _passphrase;
   final KeyOptionsObjectBuilder? _options;
+  final EntityObjectBuilder? _signed;
 
   DecryptFileRequestObjectBuilder({
     String? input,
@@ -844,11 +862,13 @@ class DecryptFileRequestObjectBuilder extends fb.ObjectBuilder {
     String? privateKey,
     String? passphrase,
     KeyOptionsObjectBuilder? options,
+    EntityObjectBuilder? signed,
   })  : _input = input,
         _output = output,
         _privateKey = privateKey,
         _passphrase = passphrase,
-        _options = options;
+        _options = options,
+        _signed = signed;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -862,12 +882,14 @@ class DecryptFileRequestObjectBuilder extends fb.ObjectBuilder {
     final int? passphraseOffset =
         _passphrase == null ? null : fbBuilder.writeString(_passphrase!);
     final int? optionsOffset = _options?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(5);
+    final int? signedOffset = _signed?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(6);
     fbBuilder.addOffset(0, inputOffset);
     fbBuilder.addOffset(1, outputOffset);
     fbBuilder.addOffset(2, privateKeyOffset);
     fbBuilder.addOffset(3, passphraseOffset);
     fbBuilder.addOffset(4, optionsOffset);
+    fbBuilder.addOffset(5, signedOffset);
     return fbBuilder.endTable();
   }
 
@@ -901,10 +923,11 @@ class DecryptBytesRequest {
       const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   KeyOptions? get options =>
       KeyOptions.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  Entity? get signed => Entity.reader.vTableGetNullable(_bc, _bcOffset, 12);
 
   @override
   String toString() {
-    return 'DecryptBytesRequest{message: $message, privateKey: $privateKey, passphrase: $passphrase, options: $options}';
+    return 'DecryptBytesRequest{message: $message, privateKey: $privateKey, passphrase: $passphrase, options: $options, signed: $signed}';
   }
 }
 
@@ -922,7 +945,7 @@ class DecryptBytesRequestBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(5);
   }
 
   int addMessageOffset(int? offset) {
@@ -945,6 +968,11 @@ class DecryptBytesRequestBuilder {
     return fbBuilder.offset;
   }
 
+  int addSignedOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+
   int finish() {
     return fbBuilder.endTable();
   }
@@ -955,16 +983,19 @@ class DecryptBytesRequestObjectBuilder extends fb.ObjectBuilder {
   final String? _privateKey;
   final String? _passphrase;
   final KeyOptionsObjectBuilder? _options;
+  final EntityObjectBuilder? _signed;
 
   DecryptBytesRequestObjectBuilder({
     List<int>? message,
     String? privateKey,
     String? passphrase,
     KeyOptionsObjectBuilder? options,
+    EntityObjectBuilder? signed,
   })  : _message = message,
         _privateKey = privateKey,
         _passphrase = passphrase,
-        _options = options;
+        _options = options,
+        _signed = signed;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -976,11 +1007,13 @@ class DecryptBytesRequestObjectBuilder extends fb.ObjectBuilder {
     final int? passphraseOffset =
         _passphrase == null ? null : fbBuilder.writeString(_passphrase!);
     final int? optionsOffset = _options?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(4);
+    final int? signedOffset = _signed?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(5);
     fbBuilder.addOffset(0, messageOffset);
     fbBuilder.addOffset(1, privateKeyOffset);
     fbBuilder.addOffset(2, passphraseOffset);
     fbBuilder.addOffset(3, optionsOffset);
+    fbBuilder.addOffset(4, signedOffset);
     return fbBuilder.endTable();
   }
 

@@ -292,12 +292,13 @@ class OpenPGP {
 
   static Future<String> decrypt(
       String message, String privateKey, String passphrase,
-      {KeyOptions? options}) async {
+      {KeyOptions? options, Entity? signed}) async {
     var requestBuilder = model.DecryptRequestObjectBuilder(
       message: message,
       privateKey: privateKey,
       passphrase: passphrase,
       options: _keyOptionsBuilder(options),
+      signed: _entityBuilder(signed),
     );
 
     return await _stringResponse("decrypt", requestBuilder.toBytes());
@@ -305,12 +306,13 @@ class OpenPGP {
 
   static Future<Uint8List> decryptBytes(
       Uint8List message, String privateKey, String passphrase,
-      {KeyOptions? options}) async {
+      {KeyOptions? options, Entity? signed}) async {
     var requestBuilder = model.DecryptBytesRequestObjectBuilder(
       message: message,
       privateKey: privateKey,
       passphrase: passphrase,
       options: _keyOptionsBuilder(options),
+      signed: _entityBuilder(signed),
     );
 
     return await _bytesResponse("decryptBytes", requestBuilder.toBytes());

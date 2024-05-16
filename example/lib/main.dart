@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:openpgp/openpgp.dart';
+import 'package:openpgp_example/encrypt_sign_decrypt_verify.dart';
 import 'package:openpgp_example/encrypt_decrypt.dart';
 import 'package:openpgp_example/encrypt_decrypt_bytes.dart';
 import 'package:openpgp_example/encrypt_decrypt_file.dart';
@@ -124,6 +125,11 @@ class _MyAppState extends State<MyApp> {
               title: "Encrypt And Decrypt",
               keyPair: _defaultKeyPair,
               key: Key("encrypt-decrypt"),
+            ),
+            EncryptSignAndDecryptVerify(
+              title: "EncryptSign And DecryptVerify",
+              keyPair: _defaultKeyPair,
+              key: Key("encrypt-sign-decrypt-verify"),
             ),
             if (false)
               EncryptAndDecryptFile(
