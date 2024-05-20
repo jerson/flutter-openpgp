@@ -1,3 +1,8 @@
+## 3.8.0
+
+- Updated binaries to v1.10.1
+- Add decrypt+verify and encrypt+sign using signed entity
+
 ## 3.7.3
 
 - Add android Namespace
