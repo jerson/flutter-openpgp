@@ -66,6 +66,58 @@ void main() {
       }, timeout: Timeout(Duration(seconds: 60)));
     });
 
+    group('EncryptSign and DecryptVerify', () {
+      final parent = find.byKey(ValueKey("encrypt-sign-decrypt-verify"));
+
+      testWidgets('Encrypt / Decrypt', (WidgetTester tester) async {
+        final instance = app.MyApp();
+        await tester.pumpWidget(instance);
+        await tester.pumpAndSettle();
+
+        var container = find.descendant(
+          of: parent,
+          matching: find.byKey(ValueKey("encrypt")),
+        );
+        await tester.scrollUntilVisible(container, dyScroll, scrollable: list);
+        await tester.pumpAndSettle();
+
+        await tester.enterText(
+            find.descendant(
+                of: container, matching: find.byKey(ValueKey("message"))),
+            input);
+        await tester.tap(
+          find.descendant(
+              of: container, matching: find.byKey(ValueKey("button"))),
+        );
+        await tester.pumpAndSettle(Duration(seconds: 3));
+        var resultSelector = find.descendant(
+            of: container, matching: find.byKey(ValueKey("result")));
+
+        await expectLater(resultSelector, findsWidgets);
+        var result = resultSelector.evaluate().single.widget as Text;
+        expect(result.data != "", equals(true));
+
+        container = find.descendant(
+          of: parent,
+          matching: find.byKey(ValueKey("decrypt")),
+        );
+        await tester.scrollUntilVisible(container, dyScroll, scrollable: list);
+        await tester.pumpAndSettle();
+
+        await tester.tap(
+          find.descendant(
+              of: container, matching: find.byKey(ValueKey("button"))),
+        );
+        await tester.pumpAndSettle(Duration(seconds: 3));
+        resultSelector = find.descendant(
+            of: container, matching: find.byKey(ValueKey("result")));
+        await expectLater(resultSelector, findsWidgets);
+
+        result = resultSelector.evaluate().single.widget as Text;
+        expect(result.data, equals(input));
+      }, timeout: Timeout(Duration(seconds: 60)));
+    });
+
     group('Encrypt and Decrypt Bytes', () {
       final parent = find.byKey(ValueKey("encrypt-decrypt-bytes"));
 
