@@ -1,3 +1,8 @@
+## 3.8.1
+
+- Updated binaries to v1.10.2
+- Using XCFramework for iOS
+  
 ## 3.8.0
 
 - Updated binaries to v1.10.1
