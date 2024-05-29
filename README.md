@@ -41,7 +41,6 @@ Library for use openPGP with support for android, ios, macos, windows, linux and
 
 ## Generate methods
 ```dart
-import 'package:openpgp/openpgp.dart';
 
 void main() async {
     var keyOptions = KeyOptions()..rsaBits = 2048;
@@ -57,7 +56,6 @@ void main() async {
 ### Encrypt methods
 
 ```dart
-import 'package:fast_rsa/rsa.dart';
 
 void main() async {
     var bytesSample = Uint8List.fromList('data'.codeUnits);
@@ -74,7 +72,6 @@ void main() async {
 ### Decrypt methods
 
 ```dart
-import 'package:fast_rsa/rsa.dart';
 
 void main() async {
     var bytesSample = Uint8List.fromList('data'.codeUnits);
@@ -90,7 +87,6 @@ void main() async {
 ### Sign methods
 
 ```dart
-import 'package:fast_rsa/rsa.dart';
 
 void main() async {
     var bytesSample = Uint8List.fromList('data'.codeUnits);
@@ -109,7 +105,6 @@ void main() async {
 ### Verify methods
 
 ```dart
-import 'package:fast_rsa/rsa.dart';
 
 void main() async {
     var bytesSample = Uint8List.fromList('data'.codeUnits);
@@ -128,7 +123,6 @@ void main() async {
 ### Encode methods
 
 ```dart
-import 'package:fast_rsa/rsa.dart';
 
 void main() async {
     var bytesSample = Uint8List.fromList('data'.codeUnits);
@@ -140,7 +134,6 @@ void main() async {
 ### Decode methods
 
 ```dart
-import 'package:fast_rsa/rsa.dart';
 
 void main() async {    
     var result = await OpenPGP.armorDecode("message here");
@@ -152,7 +145,6 @@ void main() async {
 ### Metadata methods
 
 ```dart
-import 'package:fast_rsa/rsa.dart';
 
 void main() async {
     var result = await OpenPGP.getPrivateKeyMetadata("[privateKey here]");
@@ -165,7 +157,6 @@ void main() async {
 ### Convert methods
 
 ```dart
-import 'package:fast_rsa/rsa.dart';
 
 void main() async {
     var result = await OpenPGP.convertPrivateKeyToPublicKey("[privateKey here]");
