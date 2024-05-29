@@ -1,3 +1,8 @@
+## 3.8.1
+
+- Updated binaries to v1.10.3
+- Fix scenario when decrypt+verify using keys generated in a different tool
+
 ## 3.8.0
 
 - Updated binaries to v1.10.1
