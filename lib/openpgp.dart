@@ -10,6 +10,11 @@ class OpenPGPException implements Exception {
   String cause;
 
   OpenPGPException(this.cause);
+
+  @override
+  String toString() {
+    return 'OpenPGPException: $cause';
+  }
 }
 
 enum Hash { SHA256, SHA224, SHA384, SHA512 }

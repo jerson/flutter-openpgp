@@ -1,3 +1,7 @@
+## 3.8.2
+
+- Updated Isolate spawn logic to close gracefully
+
 ## 3.8.1
 
 - Updated binaries to v1.10.3
