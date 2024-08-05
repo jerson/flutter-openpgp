@@ -1,6 +1,6 @@
 #
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
-# Run `pod lib lint fast_rsa.podspec' to validate before publishing.
+# Run `pod lib lint openpgp.podspec' to validate before publishing.
 #
 shared_lib = File.join(__dir__, "libopenpgp_bridge.a").gsub(/ /, '\ ')
 
