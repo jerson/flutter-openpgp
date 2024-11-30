@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import 'package:openpgp/openpgp.dart';
@@ -9,11 +8,10 @@ import 'package:openpgp_example/shared/title_widget.dart';
 
 class EncryptAndDecryptSymmetric extends StatefulWidget {
   const EncryptAndDecryptSymmetric({
-    Key? key,
+    super.key,
     required this.title,
     required KeyPair? keyPair,
-  })  : keyPair = keyPair,
-        super(key: key);
+  })  : keyPair = keyPair;
 
   final KeyPair? keyPair;
   final String title;

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class InputWidget extends StatefulWidget {
   const InputWidget({
-    Key? key,
+    super.key,
     required this.result,
     required this.title,
     this.subtitle,
-    required Function(TextEditingController) this.onPressed,
-  }) : super(key: key);
+    required this.onPressed,
+  });
 
   final Function(TextEditingController) onPressed;
   final String title;
@@ -52,7 +52,6 @@ class _InputWidgetState extends State<InputWidget> {
             key: Key("message"),
           ),
           ElevatedButton(
-            child: Text(widget.title),
             onPressed: () async {
               _focusNode!.unfocus();
               await widget.onPressed(_controller);
@@ -61,6 +60,7 @@ class _InputWidgetState extends State<InputWidget> {
               });
             },
             key: Key("button"),
+            child: Text(widget.title),
           ),
           (_loading)
               ? Text(

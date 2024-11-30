@@ -26,10 +26,12 @@ void main() {
     debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
   }
 
-  runApp(new MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -93,7 +95,7 @@ XZxlM93SyqyGkXiHgVaRjpH4d/aLg0aH8COQRSVR/65Qe7mRc8pPHFHegxf5EsYF
 ''';
 
 class _MyAppState extends State<MyApp> {
-  KeyPair _defaultKeyPair = KeyPair(publicKey, privateKey);
+  final KeyPair _defaultKeyPair = KeyPair(publicKey, privateKey);
 
   @override
   void initState() {

@@ -8,11 +8,10 @@ import 'package:openpgp_example/shared/title_widget.dart';
 
 class EncryptSignAndDecryptVerify extends StatefulWidget {
   const EncryptSignAndDecryptVerify({
-    Key? key,
+    super.key,
     required this.title,
     required KeyPair? keyPair,
-  })  : keyPair = keyPair,
-        super(key: key);
+  })  : keyPair = keyPair;
 
   final KeyPair? keyPair;
   final String title;

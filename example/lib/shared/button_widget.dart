@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 
 class ButtonWidget extends StatefulWidget {
   const ButtonWidget({
-    Key? key,
+    super.key,
     required this.result,
     required String title,
     required Function onPressed,
   })  : onPressed = onPressed,
-        title = title,
-        super(key: key);
+        title = title;
 
   final Function onPressed;
   final String title;
@@ -28,7 +27,6 @@ class _ButtonWidgetState extends State<ButtonWidget> {
       child: Column(
         children: <Widget>[
           ElevatedButton(
-            child: Text(widget.title),
             onPressed: () async {
               await widget.onPressed();
               setState(() {
@@ -36,6 +34,7 @@ class _ButtonWidgetState extends State<ButtonWidget> {
               });
             },
             key: Key("button"),
+            child: Text(widget.title),
           ),
           (_loading)
               ? Text(

@@ -10,9 +10,9 @@ import 'package:openpgp_example/shared/input_widget.dart';
 
 class Armor extends StatefulWidget {
   const Armor({
-    Key? key,
+    super.key,
     required this.title,
-  }) : super(key: key);
+  });
 
   final String title;
 

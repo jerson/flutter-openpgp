@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import 'package:openpgp/openpgp.dart';
@@ -7,10 +6,10 @@ import 'package:openpgp_example/shared/title_widget.dart';
 
 class Convert extends StatefulWidget {
   const Convert({
-    Key? key,
+    super.key,
     required this.title,
-    required KeyPair? this.keyPair,
-  }) : super(key: key);
+    required this.keyPair,
+  });
 
   final String title;
   final KeyPair? keyPair;
