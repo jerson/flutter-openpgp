@@ -171,7 +171,7 @@ class ArmorMetadata {
 }
 
 class OpenPGP {
-  static const MethodChannel _channel = const MethodChannel('openpgp');
+  static const MethodChannel _channel = MethodChannel('openpgp');
   static bool bindingEnabled = Binding().isSupported();
 
   static Future<Uint8List> _call(String name, Uint8List payload) async {
@@ -186,7 +186,7 @@ class OpenPGP {
     var data = await _call(name, payload);
     var response = model.BytesResponse(data);
     if (response.error != null && response.error != "") {
-      throw new OpenPGPException(response.error!);
+      throw OpenPGPException(response.error!);
     }
     return Uint8List.fromList(response.output!);
   }
@@ -195,7 +195,7 @@ class OpenPGP {
     var data = await _call(name, payload);
     var response = model.StringResponse(data);
     if (response.error != null && response.error != "") {
-      throw new OpenPGPException(response.error!);
+      throw OpenPGPException(response.error!);
     }
     return response.output!;
   }
@@ -204,7 +204,7 @@ class OpenPGP {
     var data = await _call(name, payload);
     var response = model.BoolResponse(data);
     if (response.error != null && response.error != "") {
-      throw new OpenPGPException(response.error!);
+      throw OpenPGPException(response.error!);
     }
     return response.output;
   }
@@ -214,7 +214,7 @@ class OpenPGP {
     var data = await _call(name, payload);
     var response = model.PublicKeyMetadataResponse(data);
     if (response.error != null && response.error != "") {
-      throw new OpenPGPException(response.error!);
+      throw OpenPGPException(response.error!);
     }
     var metadata = response.output!;
     return PublicKeyMetadata(
@@ -236,7 +236,7 @@ class OpenPGP {
     var data = await _call(name, payload);
     var response = model.PrivateKeyMetadataResponse(data);
     if (response.error != null && response.error != "") {
-      throw new OpenPGPException(response.error!);
+      throw OpenPGPException(response.error!);
     }
     var metadata = response.output!;
     return PrivateKeyMetadata(
@@ -257,7 +257,7 @@ class OpenPGP {
     var data = await _call(name, payload);
     var response = model.ArmorDecodeResponse(data);
     if (response.error != null && response.error != "") {
-      throw new OpenPGPException(response.error!);
+      throw OpenPGPException(response.error!);
     }
     var metadata = response.output!;
     return ArmorMetadata(
@@ -272,14 +272,14 @@ class OpenPGP {
       return list;
     }
 
-    identities.forEach((element) {
+    for (var element in identities) {
       list.add(Identity(
         element.id!,
         element.name!,
         element.comment!,
         element.email!,
       ));
-    });
+    }
 
     return list;
   }
@@ -289,7 +289,7 @@ class OpenPGP {
     var data = await _call(name, payload);
     var response = model.KeyPairResponse(data);
     if (response.error != null && response.error != "") {
-      throw new OpenPGPException(response.error!);
+      throw OpenPGPException(response.error!);
     }
     var keyPair = response.output!;
     return KeyPair(keyPair.publicKey!, keyPair.privateKey!);

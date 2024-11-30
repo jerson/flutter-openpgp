@@ -1,8 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:openpgp/openpgp.dart';
 import 'package:openpgp_example/main.dart';
@@ -11,11 +9,10 @@ import 'package:openpgp_example/shared/title_widget.dart';
 
 class EncryptAndDecryptFile extends StatefulWidget {
   const EncryptAndDecryptFile({
-    Key? key,
+    super.key,
     required this.title,
     required KeyPair? keyPair,
-  })  : keyPair = keyPair,
-        super(key: key);
+  }) : keyPair = keyPair;
 
   final KeyPair? keyPair;
   final String title;
@@ -38,13 +35,13 @@ class _EncryptAndDecryptFileState extends State<EncryptAndDecryptFile> {
       fileHints: FileHints()..isBinary = true,
     );
     print("end");
-    String outputPath = inputPath + ".encrypted";
+    String outputPath = "$inputPath.encrypted";
     print("output $outputPath");
     File output = File(outputPath);
     await output.writeAsBytes(encrypted);
 
-    await File(inputPath + ".pub").writeAsString(widget.keyPair!.publicKey);
-    await File(inputPath + ".key").writeAsString(widget.keyPair!.privateKey);
+    await File("$inputPath.pub").writeAsString(widget.keyPair!.publicKey);
+    await File("$inputPath.key").writeAsString(widget.keyPair!.privateKey);
 
     print("saved");
     setState(() {
@@ -63,7 +60,7 @@ class _EncryptAndDecryptFileState extends State<EncryptAndDecryptFile> {
         passphrase,
       );
       print("end");
-      String outputPath = inputPath + ".decrypted.zip";
+      String outputPath = "$inputPath.decrypted.zip";
       print("output $outputPath");
       File output = File(outputPath);
       await output.writeAsBytes(decrypted);

@@ -1,9 +1,7 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:openpgp/openpgp.dart';
 import 'package:openpgp_example/main.dart';
@@ -13,11 +11,10 @@ import 'package:openpgp_example/shared/title_widget.dart';
 
 class EncryptAndDecryptSymmetricBytes extends StatefulWidget {
   const EncryptAndDecryptSymmetricBytes({
-    Key? key,
+    super.key,
     required this.title,
     required KeyPair? keyPair,
-  })  : keyPair = keyPair,
-        super(key: key);
+  }) : keyPair = keyPair;
 
   final KeyPair? keyPair;
   final String title;

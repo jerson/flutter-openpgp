@@ -1,3 +1,7 @@
+## 3.9.0
+- Updates binaries
+- Add XCFramework for ios 
+
 ## 3.8.3
 - Migrate to package:web
 

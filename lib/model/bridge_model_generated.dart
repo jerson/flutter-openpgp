@@ -52,7 +52,7 @@ class _AlgorithmReader extends fb.Reader<Algorithm> {
   const _AlgorithmReader();
 
   @override
-  int get size => 1;
+  int get size => 4;
 
   @override
   Algorithm read(fb.BufferContext bc, int offset) =>
@@ -111,7 +111,7 @@ class _CurveReader extends fb.Reader<Curve> {
   const _CurveReader();
 
   @override
-  int get size => 1;
+  int get size => 4;
 
   @override
   Curve read(fb.BufferContext bc, int offset) =>
@@ -160,7 +160,7 @@ class _HashReader extends fb.Reader<Hash> {
   const _HashReader();
 
   @override
-  int get size => 1;
+  int get size => 4;
 
   @override
   Hash read(fb.BufferContext bc, int offset) =>
@@ -203,7 +203,7 @@ class _CompressionReader extends fb.Reader<Compression> {
   const _CompressionReader();
 
   @override
-  int get size => 1;
+  int get size => 4;
 
   @override
   Compression read(fb.BufferContext bc, int offset) =>
@@ -254,7 +254,7 @@ class _CipherReader extends fb.Reader<Cipher> {
   const _CipherReader();
 
   @override
-  int get size => 1;
+  int get size => 4;
 
   @override
   Cipher read(fb.BufferContext bc, int offset) =>
@@ -285,7 +285,7 @@ class EncryptRequest {
 
   @override
   String toString() {
-    return 'EncryptRequest{message: $message, publicKey: $publicKey, options: $options, signed: $signed, fileHints: $fileHints}';
+    return 'EncryptRequest{message: ${message}, publicKey: ${publicKey}, options: ${options}, signed: ${signed}, fileHints: ${fileHints}}';
   }
 }
 
@@ -410,7 +410,7 @@ class EncryptFileRequest {
 
   @override
   String toString() {
-    return 'EncryptFileRequest{input: $input, output: $output, publicKey: $publicKey, options: $options, signed: $signed, fileHints: $fileHints}';
+    return 'EncryptFileRequest{input: ${input}, output: ${output}, publicKey: ${publicKey}, options: ${options}, signed: ${signed}, fileHints: ${fileHints}}';
   }
 }
 
@@ -544,7 +544,7 @@ class EncryptBytesRequest {
 
   @override
   String toString() {
-    return 'EncryptBytesRequest{message: $message, publicKey: $publicKey, options: $options, signed: $signed, fileHints: $fileHints}';
+    return 'EncryptBytesRequest{message: ${message}, publicKey: ${publicKey}, options: ${options}, signed: ${signed}, fileHints: ${fileHints}}';
   }
 }
 
@@ -666,7 +666,7 @@ class DecryptRequest {
 
   @override
   String toString() {
-    return 'DecryptRequest{message: $message, privateKey: $privateKey, passphrase: $passphrase, options: $options, signed: $signed}';
+    return 'DecryptRequest{message: ${message}, privateKey: ${privateKey}, passphrase: ${passphrase}, options: ${options}, signed: ${signed}}';
   }
 }
 
@@ -792,7 +792,7 @@ class DecryptFileRequest {
 
   @override
   String toString() {
-    return 'DecryptFileRequest{input: $input, output: $output, privateKey: $privateKey, passphrase: $passphrase, options: $options, signed: $signed}';
+    return 'DecryptFileRequest{input: ${input}, output: ${output}, privateKey: ${privateKey}, passphrase: ${passphrase}, options: ${options}, signed: ${signed}}';
   }
 }
 
@@ -927,7 +927,7 @@ class DecryptBytesRequest {
 
   @override
   String toString() {
-    return 'DecryptBytesRequest{message: $message, privateKey: $privateKey, passphrase: $passphrase, options: $options, signed: $signed}';
+    return 'DecryptBytesRequest{message: ${message}, privateKey: ${privateKey}, passphrase: ${passphrase}, options: ${options}, signed: ${signed}}';
   }
 }
 
@@ -1049,7 +1049,7 @@ class SignRequest {
 
   @override
   String toString() {
-    return 'SignRequest{message: $message, privateKey: $privateKey, passphrase: $passphrase, options: $options}';
+    return 'SignRequest{message: ${message}, privateKey: ${privateKey}, passphrase: ${passphrase}, options: ${options}}';
   }
 }
 
@@ -1067,7 +1067,7 @@ class SignRequestBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(5);
   }
 
   int addMessageOffset(int? offset) {
@@ -1121,7 +1121,7 @@ class SignRequestObjectBuilder extends fb.ObjectBuilder {
     final int? passphraseOffset =
         _passphrase == null ? null : fbBuilder.writeString(_passphrase!);
     final int? optionsOffset = _options?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(5);
     fbBuilder.addOffset(0, messageOffset);
     fbBuilder.addOffset(2, privateKeyOffset);
     fbBuilder.addOffset(3, passphraseOffset);
@@ -1161,7 +1161,7 @@ class SignFileRequest {
 
   @override
   String toString() {
-    return 'SignFileRequest{input: $input, privateKey: $privateKey, passphrase: $passphrase, options: $options}';
+    return 'SignFileRequest{input: ${input}, privateKey: ${privateKey}, passphrase: ${passphrase}, options: ${options}}';
   }
 }
 
@@ -1179,7 +1179,7 @@ class SignFileRequestBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(5);
   }
 
   int addInputOffset(int? offset) {
@@ -1233,7 +1233,7 @@ class SignFileRequestObjectBuilder extends fb.ObjectBuilder {
     final int? passphraseOffset =
         _passphrase == null ? null : fbBuilder.writeString(_passphrase!);
     final int? optionsOffset = _options?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(5);
     fbBuilder.addOffset(0, inputOffset);
     fbBuilder.addOffset(2, privateKeyOffset);
     fbBuilder.addOffset(3, passphraseOffset);
@@ -1273,7 +1273,7 @@ class SignBytesRequest {
 
   @override
   String toString() {
-    return 'SignBytesRequest{message: $message, privateKey: $privateKey, passphrase: $passphrase, options: $options}';
+    return 'SignBytesRequest{message: ${message}, privateKey: ${privateKey}, passphrase: ${passphrase}, options: ${options}}';
   }
 }
 
@@ -1291,7 +1291,7 @@ class SignBytesRequestBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(5);
   }
 
   int addMessageOffset(int? offset) {
@@ -1345,7 +1345,7 @@ class SignBytesRequestObjectBuilder extends fb.ObjectBuilder {
     final int? passphraseOffset =
         _passphrase == null ? null : fbBuilder.writeString(_passphrase!);
     final int? optionsOffset = _options?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(5);
     fbBuilder.addOffset(0, messageOffset);
     fbBuilder.addOffset(2, privateKeyOffset);
     fbBuilder.addOffset(3, passphraseOffset);
@@ -1385,7 +1385,7 @@ class SignDataRequest {
 
   @override
   String toString() {
-    return 'SignDataRequest{message: $message, privateKey: $privateKey, passphrase: $passphrase, options: $options}';
+    return 'SignDataRequest{message: ${message}, privateKey: ${privateKey}, passphrase: ${passphrase}, options: ${options}}';
   }
 }
 
@@ -1498,7 +1498,7 @@ class SignDataBytesRequest {
 
   @override
   String toString() {
-    return 'SignDataBytesRequest{message: $message, privateKey: $privateKey, passphrase: $passphrase, options: $options}';
+    return 'SignDataBytesRequest{message: ${message}, privateKey: ${privateKey}, passphrase: ${passphrase}, options: ${options}}';
   }
 }
 
@@ -1608,7 +1608,7 @@ class VerifyRequest {
 
   @override
   String toString() {
-    return 'VerifyRequest{signature: $signature, message: $message, publicKey: $publicKey}';
+    return 'VerifyRequest{signature: ${signature}, message: ${message}, publicKey: ${publicKey}}';
   }
 }
 
@@ -1708,7 +1708,7 @@ class VerifyFileRequest {
 
   @override
   String toString() {
-    return 'VerifyFileRequest{signature: $signature, input: $input, publicKey: $publicKey}';
+    return 'VerifyFileRequest{signature: ${signature}, input: ${input}, publicKey: ${publicKey}}';
   }
 }
 
@@ -1809,7 +1809,7 @@ class VerifyBytesRequest {
 
   @override
   String toString() {
-    return 'VerifyBytesRequest{signature: $signature, message: $message, publicKey: $publicKey}';
+    return 'VerifyBytesRequest{signature: ${signature}, message: ${message}, publicKey: ${publicKey}}';
   }
 }
 
@@ -1907,7 +1907,7 @@ class VerifyDataRequest {
 
   @override
   String toString() {
-    return 'VerifyDataRequest{signature: $signature, publicKey: $publicKey}';
+    return 'VerifyDataRequest{signature: ${signature}, publicKey: ${publicKey}}';
   }
 }
 
@@ -1995,7 +1995,7 @@ class VerifyDataBytesRequest {
 
   @override
   String toString() {
-    return 'VerifyDataBytesRequest{signature: $signature, publicKey: $publicKey}';
+    return 'VerifyDataBytesRequest{signature: ${signature}, publicKey: ${publicKey}}';
   }
 }
 
@@ -2088,7 +2088,7 @@ class EncryptSymmetricRequest {
 
   @override
   String toString() {
-    return 'EncryptSymmetricRequest{message: $message, passphrase: $passphrase, options: $options, fileHints: $fileHints}';
+    return 'EncryptSymmetricRequest{message: ${message}, passphrase: ${passphrase}, options: ${options}, fileHints: ${fileHints}}';
   }
 }
 
@@ -2203,7 +2203,7 @@ class EncryptSymmetricFileRequest {
 
   @override
   String toString() {
-    return 'EncryptSymmetricFileRequest{input: $input, output: $output, passphrase: $passphrase, options: $options, fileHints: $fileHints}';
+    return 'EncryptSymmetricFileRequest{input: ${input}, output: ${output}, passphrase: ${passphrase}, options: ${options}, fileHints: ${fileHints}}';
   }
 }
 
@@ -2327,7 +2327,7 @@ class EncryptSymmetricBytesRequest {
 
   @override
   String toString() {
-    return 'EncryptSymmetricBytesRequest{message: $message, passphrase: $passphrase, options: $options, fileHints: $fileHints}';
+    return 'EncryptSymmetricBytesRequest{message: ${message}, passphrase: ${passphrase}, options: ${options}, fileHints: ${fileHints}}';
   }
 }
 
@@ -2438,7 +2438,7 @@ class DecryptSymmetricRequest {
 
   @override
   String toString() {
-    return 'DecryptSymmetricRequest{message: $message, passphrase: $passphrase, options: $options}';
+    return 'DecryptSymmetricRequest{message: ${message}, passphrase: ${passphrase}, options: ${options}}';
   }
 }
 
@@ -2541,7 +2541,7 @@ class DecryptSymmetricFileRequest {
 
   @override
   String toString() {
-    return 'DecryptSymmetricFileRequest{input: $input, output: $output, passphrase: $passphrase, options: $options}';
+    return 'DecryptSymmetricFileRequest{input: ${input}, output: ${output}, passphrase: ${passphrase}, options: ${options}}';
   }
 }
 
@@ -2653,7 +2653,7 @@ class DecryptSymmetricBytesRequest {
 
   @override
   String toString() {
-    return 'DecryptSymmetricBytesRequest{message: $message, passphrase: $passphrase, options: $options}';
+    return 'DecryptSymmetricBytesRequest{message: ${message}, passphrase: ${passphrase}, options: ${options}}';
   }
 }
 
@@ -2748,7 +2748,7 @@ class GenerateRequest {
 
   @override
   String toString() {
-    return 'GenerateRequest{options: $options}';
+    return 'GenerateRequest{options: ${options}}';
   }
 }
 
@@ -2824,7 +2824,7 @@ class ArmorEncodeRequest {
 
   @override
   String toString() {
-    return 'ArmorEncodeRequest{packet: $packet, type: $type}';
+    return 'ArmorEncodeRequest{packet: ${packet}, type: ${type}}';
   }
 }
 
@@ -2910,7 +2910,7 @@ class ArmorDecodeRequest {
 
   @override
   String toString() {
-    return 'ArmorDecodeRequest{message: $message}';
+    return 'ArmorDecodeRequest{message: ${message}}';
   }
 }
 
@@ -2985,7 +2985,7 @@ class GetPublicKeyMetadataRequest {
 
   @override
   String toString() {
-    return 'GetPublicKeyMetadataRequest{publicKey: $publicKey}';
+    return 'GetPublicKeyMetadataRequest{publicKey: ${publicKey}}';
   }
 }
 
@@ -3061,7 +3061,7 @@ class GetPrivateKeyMetadataRequest {
 
   @override
   String toString() {
-    return 'GetPrivateKeyMetadataRequest{privateKey: $privateKey}';
+    return 'GetPrivateKeyMetadataRequest{privateKey: ${privateKey}}';
   }
 }
 
@@ -3137,7 +3137,7 @@ class ConvertPrivateKeyToPublicKeyRequest {
 
   @override
   String toString() {
-    return 'ConvertPrivateKeyToPublicKeyRequest{privateKey: $privateKey}';
+    return 'ConvertPrivateKeyToPublicKeyRequest{privateKey: ${privateKey}}';
   }
 }
 
@@ -3253,7 +3253,7 @@ class KeyOptions {
 
   @override
   String toString() {
-    return 'KeyOptions{algorithm: $algorithm, curve: $curve, hash: $hash, cipher: $cipher, compression: $compression, compressionLevel: $compressionLevel, rsaBits: $rsaBits}';
+    return 'KeyOptions{algorithm: ${algorithm}, curve: ${curve}, hash: ${hash}, cipher: ${cipher}, compression: ${compression}, compressionLevel: ${compressionLevel}, rsaBits: ${rsaBits}}';
   }
 }
 
@@ -3387,7 +3387,7 @@ class Options {
 
   @override
   String toString() {
-    return 'Options{name: $name, comment: $comment, email: $email, passphrase: $passphrase, keyOptions: $keyOptions}';
+    return 'Options{name: ${name}, comment: ${comment}, email: ${email}, passphrase: ${passphrase}, keyOptions: ${keyOptions}}';
   }
 }
 
@@ -3516,7 +3516,7 @@ class FileHints {
 
   @override
   String toString() {
-    return 'FileHints{isBinary: $isBinary, fileName: $fileName, modTime: $modTime}';
+    return 'FileHints{isBinary: ${isBinary}, fileName: ${fileName}, modTime: ${modTime}}';
   }
 }
 
@@ -3617,7 +3617,7 @@ class Entity {
 
   @override
   String toString() {
-    return 'Entity{publicKey: $publicKey, privateKey: $privateKey, passphrase: $passphrase}';
+    return 'Entity{publicKey: ${publicKey}, privateKey: ${privateKey}, passphrase: ${passphrase}}';
   }
 }
 
@@ -3714,7 +3714,7 @@ class StringResponse {
 
   @override
   String toString() {
-    return 'StringResponse{output: $output, error: $error}';
+    return 'StringResponse{output: ${output}, error: ${error}}';
   }
 }
 
@@ -3801,7 +3801,7 @@ class BytesResponse {
 
   @override
   String toString() {
-    return 'BytesResponse{output: $output, error: $error}';
+    return 'BytesResponse{output: ${output}, error: ${error}}';
   }
 }
 
@@ -3887,7 +3887,7 @@ class BoolResponse {
 
   @override
   String toString() {
-    return 'BoolResponse{output: $output, error: $error}';
+    return 'BoolResponse{output: ${output}, error: ${error}}';
   }
 }
 
@@ -3971,7 +3971,7 @@ class IntResponse {
 
   @override
   String toString() {
-    return 'IntResponse{output: $output, error: $error}';
+    return 'IntResponse{output: ${output}, error: ${error}}';
   }
 }
 
@@ -4057,7 +4057,7 @@ class ArmorDecodeResponse {
 
   @override
   String toString() {
-    return 'ArmorDecodeResponse{output: $output, error: $error}';
+    return 'ArmorDecodeResponse{output: ${output}, error: ${error}}';
   }
 }
 
@@ -4143,7 +4143,7 @@ class ArmorMetadata {
 
   @override
   String toString() {
-    return 'ArmorMetadata{body: $body, type: $type}';
+    return 'ArmorMetadata{body: ${body}, type: ${type}}';
   }
 }
 
@@ -4229,7 +4229,7 @@ class KeyPairResponse {
 
   @override
   String toString() {
-    return 'KeyPairResponse{output: $output, error: $error}';
+    return 'KeyPairResponse{output: ${output}, error: ${error}}';
   }
 }
 
@@ -4315,7 +4315,7 @@ class KeyPair {
 
   @override
   String toString() {
-    return 'KeyPair{publicKey: $publicKey, privateKey: $privateKey}';
+    return 'KeyPair{publicKey: ${publicKey}, privateKey: ${privateKey}}';
   }
 }
 
@@ -4403,7 +4403,7 @@ class PublicKeyMetadataResponse {
 
   @override
   String toString() {
-    return 'PublicKeyMetadataResponse{output: $output, error: $error}';
+    return 'PublicKeyMetadataResponse{output: ${output}, error: ${error}}';
   }
 }
 
@@ -4491,7 +4491,7 @@ class PrivateKeyMetadataResponse {
 
   @override
   String toString() {
-    return 'PrivateKeyMetadataResponse{output: $output, error: $error}';
+    return 'PrivateKeyMetadataResponse{output: ${output}, error: ${error}}';
   }
 }
 
@@ -4582,7 +4582,7 @@ class Identity {
 
   @override
   String toString() {
-    return 'Identity{id: $id, comment: $comment, email: $email, name: $name}';
+    return 'Identity{id: ${id}, comment: ${comment}, email: ${email}, name: ${name}}';
   }
 }
 
@@ -4710,7 +4710,7 @@ class PublicKeyMetadata {
 
   @override
   String toString() {
-    return 'PublicKeyMetadata{algorithm: $algorithm, keyId: $keyId, keyIdShort: $keyIdShort, creationTime: $creationTime, fingerprint: $fingerprint, keyIdNumeric: $keyIdNumeric, isSubKey: $isSubKey, canSign: $canSign, canEncrypt: $canEncrypt, identities: $identities, subKeys: $subKeys}';
+    return 'PublicKeyMetadata{algorithm: ${algorithm}, keyId: ${keyId}, keyIdShort: ${keyIdShort}, creationTime: ${creationTime}, fingerprint: ${fingerprint}, keyIdNumeric: ${keyIdNumeric}, isSubKey: ${isSubKey}, canSign: ${canSign}, canEncrypt: ${canEncrypt}, identities: ${identities}, subKeys: ${subKeys}}';
   }
 }
 
@@ -4913,7 +4913,7 @@ class PrivateKeyMetadata {
 
   @override
   String toString() {
-    return 'PrivateKeyMetadata{keyId: $keyId, keyIdShort: $keyIdShort, creationTime: $creationTime, fingerprint: $fingerprint, keyIdNumeric: $keyIdNumeric, isSubKey: $isSubKey, encrypted: $encrypted, canSign: $canSign, identities: $identities, subKeys: $subKeys}';
+    return 'PrivateKeyMetadata{keyId: ${keyId}, keyIdShort: ${keyIdShort}, creationTime: ${creationTime}, fingerprint: ${fingerprint}, keyIdNumeric: ${keyIdNumeric}, isSubKey: ${isSubKey}, encrypted: ${encrypted}, canSign: ${canSign}, identities: ${identities}, subKeys: ${subKeys}}';
   }
 }
 

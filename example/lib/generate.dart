@@ -1,8 +1,4 @@
-import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:openpgp/openpgp.dart' as OpenPGP;
 import 'package:openpgp_example/shared/button_widget.dart';
@@ -10,9 +6,9 @@ import 'package:openpgp_example/shared/title_widget.dart';
 
 class Generate extends StatefulWidget {
   const Generate({
-    Key? key,
+    super.key,
     required this.title,
-  }) : super(key: key);
+  });
 
   final String title;
 

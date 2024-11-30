@@ -1,9 +1,7 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:openpgp/openpgp.dart';
 import 'package:openpgp_example/encrypt_sign_decrypt_verify.dart';
@@ -28,10 +26,12 @@ void main() {
     debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
   }
 
-  runApp(new MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -95,7 +95,7 @@ XZxlM93SyqyGkXiHgVaRjpH4d/aLg0aH8COQRSVR/65Qe7mRc8pPHFHegxf5EsYF
 ''';
 
 class _MyAppState extends State<MyApp> {
-  KeyPair _defaultKeyPair = KeyPair(publicKey, privateKey);
+  final KeyPair _defaultKeyPair = KeyPair(publicKey, privateKey);
 
   @override
   void initState() {
@@ -109,10 +109,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    if (_defaultKeyPair == null) {
-      return Container();
-    }
-
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
