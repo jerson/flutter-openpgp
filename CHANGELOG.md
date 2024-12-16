@@ -1,3 +1,6 @@
+## 3.9.1
+- Moved flutter_lints to dev dependencies
+
 ## 3.9.0
 - Updates binaries
 - Add XCFramework for ios 
