@@ -19,6 +19,7 @@ class Binding {
 
   late ffi.DynamicLibrary _library;
 
+  @pragma('vm:entry-point')
   factory Binding() {
     return _singleton;
   }
