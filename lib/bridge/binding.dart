@@ -27,8 +27,8 @@ class Binding {
     _library = openLib();
   }
 
-  static void callBridge(IsolateArguments args) async {
-    var result = await Binding().call(args.name, args.payload);
+  static void callBridge(IsolateArguments args) {
+    var result = Binding().call(args.name, args.payload);
     args.port.send(result);
   }
 
@@ -64,7 +64,7 @@ class Binding {
     return completer.future;
   }
 
-  Future<Uint8List> call(String name, Uint8List payload) async {
+  Uint8List call(String name, Uint8List payload) {
     final callable = _library
         .lookup<ffi.NativeFunction<call_func>>(_callFuncName)
         .asFunction<Call>();
