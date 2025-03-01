@@ -638,3 +638,31 @@ class OpenPGP {
     return builder;
   }
 }
+
+extension OpenPGPSync on OpenPGP {
+  static bool available = OpenPGP.bindingEnabled;
+
+  static Uint8List _callSync(String name, Uint8List payload) {
+    if (available) {
+      return Binding().call(name, payload);
+    }
+    throw UnimplementedError();
+  }
+
+  static String decryptSync(
+      String message, String privateKey, String passphrase,
+      {KeyOptions? options, Entity? signed}) {
+    var requestBuilder = model.DecryptRequestObjectBuilder(
+      message: message,
+      privateKey: privateKey,
+      passphrase: passphrase,
+      options: OpenPGP._keyOptionsBuilder(options),
+      signed: OpenPGP._entityBuilder(signed),
+    );
+
+    return OpenPGP._stringResponse(
+        _callSync("decrypt", requestBuilder.toBytes()));
+  }
+
+  // and so on...
+}

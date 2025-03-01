@@ -14,6 +14,10 @@ class Binding {
     return Uint8List.fromList(''.codeUnits);
   }
 
+  Uint8List call(String name, Uint8List payload) {
+    return Uint8List.fromList(''.codeUnits);
+  }
+
   bool isSupported() {
     return false;
   }
