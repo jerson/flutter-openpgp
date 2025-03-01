@@ -39,19 +39,16 @@ extension OpenPGPSync on OpenPGP {
 
   static String encrypt(String message, String publicKey,
       {KeyOptions? options, Entity? signed, FileHints? fileHints}) {
-    print("step 1");
     var requestBuilder = model.EncryptRequestObjectBuilder(
       publicKey: publicKey,
       message: message,
       options: OpenPGPRequestBuilders.keyOptionsBuilder(options),
       signed: OpenPGPRequestBuilders.entityBuilder(signed),
       fileHints: OpenPGPRequestBuilders.fileHintsBuilder(fileHints),
-    ).toBytes();
-    print("step 2");
+    );
 
-    var eee = OpenPGPBridge.callSync("encrypt", requestBuilder);
-    print("step 3");
-    return OpenPGPResponseHandlers.stringResponse(eee);
+    return OpenPGPResponseHandlers.stringResponse(
+        OpenPGPBridge.callSync("encrypt", requestBuilder.toBytes()));
   }
 
   static Uint8List encryptBytes(Uint8List message, String publicKey,

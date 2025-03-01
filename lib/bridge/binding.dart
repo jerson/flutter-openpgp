@@ -28,8 +28,7 @@ class Binding {
   Binding._internal() {
     _library = openLib();
     _bridgeCall =
-        _library.lookupFunction<BridgeCallC, BridgeCallDart>(
-            _callFuncName);
+        _library.lookupFunction<BridgeCallC, BridgeCallDart>(_callFuncName);
   }
 
   static void _callBridge(IsolateArguments args) {
