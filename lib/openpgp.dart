@@ -1,9 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:openpgp/bridge/binding_stub.dart'
-    if (dart.library.io) 'package:openpgp/bridge/binding.dart'
-    if (dart.library.js) 'package:openpgp/bridge/binding_stub.dart';
 import 'package:openpgp/model/bridge_model_generated.dart' as model;
 import 'package:openpgp/openpgp_bridge.dart';
 import 'package:openpgp/mixin/openpgp_request_builders.dart';
