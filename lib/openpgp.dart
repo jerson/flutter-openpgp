@@ -181,9 +181,7 @@ class OpenPGP {
     return await _channel.invokeMethod(name, payload);
   }
 
-  static Future<Uint8List> _bytesResponse(
-      String name, Uint8List payload) async {
-    var data = await _call(name, payload);
+  static Uint8List _bytesResponse(Uint8List data) {
     var response = model.BytesResponse(data);
     if (response.error != null && response.error != "") {
       throw OpenPGPException(response.error!);
@@ -191,8 +189,7 @@ class OpenPGP {
     return Uint8List.fromList(response.output!);
   }
 
-  static Future<String> _stringResponse(String name, Uint8List payload) async {
-    var data = await _call(name, payload);
+  static String _stringResponse(Uint8List data) {
     var response = model.StringResponse(data);
     if (response.error != null && response.error != "") {
       throw OpenPGPException(response.error!);
@@ -200,8 +197,7 @@ class OpenPGP {
     return response.output!;
   }
 
-  static Future<bool> _boolResponse(String name, Uint8List payload) async {
-    var data = await _call(name, payload);
+  static bool _boolResponse(Uint8List data) {
     var response = model.BoolResponse(data);
     if (response.error != null && response.error != "") {
       throw OpenPGPException(response.error!);
@@ -209,9 +205,7 @@ class OpenPGP {
     return response.output;
   }
 
-  static Future<PublicKeyMetadata> _publicKeyMetadataResponse(
-      String name, Uint8List payload) async {
-    var data = await _call(name, payload);
+  static PublicKeyMetadata _publicKeyMetadataResponse(Uint8List data) {
     var response = model.PublicKeyMetadataResponse(data);
     if (response.error != null && response.error != "") {
       throw OpenPGPException(response.error!);
@@ -231,9 +225,7 @@ class OpenPGP {
     );
   }
 
-  static Future<PrivateKeyMetadata> _privateKeyMetadataResponse(
-      String name, Uint8List payload) async {
-    var data = await _call(name, payload);
+  static PrivateKeyMetadata _privateKeyMetadataResponse(Uint8List data) {
     var response = model.PrivateKeyMetadataResponse(data);
     if (response.error != null && response.error != "") {
       throw OpenPGPException(response.error!);
@@ -252,9 +244,7 @@ class OpenPGP {
     );
   }
 
-  static Future<ArmorMetadata> _armorDecodeResponse(
-      String name, Uint8List payload) async {
-    var data = await _call(name, payload);
+  static ArmorMetadata _armorDecodeResponse(Uint8List data) {
     var response = model.ArmorDecodeResponse(data);
     if (response.error != null && response.error != "") {
       throw OpenPGPException(response.error!);
@@ -306,7 +296,8 @@ class OpenPGP {
       signed: _entityBuilder(signed),
     );
 
-    return await _stringResponse("decrypt", requestBuilder.toBytes());
+    return await _call("decrypt", requestBuilder.toBytes())
+        .then(_stringResponse);
   }
 
   static Future<Uint8List> decryptBytes(
@@ -320,7 +311,8 @@ class OpenPGP {
       signed: _entityBuilder(signed),
     );
 
-    return await _bytesResponse("decryptBytes", requestBuilder.toBytes());
+    return await _call("decryptBytes", requestBuilder.toBytes())
+        .then(_bytesResponse);
   }
 
   static Future<String> encrypt(String message, String publicKey,
@@ -333,7 +325,8 @@ class OpenPGP {
       fileHints: _fileHintsBuilder(fileHints),
     );
 
-    return await _stringResponse("encrypt", requestBuilder.toBytes());
+    return await _call("encrypt", requestBuilder.toBytes())
+        .then(_stringResponse);
   }
 
   static Future<Uint8List> encryptBytes(Uint8List message, String publicKey,
@@ -346,7 +339,8 @@ class OpenPGP {
       fileHints: _fileHintsBuilder(fileHints),
     );
 
-    return await _bytesResponse("encryptBytes", requestBuilder.toBytes());
+    return await _call("encryptBytes", requestBuilder.toBytes())
+        .then(_bytesResponse);
   }
 
   static Future<String> sign(
@@ -359,7 +353,7 @@ class OpenPGP {
       options: _keyOptionsBuilder(options),
     );
 
-    return await _stringResponse("sign", requestBuilder.toBytes());
+    return await _call("sign", requestBuilder.toBytes()).then(_stringResponse);
   }
 
   static Future<Uint8List> signBytes(
@@ -372,7 +366,8 @@ class OpenPGP {
       options: _keyOptionsBuilder(options),
     );
 
-    return await _bytesResponse("signBytes", requestBuilder.toBytes());
+    return await _call("signBytes", requestBuilder.toBytes())
+        .then(_bytesResponse);
   }
 
   static Future<String> signBytesToString(
@@ -385,7 +380,8 @@ class OpenPGP {
       options: _keyOptionsBuilder(options),
     );
 
-    return await _stringResponse("signBytesToString", requestBuilder.toBytes());
+    return await _call("signBytesToString", requestBuilder.toBytes())
+        .then(_stringResponse);
   }
 
   static Future<String> signData(
@@ -398,7 +394,8 @@ class OpenPGP {
       options: _keyOptionsBuilder(options),
     );
 
-    return await _stringResponse("signData", requestBuilder.toBytes());
+    return await _call("signData", requestBuilder.toBytes())
+        .then(_stringResponse);
   }
 
   static Future<Uint8List> signDataBytes(
@@ -411,7 +408,8 @@ class OpenPGP {
       options: _keyOptionsBuilder(options),
     );
 
-    return await _bytesResponse("signDataBytes", requestBuilder.toBytes());
+    return await _call("signDataBytes", requestBuilder.toBytes())
+        .then(_bytesResponse);
   }
 
   static Future<String> signDataBytesToString(
@@ -424,8 +422,8 @@ class OpenPGP {
       options: _keyOptionsBuilder(options),
     );
 
-    return await _stringResponse(
-        "signDataBytesToString", requestBuilder.toBytes());
+    return await _call("signDataBytesToString", requestBuilder.toBytes())
+        .then(_stringResponse);
   }
 
   static Future<bool> verify(
@@ -436,7 +434,7 @@ class OpenPGP {
       signature: signature,
     );
 
-    return await _boolResponse("verify", requestBuilder.toBytes());
+    return await _call("verify", requestBuilder.toBytes()).then(_boolResponse);
   }
 
   static Future<bool> verifyBytes(
@@ -447,7 +445,8 @@ class OpenPGP {
       signature: signature,
     );
 
-    return await _boolResponse("verifyBytes", requestBuilder.toBytes());
+    return await _call("verifyBytes", requestBuilder.toBytes())
+        .then(_boolResponse);
   }
 
   static Future<bool> verifyData(String signature, String publicKey) async {
@@ -456,7 +455,8 @@ class OpenPGP {
       signature: signature,
     );
 
-    return await _boolResponse("verifyData", requestBuilder.toBytes());
+    return await _call("verifyData", requestBuilder.toBytes())
+        .then(_boolResponse);
   }
 
   static Future<bool> verifyDataBytes(
@@ -466,7 +466,8 @@ class OpenPGP {
       signature: signature,
     );
 
-    return await _boolResponse("verifyDataBytes", requestBuilder.toBytes());
+    return await _call("verifyDataBytes", requestBuilder.toBytes())
+        .then(_boolResponse);
   }
 
   static Future<String> decryptSymmetric(String message, String passphrase,
@@ -477,7 +478,8 @@ class OpenPGP {
       options: _keyOptionsBuilder(options),
     );
 
-    return await _stringResponse("decryptSymmetric", requestBuilder.toBytes());
+    return await _call("decryptSymmetric", requestBuilder.toBytes())
+        .then(_stringResponse);
   }
 
   static Future<Uint8List> decryptSymmetricBytes(
@@ -489,8 +491,8 @@ class OpenPGP {
       options: _keyOptionsBuilder(options),
     );
 
-    return await _bytesResponse(
-        "decryptSymmetricBytes", requestBuilder.toBytes());
+    return await _call("decryptSymmetricBytes", requestBuilder.toBytes())
+        .then(_bytesResponse);
   }
 
   static Future<String> encryptSymmetric(String message, String passphrase,
@@ -502,7 +504,8 @@ class OpenPGP {
       options: _keyOptionsBuilder(options),
     );
 
-    return await _stringResponse("encryptSymmetric", requestBuilder.toBytes());
+    return await _call("encryptSymmetric", requestBuilder.toBytes())
+        .then(_stringResponse);
   }
 
   static Future<Uint8List> encryptSymmetricBytes(
@@ -515,8 +518,8 @@ class OpenPGP {
       options: _keyOptionsBuilder(options),
     );
 
-    return await _bytesResponse(
-        "encryptSymmetricBytes", requestBuilder.toBytes());
+    return await _call("encryptSymmetricBytes", requestBuilder.toBytes())
+        .then(_bytesResponse);
   }
 
   static Future<String> armorEncode(String type, Uint8List data) async {
@@ -525,7 +528,8 @@ class OpenPGP {
       type: type,
     );
 
-    return await _stringResponse("armorEncode", requestBuilder.toBytes());
+    return await _call("armorEncode", requestBuilder.toBytes())
+        .then(_stringResponse);
   }
 
   static Future<ArmorMetadata> armorDecode(String message) async {
@@ -533,7 +537,8 @@ class OpenPGP {
       message: message,
     );
 
-    return await _armorDecodeResponse("armorDecode", requestBuilder.toBytes());
+    return await _call("armorDecode", requestBuilder.toBytes())
+        .then(_armorDecodeResponse);
   }
 
   static Future<String> convertPrivateKeyToPublicKey(String privateKey) async {
@@ -541,8 +546,8 @@ class OpenPGP {
       privateKey: privateKey,
     );
 
-    return await _stringResponse(
-        "convertPrivateKeyToPublicKey", requestBuilder.toBytes());
+    return await _call("convertPrivateKeyToPublicKey", requestBuilder.toBytes())
+        .then(_stringResponse);
   }
 
   static Future<PrivateKeyMetadata> getPrivateKeyMetadata(
@@ -551,8 +556,8 @@ class OpenPGP {
       privateKey: privateKey,
     );
 
-    return await _privateKeyMetadataResponse(
-        "getPrivateKeyMetadata", requestBuilder.toBytes());
+    return await _call("getPrivateKeyMetadata", requestBuilder.toBytes())
+        .then(_privateKeyMetadataResponse);
   }
 
   static Future<PublicKeyMetadata> getPublicKeyMetadata(
@@ -561,8 +566,8 @@ class OpenPGP {
       publicKey: publicKey,
     );
 
-    return await _publicKeyMetadataResponse(
-        "getPublicKeyMetadata", requestBuilder.toBytes());
+    return await _call("getPublicKeyMetadata", requestBuilder.toBytes())
+        .then(_publicKeyMetadataResponse);
   }
 
   static Future<KeyPair> generate({Options? options}) async {
