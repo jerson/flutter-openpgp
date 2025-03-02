@@ -21,8 +21,8 @@ class OpenpgpPlugin {
     channel.setMethodCallHandler(instance.handleMethodCall);
   }
 
-  Future<dynamic> handleMethodCall(MethodCall call) async {
-    return await bridgeCall(call.method, call.arguments);
+  Future<dynamic> handleMethodCall(MethodCall call) {
+    return bridgeCall(call.method, call.arguments);
   }
 
   void listen() async {
@@ -44,7 +44,7 @@ class OpenpgpPlugin {
     worker.onmessage = onMessage.toJS;
   }
 
-  Future<Uint8List> bridgeCall(String name, Uint8List? /*!*/ request) async {
+  Future<Uint8List> bridgeCall(String name, Uint8List? /*!*/ request) {
     _counter++;
     var id = _counter.toString();
     var completer = Completer<Uint8List>();

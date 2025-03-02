@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:openpgp/bridge/binding_stub.dart'
-    if (dart.library.io) 'package:openpgp/bridge/binding.dart'
-    if (dart.library.js) 'package:openpgp/bridge/binding_stub.dart';
 import 'package:openpgp/model/bridge_model_generated.dart' as model;
+import 'package:openpgp/openpgp_bridge.dart';
+import 'package:openpgp/mixin/openpgp_request_builders.dart';
+import 'package:openpgp/mixin/openpgp_response_handlers.dart';
 
 class OpenPGPException implements Exception {
   String cause;
@@ -170,121 +170,7 @@ class ArmorMetadata {
   ArmorMetadata(this.type, this.body);
 }
 
-class OpenPGP {
-  static const MethodChannel _channel = MethodChannel('openpgp');
-  static bool bindingEnabled = Binding().isSupported();
-
-  static Future<Uint8List> _call(String name, Uint8List payload) async {
-    if (bindingEnabled) {
-      return await Binding().callAsync(name, payload);
-    }
-    return await _channel.invokeMethod(name, payload);
-  }
-
-  static Uint8List _bytesResponse(Uint8List data) {
-    var response = model.BytesResponse(data);
-    if (response.error != null && response.error != "") {
-      throw OpenPGPException(response.error!);
-    }
-    return Uint8List.fromList(response.output!);
-  }
-
-  static String _stringResponse(Uint8List data) {
-    var response = model.StringResponse(data);
-    if (response.error != null && response.error != "") {
-      throw OpenPGPException(response.error!);
-    }
-    return response.output!;
-  }
-
-  static bool _boolResponse(Uint8List data) {
-    var response = model.BoolResponse(data);
-    if (response.error != null && response.error != "") {
-      throw OpenPGPException(response.error!);
-    }
-    return response.output;
-  }
-
-  static PublicKeyMetadata _publicKeyMetadataResponse(Uint8List data) {
-    var response = model.PublicKeyMetadataResponse(data);
-    if (response.error != null && response.error != "") {
-      throw OpenPGPException(response.error!);
-    }
-    var metadata = response.output!;
-    return PublicKeyMetadata(
-      metadata.algorithm!,
-      metadata.keyId!,
-      metadata.keyIdShort!,
-      metadata.creationTime!,
-      metadata.fingerprint!,
-      metadata.keyIdNumeric!,
-      metadata.isSubKey,
-      metadata.canSign,
-      metadata.canEncrypt,
-      _identities(metadata.identities),
-    );
-  }
-
-  static PrivateKeyMetadata _privateKeyMetadataResponse(Uint8List data) {
-    var response = model.PrivateKeyMetadataResponse(data);
-    if (response.error != null && response.error != "") {
-      throw OpenPGPException(response.error!);
-    }
-    var metadata = response.output!;
-    return PrivateKeyMetadata(
-      metadata.keyId!,
-      metadata.keyIdShort!,
-      metadata.creationTime!,
-      metadata.fingerprint!,
-      metadata.keyIdNumeric!,
-      metadata.isSubKey,
-      metadata.encrypted,
-      metadata.canSign,
-      _identities(metadata.identities),
-    );
-  }
-
-  static ArmorMetadata _armorDecodeResponse(Uint8List data) {
-    var response = model.ArmorDecodeResponse(data);
-    if (response.error != null && response.error != "") {
-      throw OpenPGPException(response.error!);
-    }
-    var metadata = response.output!;
-    return ArmorMetadata(
-      metadata.type!,
-      Uint8List.fromList(metadata.body!),
-    );
-  }
-
-  static List<Identity> _identities(List<model.Identity>? identities) {
-    List<Identity> list = [];
-    if (identities == null) {
-      return list;
-    }
-
-    for (var element in identities) {
-      list.add(Identity(
-        element.id!,
-        element.name!,
-        element.comment!,
-        element.email!,
-      ));
-    }
-
-    return list;
-  }
-
-  static Future<KeyPair> _keyPairResponse(
-      String name, Uint8List payload) async {
-    var data = await _call(name, payload);
-    var response = model.KeyPairResponse(data);
-    if (response.error != null && response.error != "") {
-      throw OpenPGPException(response.error!);
-    }
-    var keyPair = response.output!;
-    return KeyPair(keyPair.publicKey!, keyPair.privateKey!);
-  }
-
+class OpenPGP with OpenPGPResponseHandlers, OpenPGPRequestBuilders {
   static Future<String> decrypt(
       String message, String privateKey, String passphrase,
       {KeyOptions? options, Entity? signed}) async {
@@ -292,12 +178,12 @@ class OpenPGP {
       message: message,
       privateKey: privateKey,
       passphrase: passphrase,
-      options: _keyOptionsBuilder(options),
-      signed: _entityBuilder(signed),
+      options: OpenPGPRequestBuilders.keyOptionsBuilder(options),
+      signed: OpenPGPRequestBuilders.entityBuilder(signed),
     );
 
-    return await _call("decrypt", requestBuilder.toBytes())
-        .then(_stringResponse);
+    return OpenPGPBridge.call("decrypt", requestBuilder.toBytes())
+        .then(OpenPGPResponseHandlers.stringResponse);
   }
 
   static Future<Uint8List> decryptBytes(
@@ -307,12 +193,12 @@ class OpenPGP {
       message: message,
       privateKey: privateKey,
       passphrase: passphrase,
-      options: _keyOptionsBuilder(options),
-      signed: _entityBuilder(signed),
+      options: OpenPGPRequestBuilders.keyOptionsBuilder(options),
+      signed: OpenPGPRequestBuilders.entityBuilder(signed),
     );
 
-    return await _call("decryptBytes", requestBuilder.toBytes())
-        .then(_bytesResponse);
+    return OpenPGPBridge.call("decryptBytes", requestBuilder.toBytes())
+        .then(OpenPGPResponseHandlers.bytesResponse);
   }
 
   static Future<String> encrypt(String message, String publicKey,
@@ -320,13 +206,13 @@ class OpenPGP {
     var requestBuilder = model.EncryptRequestObjectBuilder(
       publicKey: publicKey,
       message: message,
-      options: _keyOptionsBuilder(options),
-      signed: _entityBuilder(signed),
-      fileHints: _fileHintsBuilder(fileHints),
+      options: OpenPGPRequestBuilders.keyOptionsBuilder(options),
+      signed: OpenPGPRequestBuilders.entityBuilder(signed),
+      fileHints: OpenPGPRequestBuilders.fileHintsBuilder(fileHints),
     );
 
-    return await _call("encrypt", requestBuilder.toBytes())
-        .then(_stringResponse);
+    return OpenPGPBridge.call("encrypt", requestBuilder.toBytes())
+        .then(OpenPGPResponseHandlers.stringResponse);
   }
 
   static Future<Uint8List> encryptBytes(Uint8List message, String publicKey,
@@ -334,13 +220,13 @@ class OpenPGP {
     var requestBuilder = model.EncryptBytesRequestObjectBuilder(
       publicKey: publicKey,
       message: message,
-      options: _keyOptionsBuilder(options),
-      signed: _entityBuilder(signed),
-      fileHints: _fileHintsBuilder(fileHints),
+      options: OpenPGPRequestBuilders.keyOptionsBuilder(options),
+      signed: OpenPGPRequestBuilders.entityBuilder(signed),
+      fileHints: OpenPGPRequestBuilders.fileHintsBuilder(fileHints),
     );
 
-    return await _call("encryptBytes", requestBuilder.toBytes())
-        .then(_bytesResponse);
+    return OpenPGPBridge.call("encryptBytes", requestBuilder.toBytes())
+        .then(OpenPGPResponseHandlers.bytesResponse);
   }
 
   static Future<String> sign(
@@ -350,10 +236,11 @@ class OpenPGP {
       message: message,
       passphrase: passphrase,
       privateKey: privateKey,
-      options: _keyOptionsBuilder(options),
+      options: OpenPGPRequestBuilders.keyOptionsBuilder(options),
     );
 
-    return await _call("sign", requestBuilder.toBytes()).then(_stringResponse);
+    return OpenPGPBridge.call("sign", requestBuilder.toBytes())
+        .then(OpenPGPResponseHandlers.stringResponse);
   }
 
   static Future<Uint8List> signBytes(
@@ -363,11 +250,11 @@ class OpenPGP {
       message: message,
       passphrase: passphrase,
       privateKey: privateKey,
-      options: _keyOptionsBuilder(options),
+      options: OpenPGPRequestBuilders.keyOptionsBuilder(options),
     );
 
-    return await _call("signBytes", requestBuilder.toBytes())
-        .then(_bytesResponse);
+    return OpenPGPBridge.call("signBytes", requestBuilder.toBytes())
+        .then(OpenPGPResponseHandlers.bytesResponse);
   }
 
   static Future<String> signBytesToString(
@@ -377,11 +264,11 @@ class OpenPGP {
       message: message,
       passphrase: passphrase,
       privateKey: privateKey,
-      options: _keyOptionsBuilder(options),
+      options: OpenPGPRequestBuilders.keyOptionsBuilder(options),
     );
 
-    return await _call("signBytesToString", requestBuilder.toBytes())
-        .then(_stringResponse);
+    return OpenPGPBridge.call("signBytesToString", requestBuilder.toBytes())
+        .then(OpenPGPResponseHandlers.stringResponse);
   }
 
   static Future<String> signData(
@@ -391,11 +278,11 @@ class OpenPGP {
       message: message,
       passphrase: passphrase,
       privateKey: privateKey,
-      options: _keyOptionsBuilder(options),
+      options: OpenPGPRequestBuilders.keyOptionsBuilder(options),
     );
 
-    return await _call("signData", requestBuilder.toBytes())
-        .then(_stringResponse);
+    return OpenPGPBridge.call("signData", requestBuilder.toBytes())
+        .then(OpenPGPResponseHandlers.stringResponse);
   }
 
   static Future<Uint8List> signDataBytes(
@@ -405,11 +292,11 @@ class OpenPGP {
       message: message,
       passphrase: passphrase,
       privateKey: privateKey,
-      options: _keyOptionsBuilder(options),
+      options: OpenPGPRequestBuilders.keyOptionsBuilder(options),
     );
 
-    return await _call("signDataBytes", requestBuilder.toBytes())
-        .then(_bytesResponse);
+    return OpenPGPBridge.call("signDataBytes", requestBuilder.toBytes())
+        .then(OpenPGPResponseHandlers.bytesResponse);
   }
 
   static Future<String> signDataBytesToString(
@@ -419,11 +306,11 @@ class OpenPGP {
       message: message,
       passphrase: passphrase,
       privateKey: privateKey,
-      options: _keyOptionsBuilder(options),
+      options: OpenPGPRequestBuilders.keyOptionsBuilder(options),
     );
 
-    return await _call("signDataBytesToString", requestBuilder.toBytes())
-        .then(_stringResponse);
+    return OpenPGPBridge.call("signDataBytesToString", requestBuilder.toBytes())
+        .then(OpenPGPResponseHandlers.stringResponse);
   }
 
   static Future<bool> verify(
@@ -434,7 +321,8 @@ class OpenPGP {
       signature: signature,
     );
 
-    return await _call("verify", requestBuilder.toBytes()).then(_boolResponse);
+    return OpenPGPBridge.call("verify", requestBuilder.toBytes())
+        .then(OpenPGPResponseHandlers.boolResponse);
   }
 
   static Future<bool> verifyBytes(
@@ -445,8 +333,8 @@ class OpenPGP {
       signature: signature,
     );
 
-    return await _call("verifyBytes", requestBuilder.toBytes())
-        .then(_boolResponse);
+    return OpenPGPBridge.call("verifyBytes", requestBuilder.toBytes())
+        .then(OpenPGPResponseHandlers.boolResponse);
   }
 
   static Future<bool> verifyData(String signature, String publicKey) async {
@@ -455,8 +343,8 @@ class OpenPGP {
       signature: signature,
     );
 
-    return await _call("verifyData", requestBuilder.toBytes())
-        .then(_boolResponse);
+    return OpenPGPBridge.call("verifyData", requestBuilder.toBytes())
+        .then(OpenPGPResponseHandlers.boolResponse);
   }
 
   static Future<bool> verifyDataBytes(
@@ -466,8 +354,8 @@ class OpenPGP {
       signature: signature,
     );
 
-    return await _call("verifyDataBytes", requestBuilder.toBytes())
-        .then(_boolResponse);
+    return OpenPGPBridge.call("verifyDataBytes", requestBuilder.toBytes())
+        .then(OpenPGPResponseHandlers.boolResponse);
   }
 
   static Future<String> decryptSymmetric(String message, String passphrase,
@@ -475,11 +363,11 @@ class OpenPGP {
     var requestBuilder = model.DecryptSymmetricRequestObjectBuilder(
       message: message,
       passphrase: passphrase,
-      options: _keyOptionsBuilder(options),
+      options: OpenPGPRequestBuilders.keyOptionsBuilder(options),
     );
 
-    return await _call("decryptSymmetric", requestBuilder.toBytes())
-        .then(_stringResponse);
+    return OpenPGPBridge.call("decryptSymmetric", requestBuilder.toBytes())
+        .then(OpenPGPResponseHandlers.stringResponse);
   }
 
   static Future<Uint8List> decryptSymmetricBytes(
@@ -488,11 +376,11 @@ class OpenPGP {
     var requestBuilder = model.DecryptSymmetricBytesRequestObjectBuilder(
       message: message,
       passphrase: passphrase,
-      options: _keyOptionsBuilder(options),
+      options: OpenPGPRequestBuilders.keyOptionsBuilder(options),
     );
 
-    return await _call("decryptSymmetricBytes", requestBuilder.toBytes())
-        .then(_bytesResponse);
+    return OpenPGPBridge.call("decryptSymmetricBytes", requestBuilder.toBytes())
+        .then(OpenPGPResponseHandlers.bytesResponse);
   }
 
   static Future<String> encryptSymmetric(String message, String passphrase,
@@ -500,12 +388,12 @@ class OpenPGP {
     var requestBuilder = model.EncryptSymmetricRequestObjectBuilder(
       message: message,
       passphrase: passphrase,
-      fileHints: _fileHintsBuilder(fileHints),
-      options: _keyOptionsBuilder(options),
+      fileHints: OpenPGPRequestBuilders.fileHintsBuilder(fileHints),
+      options: OpenPGPRequestBuilders.keyOptionsBuilder(options),
     );
 
-    return await _call("encryptSymmetric", requestBuilder.toBytes())
-        .then(_stringResponse);
+    return OpenPGPBridge.call("encryptSymmetric", requestBuilder.toBytes())
+        .then(OpenPGPResponseHandlers.stringResponse);
   }
 
   static Future<Uint8List> encryptSymmetricBytes(
@@ -514,12 +402,12 @@ class OpenPGP {
     var requestBuilder = model.EncryptSymmetricBytesRequestObjectBuilder(
       message: message,
       passphrase: passphrase,
-      fileHints: _fileHintsBuilder(fileHints),
-      options: _keyOptionsBuilder(options),
+      fileHints: OpenPGPRequestBuilders.fileHintsBuilder(fileHints),
+      options: OpenPGPRequestBuilders.keyOptionsBuilder(options),
     );
 
-    return await _call("encryptSymmetricBytes", requestBuilder.toBytes())
-        .then(_bytesResponse);
+    return OpenPGPBridge.call("encryptSymmetricBytes", requestBuilder.toBytes())
+        .then(OpenPGPResponseHandlers.bytesResponse);
   }
 
   static Future<String> armorEncode(String type, Uint8List data) async {
@@ -528,8 +416,8 @@ class OpenPGP {
       type: type,
     );
 
-    return await _call("armorEncode", requestBuilder.toBytes())
-        .then(_stringResponse);
+    return OpenPGPBridge.call("armorEncode", requestBuilder.toBytes())
+        .then(OpenPGPResponseHandlers.stringResponse);
   }
 
   static Future<ArmorMetadata> armorDecode(String message) async {
@@ -537,8 +425,8 @@ class OpenPGP {
       message: message,
     );
 
-    return await _call("armorDecode", requestBuilder.toBytes())
-        .then(_armorDecodeResponse);
+    return OpenPGPBridge.call("armorDecode", requestBuilder.toBytes())
+        .then(OpenPGPResponseHandlers.armorDecodeResponse);
   }
 
   static Future<String> convertPrivateKeyToPublicKey(String privateKey) async {
@@ -546,8 +434,9 @@ class OpenPGP {
       privateKey: privateKey,
     );
 
-    return await _call("convertPrivateKeyToPublicKey", requestBuilder.toBytes())
-        .then(_stringResponse);
+    return OpenPGPBridge.call(
+            "convertPrivateKeyToPublicKey", requestBuilder.toBytes())
+        .then(OpenPGPResponseHandlers.stringResponse);
   }
 
   static Future<PrivateKeyMetadata> getPrivateKeyMetadata(
@@ -556,8 +445,8 @@ class OpenPGP {
       privateKey: privateKey,
     );
 
-    return await _call("getPrivateKeyMetadata", requestBuilder.toBytes())
-        .then(_privateKeyMetadataResponse);
+    return OpenPGPBridge.call("getPrivateKeyMetadata", requestBuilder.toBytes())
+        .then(OpenPGPResponseHandlers.privateKeyMetadataResponse);
   }
 
   static Future<PublicKeyMetadata> getPublicKeyMetadata(
@@ -566,103 +455,15 @@ class OpenPGP {
       publicKey: publicKey,
     );
 
-    return await _call("getPublicKeyMetadata", requestBuilder.toBytes())
-        .then(_publicKeyMetadataResponse);
+    return OpenPGPBridge.call("getPublicKeyMetadata", requestBuilder.toBytes())
+        .then(OpenPGPResponseHandlers.publicKeyMetadataResponse);
   }
 
   static Future<KeyPair> generate({Options? options}) async {
     var requestBuilder = model.GenerateRequestObjectBuilder(
-      options: _optionsBuilder(options),
+      options: OpenPGPRequestBuilders.optionsBuilder(options),
     );
-    return await _keyPairResponse("generate", requestBuilder.toBytes());
+    return OpenPGPBridge.call("generate", requestBuilder.toBytes())
+        .then(OpenPGPResponseHandlers.keyPairResponse);
   }
-
-  static model.KeyOptionsObjectBuilder? _keyOptionsBuilder(KeyOptions? input) {
-    model.KeyOptionsObjectBuilder? builder;
-    if (input != null) {
-      builder = model.KeyOptionsObjectBuilder(
-        cipher: input.cipher != null
-            ? model.Cipher.values[input.cipher!.index]
-            : null,
-        compression: input.compression != null
-            ? model.Compression.values[input.compression!.index]
-            : null,
-        algorithm: input.algorithm != null
-            ? model.Algorithm.values[input.algorithm!.index]
-            : null,
-        curve:
-            input.curve != null ? model.Curve.values[input.curve!.index] : null,
-        compressionLevel: input.compressionLevel ?? 0,
-        hash: input.hash != null ? model.Hash.values[input.hash!.index] : null,
-        rsaBits: input.rsaBits ?? 0,
-      );
-    }
-    return builder;
-  }
-
-  static model.OptionsObjectBuilder? _optionsBuilder(Options? input) {
-    model.OptionsObjectBuilder? builder;
-    if (input != null) {
-      builder = model.OptionsObjectBuilder(
-        passphrase: input.passphrase ?? "",
-        comment: input.comment ?? "",
-        email: input.email ?? "",
-        name: input.name ?? "",
-        keyOptions: _keyOptionsBuilder(input.keyOptions),
-      );
-    }
-    return builder;
-  }
-
-  static model.EntityObjectBuilder? _entityBuilder(Entity? input) {
-    model.EntityObjectBuilder? builder;
-    if (input != null) {
-      builder = model.EntityObjectBuilder(
-        passphrase: input.passphrase ?? "",
-        privateKey: input.privateKey ?? "",
-        publicKey: input.publicKey ?? "",
-      );
-    }
-    return builder;
-  }
-
-  static model.FileHintsObjectBuilder? _fileHintsBuilder(FileHints? input) {
-    model.FileHintsObjectBuilder? builder;
-    if (input != null) {
-      builder = model.FileHintsObjectBuilder(
-        fileName: input.fileName ?? "",
-        isBinary: input.isBinary ?? false,
-        modTime: input.modTime ?? "",
-      );
-    }
-    return builder;
-  }
-}
-
-extension OpenPGPSync on OpenPGP {
-  static bool available = OpenPGP.bindingEnabled;
-
-  static Uint8List _callSync(String name, Uint8List payload) {
-    if (available) {
-      return Binding().call(name, payload);
-    }
-    throw UnimplementedError();
-  }
-
-  static String decryptSync(
-      String message, String privateKey, String passphrase,
-      {KeyOptions? options, Entity? signed}) {
-    var requestBuilder = model.DecryptRequestObjectBuilder(
-      message: message,
-      privateKey: privateKey,
-      passphrase: passphrase,
-      options: OpenPGP._keyOptionsBuilder(options),
-      signed: OpenPGP._entityBuilder(signed),
-    );
-
-    return OpenPGP._stringResponse(
-        _callSync("decrypt", requestBuilder.toBytes()));
-  }
-
-  // and so on...
 }
