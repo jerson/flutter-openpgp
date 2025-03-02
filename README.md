@@ -16,15 +16,8 @@ Library for use openPGP with support for android, ios, macos, windows, linux and
 - [OpenPGP](#openpgp)
   - [Contents](#contents)
   - [Usage](#usage)
-  - [Generate methods](#generate-methods)
-    - [Encrypt methods](#encrypt-methods)
-    - [Decrypt methods](#decrypt-methods)
-    - [Sign methods](#sign-methods)
-    - [Verify methods](#verify-methods)
-    - [Encode methods](#encode-methods)
-    - [Decode methods](#decode-methods)
-    - [Metadata methods](#metadata-methods)
-    - [Convert methods](#convert-methods)
+    - [Async methods](#async-methods)
+    - [Sync methods](#sync-methods)
   - [Setup](#setup)
     - [Android](#android)
     - [iOS](#ios)
@@ -39,7 +32,9 @@ Library for use openPGP with support for android, ios, macos, windows, linux and
 
 ## Usage
 
-## Generate methods
+### Async methods
+
+#### Generate methods
 ```dart
 
 void main() async {
@@ -53,7 +48,7 @@ void main() async {
 }
 ```
 
-### Encrypt methods
+#### Encrypt methods
 
 ```dart
 
@@ -69,7 +64,7 @@ void main() async {
 
 ```
 
-### Decrypt methods
+#### Decrypt methods
 
 ```dart
 
@@ -84,7 +79,7 @@ void main() async {
 }
 ```
 
-### Sign methods
+#### Sign methods
 
 ```dart
 
@@ -102,7 +97,7 @@ void main() async {
 
 ```
 
-### Verify methods
+#### Verify methods
 
 ```dart
 
@@ -120,7 +115,7 @@ void main() async {
 
 ```
 
-### Encode methods
+#### Encode methods
 
 ```dart
 
@@ -131,7 +126,7 @@ void main() async {
 }
 
 ```
-### Decode methods
+#### Decode methods
 
 ```dart
 
@@ -142,7 +137,7 @@ void main() async {
 ```
 
 
-### Metadata methods
+#### Metadata methods
 
 ```dart
 
@@ -154,12 +149,139 @@ void main() async {
 ```
 
 
-### Convert methods
+#### Convert methods
 
 ```dart
 
 void main() async {
     var result = await OpenPGP.convertPrivateKeyToPublicKey("[privateKey here]");
+}
+
+```
+
+### Sync methods
+
+#### Generate methods
+```dart
+
+void main() {
+    var keyOptions = KeyOptions()..rsaBits = 2048;
+    var keyPair = OpenPGPSync.generate(
+            options: Options()
+              ..name = 'test'
+              ..email = 'test@test.com'
+              ..passphrase = passphrase
+              ..keyOptions = keyOptions);
+}
+```
+
+#### Encrypt methods
+
+```dart
+
+void main() async {
+    var bytesSample = Uint8List.fromList('data'.codeUnits);
+    
+    var result = OpenPGPSync.encrypt("text","[publicKey here]");
+    var result = OpenPGPSync.encryptSymmetric("text","[passphrase here]");
+    var result = OpenPGPSync.encryptBytes(bytesSample,"[publicKey here]");
+    var result = OpenPGPSync.encryptSymmetricBytes(bytesSample,"[passphrase here]");
+
+}
+
+```
+
+#### Decrypt methods
+
+```dart
+
+void main() async {
+    var bytesSample = Uint8List.fromList('data'.codeUnits);
+    
+    var result = OpenPGPSync.decrypt("text encrypted","[privateKey here]","[passphrase here]");
+    var result = OpenPGPSync.decryptSymmetric("text encrypted","[passphrase here]");
+    var result = OpenPGPSync.decryptBytes(bytesSample,"[privateKey here]","[passphrase here]");
+    var result = OpenPGPSync.decryptSymmetricBytes(bytesSample,"[passphrase here]");
+
+}
+```
+
+#### Sign methods
+
+```dart
+
+void main() async {
+    var bytesSample = Uint8List.fromList('data'.codeUnits);
+    
+    var result = OpenPGPSync.sign("text","[privateKey here]","[passphrase here]");
+    var result = OpenPGPSync.signBytesToString(bytesSample,"[privateKey here]","[passphrase here]");
+    
+    // sign including data
+    var result = OpenPGPSync.signData("text","[privateKey here]","[passphrase here]");
+    var result = OpenPGPSync.signDataBytesToString(bytesSample,"[privateKey here]","[passphrase here]");
+
+}
+
+```
+
+#### Verify methods
+
+```dart
+
+void main() async {
+    var bytesSample = Uint8List.fromList('data'.codeUnits);
+    
+    var result = OpenPGPSync.verify("text signed","text","[publicKey here]");
+    var result = OpenPGPSync.verifyBytes("text signed", bytesSample,"[publicKey here]");
+    
+    // verify signed with data
+    var result = OpenPGPSync.verifyData("text signed","[publicKey here]");
+    var result = OpenPGPSync.verifyDataBytes(bytesSample,"[publicKey here]");
+
+}
+
+```
+
+#### Encode methods
+
+```dart
+
+void main() async {
+    var bytesSample = Uint8List.fromList('data'.codeUnits);
+    
+    var result = OpenPGPSync.armorEncode("PGP MESSAGE", bytesSample);
+}
+
+```
+#### Decode methods
+
+```dart
+
+void main() async {    
+    var result = OpenPGPSync.armorDecode("message here");
+}
+
+```
+
+
+#### Metadata methods
+
+```dart
+
+void main() async {
+    var result = OpenPGPSync.getPrivateKeyMetadata("[privateKey here]");
+    var result = OpenPGPSync.getPublicKeyMetadata("[publicKey here]");
+}
+
+```
+
+
+#### Convert methods
+
+```dart
+
+void main() async {
+    var result = OpenPGPSync.convertPrivateKeyToPublicKey("[privateKey here]");
 }
 
 ```

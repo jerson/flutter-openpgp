@@ -1,3 +1,6 @@
+## 3.10.0
+- Add OpenPGPSync methods for all Platforms but web
+
 ## 3.9.1
 - Moved flutter_lints to dev dependencies
 
