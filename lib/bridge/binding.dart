@@ -31,6 +31,7 @@ class Binding {
         _library.lookupFunction<BridgeCallC, BridgeCallDart>(_callFuncName);
   }
 
+  @pragma('vm:entry-point')
   static void _callBridge(IsolateArguments args) {
     var result = _instance.call(args.name, args.payload);
     args.port.send(result);
