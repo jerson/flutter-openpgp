@@ -81,6 +81,8 @@ extern "C" {
 #endif
 
 extern __declspec(dllexport) BytesReturn* OpenPGPBridgeCall(char* name, void* payload, int payloadSize);
+extern __declspec(dllexport) BytesReturn* OpenPGPEncodeText(char* input, char* encoding);
+extern __declspec(dllexport) char* OpenPGPDecodeText(void* input, int size, char* encoding, int fatal, int ignoreBOM, int stream);
 
 #ifdef __cplusplus
 }

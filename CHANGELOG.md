@@ -1,3 +1,6 @@
+## 3.10.1
+- Updates binaries + Updated Android SDK to r28 for 16KB support
+
 ## 3.10.0
 - Add OpenPGPSync methods for all Platforms but web
 
