@@ -1,3 +1,6 @@
+## 3.10.2
+- Update iOS podspec to avoid excluding the simulator SDK
+
 ## 3.10.1
 - Updates binaries + Updated Android SDK to r28 for 16KB support
 
