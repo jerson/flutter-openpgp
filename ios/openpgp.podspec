@@ -21,12 +21,14 @@ Pod::Spec.new do |s|
   s.platform = :ios, '12.0'
   s.vendored_frameworks = 'Openpgp.xcframework'
   # Flutter.framework does not contain a i386 slice. Only x86_64 simulators are supported.
-
+  s.xcconfig = {
+    'OTHER_LDFLAGS[sdk=iphoneos*]' => "-force_load '#{framework_path}/ios-arm64/libopenpgp_bridge.a'",
+    'OTHER_LDFLAGS[sdk=iphonesimulator*]' => "-force_load '#{framework_path}/ios-arm64_x86_64-simulator/libopenpgp_bridge.a'",
+    'OTHER_LDFLAGS[sdk=maccatalyst*]' => "-force_load '#{framework_path}/ios-arm64_x86_64-maccatalyst/libopenpgp_bridge.a'"
+  }
   s.pod_target_xcconfig = { 
     'DEFINES_MODULE' => 'YES', 
-    'OTHER_LDFLAGS[sdk=iphoneos*]' => "-force_load #{framework_path}/ios-arm64/libopenpgp_bridge.a",
-    'OTHER_LDFLAGS[sdk=iphonesimulator*]' => "-force_load #{framework_path}/ios-arm64_x86_64-simulator/libopenpgp_bridge.a",
-    'OTHER_LDFLAGS[sdk=maccatalyst*]' => "-force_load #{framework_path}/ios-arm64_x86_64-maccatalyst/libopenpgp_bridge.a"
+    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386',
   }
   s.swift_version = '5.0'
 
