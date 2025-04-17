@@ -1,3 +1,6 @@
+## 3.10.3
+- Update iOS podspec to use xcconfig for shared objects
+
 ## 3.10.2
 - Update iOS podspec to avoid excluding the simulator SDK
 
