@@ -1,0 +1,4 @@
+framework module "OpenPGPBridge" {
+	header "libopenpgp_bridge.h"
+  export *
+}

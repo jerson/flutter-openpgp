@@ -2,11 +2,10 @@
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
 # Run `pod lib lint openpgp.podspec' to validate before publishing.
 #
-framework_path = File.join(__dir__, "Openpgp.xcframework").gsub(/ /, '\ ')
 
 Pod::Spec.new do |s|
   s.name             = 'openpgp'
-  s.version          = '0.6.0'
+  s.version          = '0.7.0'
   s.summary          = 'library for use openPGP.'
   s.description      = <<-DESC
   library for use openPGP.
@@ -19,17 +18,15 @@ Pod::Spec.new do |s|
 
   s.dependency 'Flutter'
   s.platform = :ios, '12.0'
-  s.vendored_frameworks = 'Openpgp.xcframework'
+  
+  s.vendored_frameworks = 'OpenPGPBridge.xcframework'
+  s.static_framework = true
   # Flutter.framework does not contain a i386 slice. Only x86_64 simulators are supported.
-  s.xcconfig = {
-    'OTHER_LDFLAGS[sdk=iphoneos*]' => "-force_load '#{framework_path}/ios-arm64/libopenpgp_bridge.a'",
-    'OTHER_LDFLAGS[sdk=iphonesimulator*]' => "-force_load '#{framework_path}/ios-arm64_x86_64-simulator/libopenpgp_bridge.a'",
-    'OTHER_LDFLAGS[sdk=maccatalyst*]' => "-force_load '#{framework_path}/ios-arm64_x86_64-maccatalyst/libopenpgp_bridge.a'"
+  s.pod_target_xcconfig = {
+    'DEFINES_MODULE' => 'YES',
+    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386'
   }
-  s.pod_target_xcconfig = { 
-    'DEFINES_MODULE' => 'YES', 
-    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386',
-  }
+
   s.swift_version = '5.0'
 
 end

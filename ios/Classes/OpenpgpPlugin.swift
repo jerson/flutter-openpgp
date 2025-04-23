@@ -1,5 +1,6 @@
 import Flutter
 import UIKit
+import OpenPGPBridge
 
 public class OpenpgpPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
@@ -12,6 +13,9 @@ public class OpenpgpPlugin: NSObject, FlutterPlugin {
     switch call.method {
     case "getPlatformVersion":
       result("iOS " + UIDevice.current.systemVersion)
+    case "init":
+      _ = OpenPGPBridge.OpenPGPEncodeText(nil, nil)
+      result("success")
     default:
       result(FlutterMethodNotImplemented)
     }
