@@ -1,3 +1,6 @@
+## 3.10.5
+- Add Bridge calls to init to prevent stripping in profile mode
+
 ## 3.10.4
 - Update iOS podspec and xcframework to avoid force load 
 
