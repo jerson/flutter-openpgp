@@ -1,3 +1,6 @@
+## 3.10.6
+- Fix bridge lib copy on windows (#85) Thanks to @divinebird
+
 ## 3.10.5
 - Add Bridge calls to init to prevent stripping in profile mode
 
