@@ -4,8 +4,8 @@ test:
 	cd example && flutter test integration_test/app_test.dart
 
 fmt:
-	dart format . && dart fix --apply 
-	cd example && dart format . && dart fix --apply 
+	dart format . && dart fix --apply
+	cd example && dart format . && dart fix --apply
 
 upgrade: upgrade-libs upgrade-flatbuffers
 
@@ -14,6 +14,9 @@ upgrade-libs:
 
 upgrade-flatbuffers:
 	./scripts/upgrade_bridge_flatbuffers.sh
+
+build-native:
+	./scripts/build_native.sh
 
 example-web:
 	docker build -t flutter-openpgp-web -f example/Dockerfile .

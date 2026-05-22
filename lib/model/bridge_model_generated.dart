@@ -22,7 +22,7 @@ class Algorithm {
       value == null ? null : Algorithm.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 5;
+  static const int maxValue = 9;
   static bool containsValue(int value) => values.containsKey(value);
 
   static const Algorithm RSA = Algorithm._(0);
@@ -31,13 +31,21 @@ class Algorithm {
   static const Algorithm ECHD = Algorithm._(3);
   static const Algorithm DSA = Algorithm._(4);
   static const Algorithm ELGAMAL = Algorithm._(5);
+  static const Algorithm MLDSA65ED25519 = Algorithm._(6);
+  static const Algorithm MLDSA87ED448 = Algorithm._(7);
+  static const Algorithm MLKEM768X25519 = Algorithm._(8);
+  static const Algorithm MLKEM1024X448 = Algorithm._(9);
   static const Map<int, Algorithm> values = {
     0: RSA,
     1: ECDSA,
     2: EDDSA,
     3: ECHD,
     4: DSA,
-    5: ELGAMAL
+    5: ELGAMAL,
+    6: MLDSA65ED25519,
+    7: MLDSA87ED448,
+    8: MLKEM768X25519,
+    9: MLKEM1024X448,
   };
 
   static const fb.Reader<Algorithm> reader = _AlgorithmReader();

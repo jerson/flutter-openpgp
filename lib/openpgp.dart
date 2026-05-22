@@ -19,7 +19,18 @@ class OpenPGPException implements Exception {
 
 enum Hash { SHA256, SHA224, SHA384, SHA512 }
 
-enum Algorithm { RSA, ECDSA, EDDSA, ECHD, DSA, ELGAMAL }
+enum Algorithm {
+  RSA,
+  ECDSA,
+  EDDSA,
+  ECHD,
+  DSA,
+  ELGAMAL,
+  MLDSA65ED25519,
+  MLDSA87ED448,
+  MLKEM768X25519,
+  MLKEM1024X448,
+}
 
 enum Curve {
   CURVE25519,
