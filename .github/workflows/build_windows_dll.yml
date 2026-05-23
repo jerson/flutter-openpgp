@@ -1,0 +1,71 @@
+name: Build Windows DLL (PQC)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - 'native/**'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: native/go.mod
+          cache-dependency-path: native/go.sum
+
+      - name: Install MinGW (CGO C compiler)
+        run: choco install mingw --no-progress -y
+        shell: pwsh
+
+      - name: Build libopenpgp_bridge.dll
+        working-directory: native
+        env:
+          CGO_ENABLED: "1"
+          CC: gcc
+        run: |
+          go build -buildmode=c-shared \
+            -o ../windows/shared/libopenpgp_bridge.dll \
+            .
+
+      - name: Verify PQC symbols
+        shell: pwsh
+        run: |
+          $dll = [System.IO.File]::ReadAllBytes("windows\shared\libopenpgp_bridge.dll")
+          $text = [System.Text.Encoding]::ASCII.GetString($dll)
+          # Look for the algoName() string literals — only present if PQC bridge compiled in
+          if ($text -notmatch 'ML-DSA-65\+Ed25519|circl/sign/mldsa') {
+            Write-Error "ERROR: PQC symbols (ML-DSA-65+Ed25519 / circl/sign/mldsa) not found in DLL"
+            exit 1
+          }
+          Write-Host "PQC symbols confirmed in DLL."
+
+      - name: Upload DLL artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libopenpgp_bridge-windows-pqc
+          path: |
+            windows/shared/libopenpgp_bridge.dll
+            windows/shared/libopenpgp_bridge.h
+
+      - name: Commit updated DLL
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add windows/shared/libopenpgp_bridge.dll windows/shared/libopenpgp_bridge.h
+          if git diff --cached --quiet; then
+            echo "DLL unchanged, nothing to commit."
+          else
+            git commit -m "chore: rebuild Windows DLL with PQC support (MLDSA/MLKEM)"
+            git push
+          fi

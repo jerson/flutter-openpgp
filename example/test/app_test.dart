@@ -41,4 +41,51 @@ void main() {
 
     print(keyPair.privateKey);
   });
+
+  // ── PQC tests ──────────────────────────────────────────────────────────────
+
+  test('PQC: Generate ML-DSA-65+Ed25519 keypair', () async {
+    var pqcOptions = Options()
+      ..email = "pqc@sample.com"
+      ..keyOptions = (KeyOptions()..algorithm = Algorithm.MLDSA65ED25519);
+
+    var keyPair = await OpenPGP.generate(options: pqcOptions);
+
+    expect(keyPair.publicKey, isNotEmpty);
+    expect(keyPair.privateKey, isNotEmpty);
+    expect(keyPair.publicKey, contains('BEGIN PGP PUBLIC KEY BLOCK'));
+  });
+
+  test('PQC: Generate ML-DSA-87+Ed448 keypair', () async {
+    var pqcOptions = Options()
+      ..email = "pqc87@sample.com"
+      ..keyOptions = (KeyOptions()..algorithm = Algorithm.MLDSA87ED448);
+
+    var keyPair = await OpenPGP.generate(options: pqcOptions);
+
+    expect(keyPair.publicKey, isNotEmpty);
+    expect(keyPair.privateKey, isNotEmpty);
+  });
+
+  test('PQC: Generate ML-KEM-768+X25519 keypair', () async {
+    var pqcOptions = Options()
+      ..email = "mlkem@sample.com"
+      ..keyOptions = (KeyOptions()..algorithm = Algorithm.MLKEM768X25519);
+
+    var keyPair = await OpenPGP.generate(options: pqcOptions);
+
+    expect(keyPair.publicKey, isNotEmpty);
+    expect(keyPair.privateKey, isNotEmpty);
+  });
+
+  test('PQC: ML-DSA-65 key metadata shows correct algorithm', () async {
+    var pqcOptions = Options()
+      ..email = "meta@sample.com"
+      ..keyOptions = (KeyOptions()..algorithm = Algorithm.MLDSA65ED25519);
+
+    var keyPair = await OpenPGP.generate(options: pqcOptions);
+    var meta = await OpenPGP.getPublicKeyMetadata(keyPair.publicKey);
+
+    expect(meta.algorithm, equals('ML-DSA-65+Ed25519'));
+  });
 }

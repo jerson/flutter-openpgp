@@ -1,0 +1,370 @@
+name: Build Native Libs (PQC)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - 'native/**'
+
+jobs:
+  # ── Linux x86_64 + aarch64 ─────────────────────────────────────────────────
+  linux:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: native/go.mod
+          cache-dependency-path: native/go.sum
+
+      - name: Install cross-compilers
+        run: sudo apt-get update && sudo apt-get install -y gcc-aarch64-linux-gnu
+
+      - name: Build Linux x86_64
+        working-directory: native
+        env:
+          CGO_ENABLED: "1"
+        run: |
+          go build -buildmode=c-shared \
+            -o ../linux/shared/x86_64/libopenpgp_bridge.so .
+
+      - name: Build Linux aarch64
+        working-directory: native
+        env:
+          CGO_ENABLED: "1"
+          CC: aarch64-linux-gnu-gcc
+          GOOS: linux
+          GOARCH: arm64
+        run: |
+          go build -buildmode=c-shared \
+            -o ../linux/shared/aarch64/libopenpgp_bridge.so .
+
+      - name: Verify PQC symbols
+        run: |
+          for f in linux/shared/x86_64/libopenpgp_bridge.so linux/shared/aarch64/libopenpgp_bridge.so; do
+            if strings "$f" | grep -qE "ML-DSA-65\+Ed25519|circl/sign/mldsa"; then
+              echo "✅ PQC symbols confirmed: $f"
+            else
+              echo "❌ No PQC symbols: $f" && exit 1
+            fi
+          done
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: libopenpgp_bridge-linux-pqc
+          path: linux/shared/
+
+      - name: Commit updated Linux libs
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add linux/shared/
+          if git diff --cached --quiet; then
+            echo "Linux libs unchanged."
+          else
+            git commit -m "chore: rebuild Linux native libs with PQC support"
+            git pull --rebase && git push
+          fi
+
+  # ── macOS universal dylib ──────────────────────────────────────────────────
+  macos:
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: native/go.mod
+          cache-dependency-path: native/go.sum
+
+      - name: Build macOS arm64
+        working-directory: native
+        env:
+          CGO_ENABLED: "1"
+          GOOS: darwin
+          GOARCH: arm64
+        run: go build -buildmode=c-shared -o /tmp/libopenpgp_bridge_arm64.dylib .
+
+      - name: Build macOS x86_64
+        working-directory: native
+        env:
+          CGO_ENABLED: "1"
+          GOOS: darwin
+          GOARCH: amd64
+        run: go build -buildmode=c-shared -o /tmp/libopenpgp_bridge_amd64.dylib .
+
+      - name: Lipo universal dylib
+        run: |
+          lipo -create \
+            /tmp/libopenpgp_bridge_arm64.dylib \
+            /tmp/libopenpgp_bridge_amd64.dylib \
+            -output macos/libopenpgp_bridge.dylib
+
+      - name: Verify PQC symbols
+        run: |
+          if strings macos/libopenpgp_bridge.dylib | grep -qE "ML-DSA-65\+Ed25519|circl/sign/mldsa"; then
+            echo "✅ PQC symbols confirmed in macOS dylib"
+          else
+            echo "❌ No PQC symbols in macOS dylib" && exit 1
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: libopenpgp_bridge-macos-pqc
+          path: macos/libopenpgp_bridge.dylib
+
+      - name: Commit updated dylib
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add macos/libopenpgp_bridge.dylib
+          if git diff --cached --quiet; then
+            echo "macOS dylib unchanged."
+          else
+            git commit -m "chore: rebuild macOS dylib with PQC support (universal)"
+            git pull --rebase && git push
+          fi
+
+  # ── Android (all 4 ABIs) ───────────────────────────────────────────────────
+  android:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: native/go.mod
+          cache-dependency-path: native/go.sum
+
+      - name: Set up Android NDK
+        uses: android-actions/setup-android@v3
+
+      - name: Locate NDK prebuilt toolchain
+        id: ndk
+        run: |
+          NDK_BIN=$(ls -d "$ANDROID_HOME/ndk/"*/toolchains/llvm/prebuilt/linux-x86_64/bin 2>/dev/null | sort -V | tail -1)
+          echo "bin=$NDK_BIN" >> "$GITHUB_OUTPUT"
+
+      - name: Build Android arm64-v8a
+        working-directory: native
+        env:
+          CGO_ENABLED: "1"
+          GOOS: android
+          GOARCH: arm64
+          CC: ${{ steps.ndk.outputs.bin }}/aarch64-linux-android21-clang
+        run: go build -buildmode=c-shared -o ../android/src/main/jniLibs/arm64-v8a/libopenpgp_bridge.so .
+
+      - name: Build Android armeabi-v7a
+        working-directory: native
+        env:
+          CGO_ENABLED: "1"
+          GOOS: android
+          GOARCH: arm
+          GOARM: "7"
+          CC: ${{ steps.ndk.outputs.bin }}/armv7a-linux-androideabi21-clang
+        run: go build -buildmode=c-shared -o ../android/src/main/jniLibs/armeabi-v7a/libopenpgp_bridge.so .
+
+      - name: Build Android x86_64
+        working-directory: native
+        env:
+          CGO_ENABLED: "1"
+          GOOS: android
+          GOARCH: amd64
+          CC: ${{ steps.ndk.outputs.bin }}/x86_64-linux-android21-clang
+        run: go build -buildmode=c-shared -o ../android/src/main/jniLibs/x86_64/libopenpgp_bridge.so .
+
+      - name: Build Android x86
+        working-directory: native
+        env:
+          CGO_ENABLED: "1"
+          GOOS: android
+          GOARCH: "386"
+          CC: ${{ steps.ndk.outputs.bin }}/i686-linux-android21-clang
+        run: go build -buildmode=c-shared -o ../android/src/main/jniLibs/x86/libopenpgp_bridge.so .
+
+      - name: Verify PQC symbols
+        run: |
+          for f in android/src/main/jniLibs/*/libopenpgp_bridge.so; do
+            if strings "$f" | grep -qE "ML-DSA-65\+Ed25519|circl/sign/mldsa"; then
+              echo "✅ PQC symbols confirmed: $f"
+            else
+              echo "❌ No PQC symbols: $f" && exit 1
+            fi
+          done
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: libopenpgp_bridge-android-pqc
+          path: android/src/main/jniLibs/
+
+      - name: Commit updated Android libs
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add android/src/main/jniLibs/
+          if git diff --cached --quiet; then
+            echo "Android libs unchanged."
+          else
+            git commit -m "chore: rebuild Android native libs with PQC support (all ABIs)"
+            git pull --rebase && git push
+          fi
+
+  # ── iOS xcframework (device + simulator + maccatalyst) ─────────────────────
+  ios:
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: native/go.mod
+          cache-dependency-path: native/go.sum
+
+      - name: Build iOS static archives
+        working-directory: native
+        run: |
+          IOS_CC=$(xcrun -sdk iphoneos -find clang)
+          IOS_SDK=$(xcrun -sdk iphoneos --show-sdk-path)
+          SIM_CC=$(xcrun -sdk iphonesimulator -find clang)
+          SIM_SDK=$(xcrun -sdk iphonesimulator --show-sdk-path)
+          MAC_CC=$(xcrun -sdk macosx -find clang)
+          MAC_SDK=$(xcrun -sdk macosx --show-sdk-path)
+
+          # Device arm64
+          CGO_ENABLED=1 GOOS=ios GOARCH=arm64 \
+            CC="$IOS_CC" \
+            CGO_CFLAGS="-target arm64-apple-ios12.0 -isysroot $IOS_SDK" \
+            CGO_LDFLAGS="-target arm64-apple-ios12.0 -isysroot $IOS_SDK" \
+            go build -buildmode=c-archive -o /tmp/ios_device_arm64.a .
+
+          # Simulator arm64
+          CGO_ENABLED=1 GOOS=ios GOARCH=arm64 \
+            CC="$SIM_CC" \
+            CGO_CFLAGS="-target arm64-apple-ios12.0-simulator -isysroot $SIM_SDK" \
+            CGO_LDFLAGS="-target arm64-apple-ios12.0-simulator -isysroot $SIM_SDK" \
+            go build -buildmode=c-archive -o /tmp/ios_sim_arm64.a .
+
+          # Simulator x86_64
+          CGO_ENABLED=1 GOOS=ios GOARCH=amd64 \
+            CC="$SIM_CC" \
+            CGO_CFLAGS="-target x86_64-apple-ios12.0-simulator -isysroot $SIM_SDK" \
+            CGO_LDFLAGS="-target x86_64-apple-ios12.0-simulator -isysroot $SIM_SDK" \
+            go build -buildmode=c-archive -o /tmp/ios_sim_amd64.a .
+
+          # Maccatalyst arm64
+          CGO_ENABLED=1 GOOS=ios GOARCH=arm64 \
+            CC="$MAC_CC" \
+            CGO_CFLAGS="-target arm64-apple-ios13.1-macabi -isysroot $MAC_SDK" \
+            CGO_LDFLAGS="-target arm64-apple-ios13.1-macabi -isysroot $MAC_SDK" \
+            go build -buildmode=c-archive -o /tmp/ios_catalyst_arm64.a .
+
+          # Maccatalyst x86_64
+          CGO_ENABLED=1 GOOS=ios GOARCH=amd64 \
+            CC="$MAC_CC" \
+            CGO_CFLAGS="-target x86_64-apple-ios13.1-macabi -isysroot $MAC_SDK" \
+            CGO_LDFLAGS="-target x86_64-apple-ios13.1-macabi -isysroot $MAC_SDK" \
+            go build -buildmode=c-archive -o /tmp/ios_catalyst_amd64.a .
+
+          # Lipo fat archives
+          lipo -create /tmp/ios_sim_arm64.a /tmp/ios_sim_amd64.a \
+            -output /tmp/ios_sim_universal.a
+          lipo -create /tmp/ios_catalyst_arm64.a /tmp/ios_catalyst_amd64.a \
+            -output /tmp/ios_catalyst_universal.a
+
+          # Shared header directory (generated by the device build)
+          mkdir -p /tmp/ios_headers
+          cp /tmp/ios_device_arm64.h /tmp/ios_headers/libopenpgp_bridge.h
+
+      - name: Assemble xcframework
+        run: |
+          rm -rf ios/OpenPGPBridge.xcframework
+          xcodebuild -create-xcframework \
+            -library /tmp/ios_device_arm64.a    -headers /tmp/ios_headers \
+            -library /tmp/ios_sim_universal.a   -headers /tmp/ios_headers \
+            -library /tmp/ios_catalyst_universal.a -headers /tmp/ios_headers \
+            -output ios/OpenPGPBridge.xcframework
+
+      - name: Verify PQC symbols
+        run: |
+          for slice in ios/OpenPGPBridge.xcframework/*/OpenPGPBridge.framework/OpenPGPBridge; do
+            if strings "$slice" | grep -qE "ML-DSA-65\+Ed25519|circl/sign/mldsa"; then
+              echo "✅ PQC confirmed: $slice"
+            else
+              echo "❌ No PQC: $slice" && exit 1
+            fi
+          done
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: OpenPGPBridge-ios-pqc
+          path: ios/OpenPGPBridge.xcframework/
+
+      - name: Commit updated xcframework
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add ios/OpenPGPBridge.xcframework/
+          if git diff --cached --quiet; then
+            echo "iOS xcframework unchanged."
+          else
+            git commit -m "chore: rebuild iOS xcframework with PQC support"
+            git pull --rebase && git push
+          fi
+
+  # ── WASM ───────────────────────────────────────────────────────────────────
+  wasm:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: native/go.mod
+          cache-dependency-path: native/go.sum
+
+      - name: Build WASM
+        working-directory: native
+        env:
+          GOOS: js
+          GOARCH: wasm
+          CGO_ENABLED: "0"
+        run: go build -o ../lib/web/assets/openpgp.wasm .
+
+      - name: Verify PQC symbols
+        run: |
+          # WASM sections are binary; use Go's nm-equivalent via objdump-wasm or
+          # just grep the raw bytes for the algoName string literal.
+          if grep -qaP "ML-DSA-65\+Ed25519" lib/web/assets/openpgp.wasm; then
+            echo "✅ PQC symbols confirmed in openpgp.wasm"
+          else
+            echo "❌ No PQC symbols in openpgp.wasm" && exit 1
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: openpgp-wasm-pqc
+          path: lib/web/assets/openpgp.wasm
+
+      - name: Commit updated WASM
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add lib/web/assets/openpgp.wasm
+          if git diff --cached --quiet; then
+            echo "WASM unchanged."
+          else
+            git commit -m "chore: rebuild WASM with PQC support"
+            git pull --rebase && git push
+          fi
