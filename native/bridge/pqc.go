@@ -79,17 +79,21 @@ func pqcConfig(algo int32, defaultHash crypto.Hash) *packet.Config {
 			V6Keys:      true,
 		}
 	case AlgoMLKEM768X25519:
-		// Setting the algorithm to ML-KEM-768+X25519 causes the library to
-		// generate an Ed25519 primary signing key with an ML-KEM encryption subkey.
+		// ML-KEM-768+X25519 is encryption-only and cannot be a primary key.
+		// The ML-DSA-65+Ed25519 composite key automatically includes an
+		// ML-KEM-768+X25519 encryption subkey per draft-ietf-openpgp-pqc.
 		return &packet.Config{
-			Algorithm:   packet.PubKeyAlgoMlkem768X25519,
+			Algorithm:   packet.PubKeyAlgoMldsa65Ed25519,
 			DefaultHash: defaultHash,
 			AEADConfig:  aead,
 			V6Keys:      true,
 		}
 	case AlgoMLKEM1024X448:
+		// ML-KEM-1024+X448 is encryption-only and cannot be a primary key.
+		// The ML-DSA-87+Ed448 composite key automatically includes an
+		// ML-KEM-1024+X448 encryption subkey per draft-ietf-openpgp-pqc.
 		return &packet.Config{
-			Algorithm:   packet.PubKeyAlgoMlkem1024X448,
+			Algorithm:   packet.PubKeyAlgoMldsa87Ed448,
 			DefaultHash: defaultHash,
 			AEADConfig:  aead,
 			V6Keys:      true,
