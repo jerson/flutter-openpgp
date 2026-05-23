@@ -7,6 +7,9 @@ on:
     paths:
       - 'native/**'
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   # ── Linux x86_64 + aarch64 ─────────────────────────────────────────────────
   linux:
@@ -85,6 +88,8 @@ jobs:
             /tmp/libopenpgp_bridge_arm64.dylib \
             /tmp/libopenpgp_bridge_amd64.dylib \
             -output /tmp/libopenpgp_bridge.dylib
+          # Fix install name so CocoaPods links it as @rpath/... not /tmp/...
+          install_name_tool -id @rpath/libopenpgp_bridge.dylib /tmp/libopenpgp_bridge.dylib
 
       - name: Verify PQC symbols
         run: |
