@@ -12,7 +12,7 @@ env:
 
 jobs:
   e2e:
-    runs-on: macos-latest
+    runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@main
