@@ -1,3 +1,11 @@
+## 3.11.0
+- Rebuild all native libs with post-quantum cryptography support (ML-DSA-65 / ML-KEM-768)
+- Unified Windows DLL build into the main native libs workflow (single CI pipeline for all platforms)
+- Fixed macOS integration tests in CI (pin runner to macos-14 for CVDisplayLink compatibility)
+- Fixed iOS integration tests in CI (pin simulator to iPhone 16; add step timeout)
+- Fixed macOS dylib codesigning and install name for CI embed
+- Upgraded example transitive dependencies
+
 ## 3.10.7
 - Add force load to prevent stripping
 
