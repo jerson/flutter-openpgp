@@ -116,7 +116,7 @@ class Binding {
     }
 
     handleError(result.ref.errorMessage, result);
-    final output = result.ref.toUint8List();
+    final output = Uint8List.fromList(result.ref.toUint8List());
     freeResult(result);
     return output;
   }
