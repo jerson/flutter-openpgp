@@ -85,6 +85,7 @@ func pqcConfig(algo int32, defaultHash crypto.Hash) *packet.Config {
 			Algorithm:   packet.PubKeyAlgoMlkem768X25519,
 			DefaultHash: defaultHash,
 			AEADConfig:  aead,
+			V6Keys:      true,
 		}
 	case AlgoMLKEM1024X448:
 		return &packet.Config{

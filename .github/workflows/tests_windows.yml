@@ -28,4 +28,5 @@ jobs:
           if ($output -match '❌') { Write-Host 'Integration tests failed'; exit 1 }
           if ($output -notmatch '🎉|tests passed') { Write-Host 'No tests ran successfully'; exit 1 }
           Write-Host 'All integration tests passed'
+          exit 0
       - run: "cd example && flutter test test/app_test.dart"

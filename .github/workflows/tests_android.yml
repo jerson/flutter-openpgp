@@ -33,13 +33,8 @@ jobs:
           arch: x86_64
           disable-animations: true
           script: |
-            cd example
-            output=$(flutter test integration_test/app_test.dart 2>&1) || true
-            echo "$output"
-            if echo "$output" | grep -qE 'Some tests failed|❌'; then
-              echo 'Integration tests failed'; exit 1
-            fi
-            if ! echo "$output" | grep -qE 'tests passed|🎉'; then
-              echo 'No tests ran successfully'; exit 1
-            fi
+            cd example && flutter test integration_test/app_test.dart > /tmp/flutter_out.txt 2>&1 || true
+            cat /tmp/flutter_out.txt
+            grep -qE 'Some tests failed|❌' /tmp/flutter_out.txt && echo 'Integration tests failed' && exit 1 || true
+            grep -qE 'tests passed|🎉' /tmp/flutter_out.txt || { echo 'No tests ran successfully'; exit 1; }
             echo 'All integration tests passed'

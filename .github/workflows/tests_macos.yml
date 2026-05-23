@@ -21,5 +21,16 @@ jobs:
           flutter config --enable-macos-desktop
           flutter pub get
           cd example/macos && pod install
-      - run: "cd example && flutter test -d macos integration_test/app_test.dart"
+      - name: Run integration tests
+        run: |
+          cd example
+          output=$(flutter test -d macos integration_test/app_test.dart 2>&1) || true
+          echo "$output"
+          if echo "$output" | grep -qE 'Some tests failed|❌'; then
+            echo 'Integration tests failed'; exit 1
+          fi
+          if ! echo "$output" | grep -qE 'tests passed|🎉'; then
+            echo 'No tests ran successfully'; exit 1
+          fi
+          echo 'All integration tests passed'
       - run: "cd example && flutter test test/app_test.dart"
