@@ -193,7 +193,7 @@ class Binding {
     if (Platform.isAndroid || Platform.isLinux) {
       if (isFlutterTest) {
         final arch =
-            Platform.resolvedExecutable.contains('linux-x64') ? 'x64' : 'arm64';
+            Platform.resolvedExecutable.contains('x64') ? 'x64' : 'arm64';
         final ffiFile =
             'build/linux/$arch/debug/bundle/lib/$_libraryName.so';
         validateTestFFIFile(ffiFile);
