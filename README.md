@@ -1,6 +1,6 @@
 # OpenPGP
 
-Library for use openPGP with support for android, ios, macos, windows, linux and web
+Library for use openPGP with support for android, ios, macos, windows, linux and web, including post-quantum cryptography (ML-DSA / ML-KEM, FIPS 203/204).
 
 [![Integration Tests Android](https://github.com/jerson/flutter-openpgp/actions/workflows/tests_android.yml/badge.svg)](https://github.com/jerson/flutter-openpgp/actions/workflows/tests_android.yml)
 
@@ -15,6 +15,7 @@ Library for use openPGP with support for android, ios, macos, windows, linux and
  
 - [OpenPGP](#openpgp)
   - [Contents](#contents)
+  - [Post-Quantum Cryptography](#post-quantum-cryptography)
   - [Usage](#usage)
     - [Async methods](#async-methods)
     - [Sync methods](#sync-methods)
@@ -30,6 +31,36 @@ Library for use openPGP with support for android, ios, macos, windows, linux and
   - [Upgrade Library](#upgrade-library)
   - [Tests](#tests)
 
+## Post-Quantum Cryptography
+
+This library supports the four composite PQC algorithms introduced in GnuPG 2.5.x, implemented via FIPS 203 (ML-KEM) and FIPS 204 (ML-DSA):
+
+| Algorithm enum | GnuPG name | Description |
+|---|---|---|
+| `Algorithm.MLDSA65ED25519` | `dil3x25519` | ML-DSA-65 + Ed25519 signing key (OpenPGP v6) |
+| `Algorithm.MLDSA87ED448` | `dil5x448` | ML-DSA-87 + Ed448 signing key (OpenPGP v6) |
+| `Algorithm.MLKEM768X25519` | `ky768x25519` | ML-KEM-768 + X25519 encryption key |
+| `Algorithm.MLKEM1024X448` | `ky1024x448` | ML-KEM-1024 + X448 encryption key (OpenPGP v6) |
+
+ML-DSA keys are signing keys that automatically include a matching ML-KEM encryption subkey. ML-KEM keys are encryption keys that automatically include an Ed25519/Ed448 primary signing key.
+
+```dart
+void main() async {
+  // Generate a post-quantum signing + encryption key pair
+  var keyPair = await OpenPGP.generate(
+    options: Options()
+      ..name = 'Alice'
+      ..email = 'alice@example.com'
+      ..passphrase = 'secret'
+      ..keyOptions = (KeyOptions()..algorithm = Algorithm.MLDSA65ED25519),
+  );
+
+  // Works with all existing encrypt/decrypt/sign/verify operations
+  var encrypted = await OpenPGP.encrypt("hello", keyPair.publicKey);
+  var decrypted = await OpenPGP.decrypt(encrypted, keyPair.privateKey, "secret");
+}
+```
+
 ## Usage
 
 ### Async methods
@@ -38,6 +69,7 @@ Library for use openPGP with support for android, ios, macos, windows, linux and
 ```dart
 
 void main() async {
+    // Classic key
     var keyOptions = KeyOptions()..rsaBits = 2048;
     var keyPair = await OpenPGP.generate(
             options: Options()
@@ -45,6 +77,14 @@ void main() async {
               ..email = 'test@test.com'
               ..passphrase = passphrase
               ..keyOptions = keyOptions);
+
+    // Post-quantum key (ML-DSA-65 + Ed25519)
+    var pqcKeyPair = await OpenPGP.generate(
+            options: Options()
+              ..name = 'test'
+              ..email = 'test@test.com'
+              ..passphrase = passphrase
+              ..keyOptions = (KeyOptions()..algorithm = Algorithm.MLDSA65ED25519));
 }
 ```
 
@@ -333,7 +373,7 @@ check our web demo: [https://flutter-openpgp.jerson.dev/]
 
 ## Native Code
 
-Native library is made in `Go` for faster performance.
+Native library is made in `Go` for faster performance. PQC support is provided by [ProtonMail/go-crypto](https://github.com/ProtonMail/go-crypto) (`v1.4.1-proton`) and [cloudflare/circl](https://github.com/cloudflare/circl) for the ML-DSA/ML-KEM primitives.
 
 [https://github.com/jerson/openpgp-mobile]
 

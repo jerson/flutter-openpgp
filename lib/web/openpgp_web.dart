@@ -44,6 +44,8 @@ class OpenpgpPlugin {
     worker.onmessage = onMessage.toJS;
   }
 
+  static const Duration _timeout = Duration(seconds: 30);
+
   Future<Uint8List> bridgeCall(String name, Uint8List? /*!*/ request) {
     _counter++;
     var id = _counter.toString();
@@ -54,6 +56,12 @@ class OpenpgpPlugin {
       name: name,
       request: request?.toJS,
     ));
+    Future.delayed(_timeout, () {
+      if (completers.containsKey(id)) {
+        completers.remove(id);
+        completer.completeError('OpenPGP operation timed out: $name');
+      }
+    });
     return completer.future;
   }
 }

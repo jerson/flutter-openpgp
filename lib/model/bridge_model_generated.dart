@@ -3259,9 +3259,13 @@ class KeyOptions {
   ///  If zero, then 2048 bit keys are created.
   int get rsaBits => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 16, 0);
 
+  ///  KeyLifetimeSecs is how long the key is valid in seconds (0 = no expiry).
+  int get keyLifetimeSecs =>
+      const fb.Int32Reader().vTableGet(_bc, _bcOffset, 18, 0);
+
   @override
   String toString() {
-    return 'KeyOptions{algorithm: ${algorithm}, curve: ${curve}, hash: ${hash}, cipher: ${cipher}, compression: ${compression}, compressionLevel: ${compressionLevel}, rsaBits: ${rsaBits}}';
+    return 'KeyOptions{algorithm: ${algorithm}, curve: ${curve}, hash: ${hash}, cipher: ${cipher}, compression: ${compression}, compressionLevel: ${compressionLevel}, rsaBits: ${rsaBits}, keyLifetimeSecs: ${keyLifetimeSecs}}';
   }
 }
 
@@ -3279,7 +3283,7 @@ class KeyOptionsBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(7);
+    fbBuilder.startTable(8);
   }
 
   int addAlgorithm(Algorithm? algorithm) {
@@ -3317,6 +3321,11 @@ class KeyOptionsBuilder {
     return fbBuilder.offset;
   }
 
+  int addKeyLifetimeSecs(int? keyLifetimeSecs) {
+    fbBuilder.addInt32(7, keyLifetimeSecs);
+    return fbBuilder.offset;
+  }
+
   int finish() {
     return fbBuilder.endTable();
   }
@@ -3330,6 +3339,7 @@ class KeyOptionsObjectBuilder extends fb.ObjectBuilder {
   final Compression? _compression;
   final int? _compressionLevel;
   final int? _rsaBits;
+  final int? _keyLifetimeSecs;
 
   KeyOptionsObjectBuilder({
     Algorithm? algorithm,
@@ -3339,18 +3349,20 @@ class KeyOptionsObjectBuilder extends fb.ObjectBuilder {
     Compression? compression,
     int? compressionLevel,
     int? rsaBits,
+    int? keyLifetimeSecs,
   })  : _algorithm = algorithm,
         _curve = curve,
         _hash = hash,
         _cipher = cipher,
         _compression = compression,
         _compressionLevel = compressionLevel,
-        _rsaBits = rsaBits;
+        _rsaBits = rsaBits,
+        _keyLifetimeSecs = keyLifetimeSecs;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(7);
+    fbBuilder.startTable(8);
     fbBuilder.addInt32(0, _algorithm?.value);
     fbBuilder.addInt32(1, _curve?.value);
     fbBuilder.addInt32(2, _hash?.value);
@@ -3358,6 +3370,7 @@ class KeyOptionsObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addInt32(4, _compression?.value);
     fbBuilder.addInt32(5, _compressionLevel);
     fbBuilder.addInt32(6, _rsaBits);
+    fbBuilder.addInt32(7, _keyLifetimeSecs);
     return fbBuilder.endTable();
   }
 

@@ -20,6 +20,7 @@ mixin OpenPGPRequestBuilders {
         compressionLevel: input.compressionLevel ?? 0,
         hash: input.hash != null ? model.Hash.values[input.hash!.index] : null,
         rsaBits: input.rsaBits ?? 0,
+        keyLifetimeSecs: input.keyLifetimeSecs ?? 0,
       );
     }
     return builder;

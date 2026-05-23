@@ -18,8 +18,13 @@ class Binding {
   static final Binding _instance = Binding._internal();
 
   late final DynamicLibrary _library;
-
   late final BridgeCallDart _bridgeCall;
+
+  // Persistent worker isolate — spawned once, reused for all async calls.
+  SendPort? _workerPort;
+  final _pending = <int, Completer<Uint8List>>{};
+  int _nextId = 0;
+  Future<void>? _workerReady;
 
   factory Binding() {
     return _instance;
@@ -31,71 +36,88 @@ class Binding {
         _library.lookupFunction<BridgeCallC, BridgeCallDart>(_callFuncName);
   }
 
+  // ── Worker isolate entry point ──────────────────────────────────────────────
+  // Runs in the worker isolate. Initialises its own Binding (FFI handles are
+  // per-isolate) then services BridgeRequest messages.
   @pragma('vm:entry-point')
-  static void _callBridge(IsolateArguments args) {
-    var result = _instance.call(args.name, args.payload);
-    args.port.send(result);
+  static void _workerEntryPoint(SendPort replyTo) {
+    final inbox = ReceivePort();
+    replyTo.send(inbox.sendPort); // signal ready + hand back the inbox port
+
+    inbox.listen((msg) {
+      if (msg is! BridgeRequest) return;
+      try {
+        final result = _instance.call(msg.name, msg.payload);
+        replyTo.send(BridgeResponse(id: msg.id, data: result));
+      } catch (e) {
+        replyTo.send(BridgeResponse(id: msg.id, error: e.toString()));
+      }
+    });
+  }
+
+  // ── Async dispatch via persistent worker ────────────────────────────────────
+  Future<void> _ensureWorker() {
+    _workerReady ??= _spawnWorker();
+    return _workerReady!;
+  }
+
+  Future<void> _spawnWorker() async {
+    final inbox = ReceivePort();
+    await Isolate.spawn(
+      _workerEntryPoint,
+      inbox.sendPort,
+      debugName: '${_libraryName}_worker',
+      errorsAreFatal: false,
+    );
+    final ready = Completer<void>();
+    inbox.listen((msg) {
+      if (msg is SendPort) {
+        _workerPort = msg;
+        if (!ready.isCompleted) ready.complete();
+        return;
+      }
+      if (msg is BridgeResponse) {
+        final c = _pending.remove(msg.id);
+        if (c == null) return;
+        if (msg.error != null) {
+          c.completeError(OpenPGPException(msg.error!));
+        } else {
+          c.complete(msg.data!);
+        }
+      }
+    });
+    return ready.future;
   }
 
   Future<Uint8List> callAsync(String name, Uint8List payload) async {
-    final port = ReceivePort();
-    final completer = Completer<Uint8List>();
-
-    try {
-      final isolate = await Isolate.spawn(
-        _callBridge,
-        IsolateArguments(name, payload, port.sendPort),
-        errorsAreFatal: false,
-        debugName: '${_libraryName}_isolate',
-        onError: port.sendPort,
-      );
-
-      port.listen((message) {
-        try {
-          if (message is Uint8List) {
-            completer.complete(message);
-          } else if (message is List && message.isNotEmpty) {
-            completer.completeError(message.first ?? "internal error");
-          } else {
-            completer.completeError("spawn error");
-          }
-        } finally {
-          port.close();
-          isolate.kill(priority: Isolate.beforeNextEvent);
-        }
-      });
-
-      return completer.future;
-    } catch (e) {
-      port.close();
-      throw OpenPGPException("Failed to start isolate: $e");
-    }
+    await _ensureWorker();
+    final id = _nextId++;
+    final c = Completer<Uint8List>();
+    _pending[id] = c;
+    _workerPort!.send(BridgeRequest(id, name, payload));
+    return c.future;
   }
 
+  // ── Synchronous dispatch (main isolate, blocks) ─────────────────────────────
   Uint8List call(String name, Uint8List payload) {
-    if (_bridgeCall == null) {
-      throw OpenPGPException(
-          "FFI function ${_callFuncName} is not initialized. Check library loading.");
-    }
-
     final namePointer = name.toNativeUtf8();
     final payloadPointer = malloc.allocate<Uint8>(payload.length);
     payloadPointer.asTypedList(payload.length).setAll(0, payload);
 
     final result =
         _bridgeCall(namePointer, payloadPointer.cast<Void>(), payload.length);
-    if (result.address == 0) {
-      throw OpenPGPException(
-          "FFI function ${_callFuncName} returned null pointer. Check openpgp-mobile implementation.");
-    }
 
     malloc.free(namePointer);
     malloc.free(payloadPointer);
 
+    if (result.address == 0) {
+      throw OpenPGPException(
+          'FFI function $_callFuncName returned null pointer.');
+    }
+
     handleError(result.ref.errorMessage, result);
     final output = result.ref.toUint8List();
     freeResult(result);
-
     return output;
   }
 
@@ -107,6 +129,13 @@ class Binding {
   }
 
   void freeResult(Pointer<BytesReturn> result) {
+    // Free the two inner C.malloc allocations before the struct itself.
+    if (result.ref.message != nullptr) {
+      malloc.free(result.ref.message);
+    }
+    if (result.ref.error != nullptr) {
+      malloc.free(result.ref.error);
+    }
     if (!Platform.isWindows) {
       malloc.free(result);
     }
@@ -125,7 +154,8 @@ class Binding {
     if (!File(path).existsSync()) {
       debugPrint('dynamic library not found: $path');
       throw Exception(
-          '''In order to be able to run unit tests, you need to run the project first: "flutter run -d ${Platform.operatingSystem}"''');
+          'In order to run unit tests, run the project first: '
+          '"flutter run -d ${Platform.operatingSystem}"');
     }
   }
 
@@ -141,19 +171,19 @@ class Binding {
   }
 
   DynamicLibrary openLib() {
-    var isFlutterTest = Platform.environment.containsKey('FLUTTER_TEST');
+    final isFlutterTest = Platform.environment.containsKey('FLUTTER_TEST');
 
     if (Platform.isMacOS || Platform.isIOS) {
       if (isFlutterTest) {
         final appDirectory =
             _findAppDirectory(Directory('build/macos/Build/Products/Debug'));
-        var ffiFile = Path.join(
-            appDirectory.path, "Contents", "Frameworks", "$_libraryName.dylib");
+        final ffiFile = Path.join(
+            appDirectory.path, 'Contents', 'Frameworks', '$_libraryName.dylib');
         validateTestFFIFile(ffiFile);
         return DynamicLibrary.open(ffiFile);
       }
       if (Platform.isMacOS) {
-        return DynamicLibrary.open("$_libraryName.dylib");
+        return DynamicLibrary.open('$_libraryName.dylib');
       }
       if (Platform.isIOS) {
         return DynamicLibrary.process();
@@ -162,55 +192,48 @@ class Binding {
 
     if (Platform.isAndroid || Platform.isLinux) {
       if (isFlutterTest) {
-        var arch =
-            Platform.resolvedExecutable.contains("linux-x64") ? "x64" : "arm64";
-
-        var ffiFile = 'build/linux/$arch/debug/bundle/lib/$_libraryName.so';
+        final arch =
+            Platform.resolvedExecutable.contains('linux-x64') ? 'x64' : 'arm64';
+        final ffiFile =
+            'build/linux/$arch/debug/bundle/lib/$_libraryName.so';
         validateTestFFIFile(ffiFile);
         return DynamicLibrary.open(ffiFile);
       }
 
       if (Platform.isLinux) {
         try {
-          return DynamicLibrary.open("$_libraryName.so");
+          return DynamicLibrary.open('$_libraryName.so');
         } catch (e) {
-          print(e);
-          var binary = File("/proc/self/cmdline").readAsStringSync();
-          var suggestedFile =
-              Path.join(Path.dirname(binary), "lib", "$_libraryName.so");
+          final binary = File('/proc/self/cmdline').readAsStringSync();
+          final suggestedFile =
+              Path.join(Path.dirname(binary), 'lib', '$_libraryName.so');
           return DynamicLibrary.open(suggestedFile);
         }
       }
 
       if (Platform.isAndroid) {
         try {
-          return DynamicLibrary.open("$_libraryName.so");
+          return DynamicLibrary.open('$_libraryName.so');
         } catch (e) {
-          print("fallback to open DynamicLibrary on older devices");
-          //fallback for devices that cannot load dynamic libraries by name: load the library with an absolute path
-          //read the app id
-          var appid = File("/proc/self/cmdline").readAsStringSync();
-          // the file /proc/self/cmdline returns a string with many trailing \0 characters, which makes the string pretty useless for dart, many
-          // operations will not work correctly. remove these trailing zero bytes.
+          debugPrint('Falling back to absolute path for older Android devices');
+          var appid = File('/proc/self/cmdline').readAsStringSync();
           appid = String.fromCharCodes(
-              appid.codeUnits.where((element) => element != 0));
-          final loadPath = "/data/data/$appid/lib/$_libraryName.so";
-          return DynamicLibrary.open(loadPath);
+              appid.codeUnits.where((c) => c != 0));
+          return DynamicLibrary.open('/data/data/$appid/lib/$_libraryName.so');
         }
       }
     }
 
     if (Platform.isWindows) {
       if (isFlutterTest) {
-        var arch =
-            Platform.resolvedExecutable.contains("x64") ? "x64" : "arm64";
-
-        var ffiFile = Path.canonicalize(Path.join(
+        final arch =
+            Platform.resolvedExecutable.contains('x64') ? 'x64' : 'arm64';
+        final ffiFile = Path.canonicalize(Path.join(
             r'build\windows', arch, r'runner\Debug', '$_libraryName.dll'));
         validateTestFFIFile(ffiFile);
         return DynamicLibrary.open(ffiFile);
       }
-      return DynamicLibrary.open("$_libraryName.dll");
+      return DynamicLibrary.open('$_libraryName.dll');
     }
 
     throw UnsupportedError('Unknown platform: ${Platform.operatingSystem}');

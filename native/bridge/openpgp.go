@@ -6,7 +6,6 @@ import (
 	"encoding/hex"
 	"fmt"
 	"io"
-	"math/big"
 	"strconv"
 	"strings"
 	"time"
@@ -116,6 +115,7 @@ type keyOptions struct {
 	compression      int32
 	compressionLevel int32
 	rsaBits          int32
+	keyLifetimeSecs  int32
 }
 
 type options struct {
@@ -150,6 +150,7 @@ func parseKeyOptions(t *flatbuffers.Table) *keyOptions {
 		compression:      fbInt32(t, 12),
 		compressionLevel: fbInt32(t, 14),
 		rsaBits:          fbInt32(t, 16),
+		keyLifetimeSecs:  fbInt32(t, 18),
 	}
 }
 
@@ -219,7 +220,14 @@ func buildConfig(ko *keyOptions) *packet.Config {
 	}
 
 	if ko.rsaBits > 0 {
+		if ko.rsaBits < 2048 {
+			ko.rsaBits = 2048
+		}
 		cfg.RSABits = int(ko.rsaBits)
+	}
+
+	if ko.keyLifetimeSecs > 0 {
+		cfg.KeyLifetimeSecs = uint32(ko.keyLifetimeSecs)
 	}
 
 	switch ko.algorithm {
@@ -338,15 +346,11 @@ func pgpFileHints(fh *fileHints) *openpgp.FileHints {
 }
 
 func keyIDHex(id uint64) string {
-	return strings.ToUpper(hex.EncodeToString(big.NewInt(0).SetUint64(id).Bytes()))
+	return fmt.Sprintf("%016X", id)
 }
 
 func keyIDShortHex(id uint64) string {
-	full := keyIDHex(id)
-	if len(full) > 8 {
-		return full[len(full)-8:]
-	}
-	return full
+	return fmt.Sprintf("%08X", id&0xFFFFFFFF)
 }
 
 func fingerprintHex(fp []byte) string {
@@ -985,7 +989,7 @@ func callGetPublicKeyMetadata(payload []byte) ([]byte, error) {
 
 	isSubKey := false
 	canSign := pk.PubKeyAlgo.CanSign()
-	canEncrypt := !pk.PubKeyAlgo.CanSign()
+	canEncrypt := pk.PubKeyAlgo.CanEncrypt()
 
 	ids := collectIdentities(entity)
 	return publicKeyMetadataResponse(

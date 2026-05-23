@@ -64,6 +64,8 @@ class KeyOptions {
   Compression? compression;
   int? compressionLevel;
   int? rsaBits;
+  /// Key lifetime in seconds. 0 means the key does not expire.
+  int? keyLifetimeSecs;
 }
 
 class KeyPair {
@@ -182,6 +184,10 @@ class ArmorMetadata {
 }
 
 class OpenPGP with OpenPGPResponseHandlers, OpenPGPRequestBuilders {
+  /// Decrypts an ASCII-armored PGP message using [privateKey] and [passphrase].
+  ///
+  /// Pass [signed] with a [Entity.publicKey] to also verify the embedded
+  /// signature; throws [OpenPGPException] if verification fails.
   static Future<String> decrypt(
       String message, String privateKey, String passphrase,
       {KeyOptions? options, Entity? signed}) async {
@@ -197,6 +203,7 @@ class OpenPGP with OpenPGPResponseHandlers, OpenPGPRequestBuilders {
         .then(OpenPGPResponseHandlers.stringResponse);
   }
 
+  /// Decrypts a binary PGP message using [privateKey] and [passphrase].
   static Future<Uint8List> decryptBytes(
       Uint8List message, String privateKey, String passphrase,
       {KeyOptions? options, Entity? signed}) async {
@@ -212,6 +219,10 @@ class OpenPGP with OpenPGPResponseHandlers, OpenPGPRequestBuilders {
         .then(OpenPGPResponseHandlers.bytesResponse);
   }
 
+  /// Encrypts [message] for the holder of [publicKey].
+  ///
+  /// Pass [signed] with a [Entity.privateKey] and [Entity.passphrase] to
+  /// produce a signed+encrypted message.
   static Future<String> encrypt(String message, String publicKey,
       {KeyOptions? options, Entity? signed, FileHints? fileHints}) async {
     var requestBuilder = model.EncryptRequestObjectBuilder(
@@ -226,6 +237,7 @@ class OpenPGP with OpenPGPResponseHandlers, OpenPGPRequestBuilders {
         .then(OpenPGPResponseHandlers.stringResponse);
   }
 
+  /// Encrypts binary [message] for the holder of [publicKey].
   static Future<Uint8List> encryptBytes(Uint8List message, String publicKey,
       {KeyOptions? options, Entity? signed, FileHints? fileHints}) async {
     var requestBuilder = model.EncryptBytesRequestObjectBuilder(
@@ -240,6 +252,9 @@ class OpenPGP with OpenPGPResponseHandlers, OpenPGPRequestBuilders {
         .then(OpenPGPResponseHandlers.bytesResponse);
   }
 
+  /// Creates a detached ASCII-armored signature over [message].
+  ///
+  /// Use [verify] to check the returned signature against the original message.
   static Future<String> sign(
       String message, String privateKey, String passphrase,
       {KeyOptions? options}) async {
@@ -254,6 +269,9 @@ class OpenPGP with OpenPGPResponseHandlers, OpenPGPRequestBuilders {
         .then(OpenPGPResponseHandlers.stringResponse);
   }
 
+  /// Creates a detached binary signature over [message].
+  ///
+  /// Use [verifyBytes] to check the returned signature.
   static Future<Uint8List> signBytes(
       Uint8List message, String privateKey, String passphrase,
       {KeyOptions? options}) async {
@@ -268,6 +286,8 @@ class OpenPGP with OpenPGPResponseHandlers, OpenPGPRequestBuilders {
         .then(OpenPGPResponseHandlers.bytesResponse);
   }
 
+  /// Creates a detached binary signature over [message], returned as an
+  /// ASCII-armored string. Use [verifyBytes] to check the signature.
   static Future<String> signBytesToString(
       Uint8List message, String privateKey, String passphrase,
       {KeyOptions? options}) async {
@@ -282,6 +302,8 @@ class OpenPGP with OpenPGPResponseHandlers, OpenPGPRequestBuilders {
         .then(OpenPGPResponseHandlers.stringResponse);
   }
 
+  /// Produces a cleartext-signed message (RFC 4880 §7) embedding [message]
+  /// inline alongside the signature. Use [verifyData] to verify.
   static Future<String> signData(
       String message, String privateKey, String passphrase,
       {KeyOptions? options}) async {
@@ -296,6 +318,8 @@ class OpenPGP with OpenPGPResponseHandlers, OpenPGPRequestBuilders {
         .then(OpenPGPResponseHandlers.stringResponse);
   }
 
+  /// Signs binary [message] and returns a PGP literal-data packet containing
+  /// both the data and the signature. Use [verifyDataBytes] to verify.
   static Future<Uint8List> signDataBytes(
       Uint8List message, String privateKey, String passphrase,
       {KeyOptions? options}) async {
@@ -310,6 +334,8 @@ class OpenPGP with OpenPGPResponseHandlers, OpenPGPRequestBuilders {
         .then(OpenPGPResponseHandlers.bytesResponse);
   }
 
+  /// Signs binary [message] and returns the signed packet as an ASCII-armored
+  /// string. Use [verifyDataBytes] to verify.
   static Future<String> signDataBytesToString(
       Uint8List message, String privateKey, String passphrase,
       {KeyOptions? options}) async {
@@ -324,6 +350,7 @@ class OpenPGP with OpenPGPResponseHandlers, OpenPGPRequestBuilders {
         .then(OpenPGPResponseHandlers.stringResponse);
   }
 
+  /// Verifies a detached text [signature] (from [sign]) against [message].
   static Future<bool> verify(
       String signature, String message, String publicKey) async {
     var requestBuilder = model.VerifyRequestObjectBuilder(
@@ -336,6 +363,8 @@ class OpenPGP with OpenPGPResponseHandlers, OpenPGPRequestBuilders {
         .then(OpenPGPResponseHandlers.boolResponse);
   }
 
+  /// Verifies a detached binary [signature] (from [signBytes] /
+  /// [signBytesToString]) against binary [message].
   static Future<bool> verifyBytes(
       String signature, Uint8List message, String publicKey) async {
     var requestBuilder = model.VerifyBytesRequestObjectBuilder(
@@ -348,6 +377,8 @@ class OpenPGP with OpenPGPResponseHandlers, OpenPGPRequestBuilders {
         .then(OpenPGPResponseHandlers.boolResponse);
   }
 
+  /// Verifies a cleartext-signed message (from [signData]).
+  /// [signature] is the full signed block including the embedded plaintext.
   static Future<bool> verifyData(String signature, String publicKey) async {
     var requestBuilder = model.VerifyDataRequestObjectBuilder(
       publicKey: publicKey,
@@ -358,6 +389,8 @@ class OpenPGP with OpenPGPResponseHandlers, OpenPGPRequestBuilders {
         .then(OpenPGPResponseHandlers.boolResponse);
   }
 
+  /// Verifies a signed literal-data packet (from [signDataBytes] /
+  /// [signDataBytesToString]).
   static Future<bool> verifyDataBytes(
       Uint8List signature, String publicKey) async {
     var requestBuilder = model.VerifyDataBytesRequestObjectBuilder(
@@ -440,6 +473,7 @@ class OpenPGP with OpenPGPResponseHandlers, OpenPGPRequestBuilders {
         .then(OpenPGPResponseHandlers.armorDecodeResponse);
   }
 
+  /// Extracts the public key from [privateKey] and returns it armored.
   static Future<String> convertPrivateKeyToPublicKey(String privateKey) async {
     var requestBuilder = model.ConvertPrivateKeyToPublicKeyRequestObjectBuilder(
       privateKey: privateKey,
@@ -450,6 +484,7 @@ class OpenPGP with OpenPGPResponseHandlers, OpenPGPRequestBuilders {
         .then(OpenPGPResponseHandlers.stringResponse);
   }
 
+  /// Returns metadata (key ID, algorithm, creation time, etc.) for [privateKey].
   static Future<PrivateKeyMetadata> getPrivateKeyMetadata(
       String privateKey) async {
     var requestBuilder = model.GetPrivateKeyMetadataRequestObjectBuilder(
@@ -460,6 +495,7 @@ class OpenPGP with OpenPGPResponseHandlers, OpenPGPRequestBuilders {
         .then(OpenPGPResponseHandlers.privateKeyMetadataResponse);
   }
 
+  /// Returns metadata (key ID, algorithm, creation time, etc.) for [publicKey].
   static Future<PublicKeyMetadata> getPublicKeyMetadata(
       String publicKey) async {
     var requestBuilder = model.GetPublicKeyMetadataRequestObjectBuilder(
@@ -470,6 +506,10 @@ class OpenPGP with OpenPGPResponseHandlers, OpenPGPRequestBuilders {
         .then(OpenPGPResponseHandlers.publicKeyMetadataResponse);
   }
 
+  /// Generates a new key pair.
+  ///
+  /// Use [Options.keyOptions] to control the algorithm (including PQC variants
+  /// via [Algorithm.MLDSA65ED25519] etc.), curve, RSA bits, and expiry.
   static Future<KeyPair> generate({Options? options}) async {
     var requestBuilder = model.GenerateRequestObjectBuilder(
       options: OpenPGPRequestBuilders.optionsBuilder(options),
