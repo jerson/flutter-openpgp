@@ -25,20 +25,23 @@ class OpenpgpPlugin {
     return bridgeCall(call.method, call.arguments);
   }
 
-  void listen() async {
+  void listen() {
     void onMessage(Event event) {
       final msgEvent = event as MessageEvent;
       final data = msgEvent.data as OpenpgpResponse;
-      var completer = completers[data.id];
-      if (completer == null) {
-        return;
-      }
+      // Remove before completing so the timeout handler can't also fire.
+      final completer = completers.remove(data.id);
+      if (completer == null) return;
       if (data.error != null && data.error! != '') {
         completer.completeError(data.error!);
       } else {
-        completer.complete(data.response?.toDart);
+        final bytes = data.response?.toDart;
+        if (bytes == null) {
+          completer.completeError('OpenPGP: empty response for unknown reason');
+        } else {
+          completer.complete(bytes);
+        }
       }
-      completers.remove(data.id);
     }
 
     worker.onmessage = onMessage.toJS;

@@ -1,7 +1,6 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
-  exclude: 
+  exclude:
     - example/**
-    - lib/model/**
-    - lib/bridge/**
+    - lib/model/**   # generated FlatBuffers code
