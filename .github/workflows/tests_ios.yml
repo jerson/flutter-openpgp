@@ -16,6 +16,7 @@ jobs:
     steps:
       - uses: futureware-tech/simulator-action@v1
         with:
+          model: 'iPhone 16'
           os: iOS
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@main
@@ -27,6 +28,7 @@ jobs:
           flutter pub get
           cd example/ios && pod install
       - name: Run integration tests
+        timeout-minutes: 12
         run: |
           cd example
           output=$(flutter test integration_test/app_test.dart 2>&1) || true
