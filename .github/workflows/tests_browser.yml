@@ -2,11 +2,10 @@ name: Integration Tests Browser
 
 on:
   workflow_dispatch:
-  # Web devices are not supported for integration tests yet.
-  #pull_request:
-  #push:
-  #  tags:
-  #    - 'v*'
+  pull_request:
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   e2e:
@@ -17,10 +16,11 @@ jobs:
         with:
           flutter-version: '3.x'
           channel: 'stable'
-      - uses: nanasess/setup-chromedriver@master
-      - run: |
-          export DISPLAY=:99
-          chromedriver --port=4444 --url-base=/wd/hub &
-          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
-      - run: flutter pub get
-      - run: "cd example && flutter test -d chrome integration_test/app_test.dart"
+      - name: install deps
+        run: flutter pub get
+      - name: Build web
+        run: |
+          cd example
+          flutter config --enable-web
+          flutter build web
+          echo 'Web build succeeded'

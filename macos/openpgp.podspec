@@ -21,4 +21,17 @@ library for use OpenPGP.
   s.preserve_paths   = 'libopenpgp_bridge.dylib'
   s.vendored_libraries = 'libopenpgp_bridge.dylib'
   s.xcconfig         = { 'LD_RUNPATH_SEARCH_PATHS' => '@loader_path/../Frameworks' }
+
+  # Embed the dylib into the app bundle's Contents/Frameworks/ at build time.
+  # vendored_libraries links the dylib but does not always embed it on macOS.
+  s.script_phase = {
+    :name => 'Embed libopenpgp_bridge.dylib',
+    :script => <<~SCRIPT,
+      DEST="${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}"
+      mkdir -p "$DEST"
+      cp "${PODS_TARGET_SRCROOT}/libopenpgp_bridge.dylib" "$DEST/"
+      chmod +x "$DEST/libopenpgp_bridge.dylib"
+    SCRIPT
+    :execution_position => :after_compile
+  }
 end
