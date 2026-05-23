@@ -21,5 +21,12 @@ jobs:
         run: |
           flutter config --enable-linux-desktop
           flutter pub get
-      - run: "cd example && xvfb-run flutter test -d linux integration_test/app_test.dart"
+      - name: Run integration tests
+        run: |
+          cd example
+          output=$(xvfb-run flutter test -d linux integration_test/app_test.dart 2>&1)
+          echo "$output"
+          echo "$output" | grep -q '❌' && { echo 'Integration tests failed'; exit 1; }
+          echo "$output" | grep -q '🎉' || { echo 'No tests ran successfully'; exit 1; }
+          echo 'All integration tests passed'
       - run: "cd example && flutter test test/app_test.dart"

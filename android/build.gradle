@@ -1,10 +1,10 @@
-group = "dev.jerson.openpgp"
-version = "1.0-SNAPSHOT"
-
 plugins {
     id "com.android.library"
     id "org.jetbrains.kotlin.android"
 }
+
+group = "dev.jerson.openpgp"
+version = "1.0-SNAPSHOT"
 
 android {
     if (project.android.hasProperty("namespace")) {

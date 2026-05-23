@@ -32,4 +32,10 @@ jobs:
           api-level: 33
           arch: x86_64
           disable-animations: true
-          script: "cd example && flutter test integration_test/app_test.dart"
+          script: |
+            cd example
+            output=$(flutter test integration_test/app_test.dart 2>&1)
+            echo "$output"
+            echo "$output" | grep -q '❌' && { echo 'Integration tests failed'; exit 1; }
+            echo "$output" | grep -q '🎉' || { echo 'No tests ran successfully'; exit 1; }
+            echo 'All integration tests passed'
