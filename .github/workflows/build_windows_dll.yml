@@ -67,5 +67,9 @@ jobs:
             echo "DLL unchanged, nothing to commit."
           else
             git commit -m "chore: rebuild Windows DLL with PQC support (MLDSA/MLKEM)"
-            git push
+            for i in 1 2 3 4 5; do
+              git pull --rebase origin master && git push && break
+              echo "Push attempt $i failed, retrying in 10s..."
+              sleep 10
+            done
           fi
