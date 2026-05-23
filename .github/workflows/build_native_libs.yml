@@ -293,9 +293,52 @@ jobs:
           name: wasm-binary
           path: /tmp/openpgp.wasm
 
+  # ── Windows DLL ─────────────────────────────────────────────────────────────
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: native/go.mod
+          cache-dependency-path: native/go.sum
+
+      - name: Install MinGW (CGO C compiler)
+        run: choco install mingw --no-progress -y
+        shell: pwsh
+
+      - name: Build libopenpgp_bridge.dll
+        working-directory: native
+        env:
+          CGO_ENABLED: "1"
+          CC: gcc
+        run: go build -buildmode=c-shared -o ../windows/shared/libopenpgp_bridge.dll .
+
+      - name: Verify PQC symbols
+        shell: pwsh
+        run: |
+          $dll = [System.IO.File]::ReadAllBytes("windows\shared\libopenpgp_bridge.dll")
+          $text = [System.Text.Encoding]::ASCII.GetString($dll)
+          if ($text -notmatch 'ML-DSA-65\+Ed25519|circl/sign/mldsa') {
+            Write-Error "ERROR: PQC symbols not found in DLL"
+            exit 1
+          }
+          Write-Host "PQC symbols confirmed in DLL."
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-dll
+          path: |
+            windows/shared/libopenpgp_bridge.dll
+            windows/shared/libopenpgp_bridge.h
+
   # ── Single commit job (no push race) ───────────────────────────────────────
   commit:
-    needs: [linux, macos, android, ios, wasm]
+    needs: [linux, macos, android, ios, wasm, windows]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -327,6 +370,11 @@ jobs:
           name: wasm-binary
           path: lib/web/assets/
 
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-dll
+          path: windows/shared/
+
       - name: Rename downloaded WASM to correct filename
         run: mv lib/web/assets/openpgp.wasm lib/web/assets/openpgp.wasm 2>/dev/null || true
 
@@ -339,7 +387,9 @@ jobs:
             macos/libopenpgp_bridge.dylib \
             android/src/main/jniLibs/ \
             ios/OpenPGPBridge.xcframework/ \
-            lib/web/assets/openpgp.wasm
+            lib/web/assets/openpgp.wasm \
+            windows/shared/libopenpgp_bridge.dll \
+            windows/shared/libopenpgp_bridge.h
           if git diff --cached --quiet; then
             echo "All binaries unchanged — nothing to commit."
           else

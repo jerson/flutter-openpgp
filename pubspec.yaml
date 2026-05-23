@@ -1,6 +1,6 @@
 name: openpgp
 description: OpenPGP library for Android, iOS, macOS, Linux, Windows, and Web with post-quantum cryptography (ML-DSA / ML-KEM).
-version: 3.10.7
+version: 3.10.8
 homepage: https://github.com/jerson/flutter-openpgp
 
 environment:
