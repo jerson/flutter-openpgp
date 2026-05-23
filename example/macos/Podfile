@@ -56,6 +56,7 @@ post_install do |installer|
         mkdir -p "$DEST"
         cp "$DYLIB" "$DEST/"
         chmod +x "$DEST/libopenpgp_bridge.dylib"
+        codesign --force --sign - "$DEST/libopenpgp_bridge.dylib"
       SH
     end
     agg.user_project.save
