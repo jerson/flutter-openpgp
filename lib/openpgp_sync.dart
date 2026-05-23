@@ -4,6 +4,7 @@ import 'package:openpgp/openpgp.dart';
 import 'package:openpgp/openpgp_bridge.dart';
 import 'package:openpgp/mixin/openpgp_request_builders.dart';
 import 'package:openpgp/mixin/openpgp_response_handlers.dart';
+import 'package:flat_buffers/flat_buffers.dart' as fb;
 import 'package:openpgp/model/bridge_model_generated.dart' as model;
 
 /// Synchronous variants of every [OpenPGP] operation.
@@ -15,7 +16,7 @@ extension OpenPGPSync on OpenPGP {
 
   // ── Helpers ─────────────────────────────────────────────────────────────────
 
-  static Uint8List _call(String op, model.ObjectBuilder req) =>
+  static Uint8List _call(String op, fb.ObjectBuilder req) =>
       OpenPGPBridge.callSync(op, req.toBytes());
 
   // ── Decrypt ─────────────────────────────────────────────────────────────────
