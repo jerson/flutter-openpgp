@@ -174,7 +174,20 @@ class Binding {
     final isFlutterTest = Platform.environment.containsKey('FLUTTER_TEST');
 
     if (Platform.isMacOS || Platform.isIOS) {
-      if (isFlutterTest) {
+      if (isFlutterTest && Platform.isMacOS) {
+        final exec = Platform.resolvedExecutable;
+        // Integration test: executable is inside the compiled .app bundle.
+        // Navigate up from Contents/MacOS/<binary> to Contents/Frameworks/.
+        if (exec.contains('.app/Contents/MacOS')) {
+          final contentsPath = exec.substring(
+              0, exec.lastIndexOf('/Contents/MacOS') + '/Contents'.length);
+          final ffiFile =
+              Path.join(contentsPath, 'Frameworks', '$_libraryName.dylib');
+          if (File(ffiFile).existsSync()) {
+            return DynamicLibrary.open(ffiFile);
+          }
+        }
+        // Unit test: executable is the Dart VM, use CWD-relative build path.
         final appDirectory =
             _findAppDirectory(Directory('build/macos/Build/Products/Debug'));
         final ffiFile = Path.join(

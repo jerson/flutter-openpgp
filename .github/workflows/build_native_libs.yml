@@ -40,7 +40,7 @@ jobs:
       - name: Verify PQC symbols
         run: |
           for f in linux/shared/x86_64/libopenpgp_bridge.so linux/shared/aarch64/libopenpgp_bridge.so; do
-            if strings "$f" | grep -qE "ML-DSA-65\+Ed25519|circl/sign/mldsa"; then
+            if grep -qa "circl/sign/mldsa" "$f"; then
               echo "✅ PQC confirmed: $f"
             else
               echo "❌ No PQC symbols: $f" && exit 1
@@ -88,7 +88,7 @@ jobs:
 
       - name: Verify PQC symbols
         run: |
-          if strings /tmp/libopenpgp_bridge.dylib | grep -qE "ML-DSA-65\+Ed25519|circl/sign/mldsa"; then
+          if grep -qa "circl/sign/mldsa" /tmp/libopenpgp_bridge.dylib; then
             echo "✅ PQC confirmed in macOS dylib"
           else
             echo "❌ No PQC symbols in macOS dylib" && exit 1
@@ -159,7 +159,7 @@ jobs:
       - name: Verify PQC symbols
         run: |
           for f in android/src/main/jniLibs/*/libopenpgp_bridge.so; do
-            if strings "$f" | grep -qE "ML-DSA-65\+Ed25519|circl/sign/mldsa"; then
+            if grep -qa "circl/sign/mldsa" "$f"; then
               echo "✅ PQC confirmed: $f"
             else
               echo "❌ No PQC symbols: $f" && exit 1
@@ -244,7 +244,7 @@ jobs:
             ios/OpenPGPBridge.xcframework/ios-arm64/OpenPGPBridge.framework/OpenPGPBridge \
             ios/OpenPGPBridge.xcframework/ios-arm64_x86_64-simulator/OpenPGPBridge.framework/OpenPGPBridge \
             ios/OpenPGPBridge.xcframework/ios-arm64_x86_64-maccatalyst/OpenPGPBridge.framework/OpenPGPBridge; do
-            if strings "$slice" | grep -qE "ML-DSA-65\+Ed25519|circl/sign/mldsa"; then
+            if grep -qa "circl/sign/mldsa" "$slice"; then
               echo "✅ PQC confirmed: $slice"
             else
               echo "❌ No PQC symbols: $slice" && exit 1
