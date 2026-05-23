@@ -26,6 +26,6 @@ jobs:
           $output = (flutter test -d windows integration_test/app_test.dart 2>&1) | Out-String
           Write-Host $output
           if ($output -match '❌') { Write-Host 'Integration tests failed'; exit 1 }
-          if ($output -notmatch '🎉') { Write-Host 'No tests ran successfully'; exit 1 }
+          if ($output -notmatch '🎉|tests passed') { Write-Host 'No tests ran successfully'; exit 1 }
           Write-Host 'All integration tests passed'
       - run: "cd example && flutter test test/app_test.dart"

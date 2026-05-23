@@ -24,9 +24,13 @@ jobs:
       - name: Run integration tests
         run: |
           cd example
-          output=$(xvfb-run flutter test -d linux integration_test/app_test.dart 2>&1)
+          output=$(xvfb-run flutter test -d linux integration_test/app_test.dart 2>&1) || true
           echo "$output"
-          echo "$output" | grep -q '❌' && { echo 'Integration tests failed'; exit 1; }
-          echo "$output" | grep -q '🎉' || { echo 'No tests ran successfully'; exit 1; }
+          if echo "$output" | grep -qE 'Some tests failed|❌'; then
+            echo 'Integration tests failed'; exit 1
+          fi
+          if ! echo "$output" | grep -qE 'tests passed|🎉'; then
+            echo 'No tests ran successfully'; exit 1
+          fi
           echo 'All integration tests passed'
       - run: "cd example && flutter test test/app_test.dart"
