@@ -273,7 +273,26 @@ func mapPubKeyAlgo(algo int32) packet.PublicKeyAlgorithm {
 // ── OpenPGP helpers ───────────────────────────────────────────────────────────
 
 func readArmoredKey(armoredKey string) (openpgp.EntityList, error) {
-	return openpgp.ReadArmoredKeyRing(strings.NewReader(armoredKey))
+	reader := strings.NewReader(armoredKey)
+	var all openpgp.EntityList
+	for {
+		block, err := armor.Decode(reader)
+		if err == io.EOF || block == nil {
+			break
+		}
+		if err != nil {
+			break
+		}
+		entities, err := openpgp.ReadKeyRing(block.Body)
+		if err != nil {
+			continue
+		}
+		all = append(all, entities...)
+	}
+	if len(all) == 0 {
+		return nil, fmt.Errorf("no armored keys found")
+	}
+	return all, nil
 }
 
 func readAndUnlockPrivateKey(armoredKey, passphrase string) (*openpgp.Entity, error) {
