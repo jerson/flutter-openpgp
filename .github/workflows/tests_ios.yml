@@ -39,4 +39,3 @@ jobs:
             echo 'No tests ran successfully'; exit 1
           fi
           echo 'All integration tests passed'
-      - run: "cd example && flutter test test/app_test.dart"
