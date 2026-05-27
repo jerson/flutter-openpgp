@@ -19,6 +19,7 @@ class Binding {
 
   late final DynamicLibrary _library;
   late final BridgeCallDart _bridgeCall;
+  FreeResultDart? _freeResult;
 
   // Persistent worker isolate — spawned once, reused for all async calls.
   SendPort? _workerPort;
@@ -34,6 +35,13 @@ class Binding {
     _library = openLib();
     _bridgeCall =
         _library.lookupFunction<BridgeCallC, BridgeCallDart>(_callFuncName);
+    try {
+      _freeResult =
+          _library.lookupFunction<FreeResultC, FreeResultDart>('OpenPGPFreeResult');
+    } catch (_) {
+      // Symbol absent in older native builds; freeResult falls back to
+      // Dart-side malloc.free until natives are rebuilt.
+    }
   }
 
   // ── Worker isolate entry point ──────────────────────────────────────────────
@@ -95,7 +103,13 @@ class Binding {
     final c = Completer<Uint8List>();
     _pending[id] = c;
     _workerPort!.send(BridgeRequest(id, name, payload));
-    return c.future;
+    return c.future.timeout(
+      const Duration(seconds: 30),
+      onTimeout: () {
+        _pending.remove(id);
+        throw OpenPGPException('FFI call "$name" timed out after 30 seconds');
+      },
+    );
   }
 
   // ── Synchronous dispatch (main isolate, blocks) ─────────────────────────────
@@ -129,7 +143,14 @@ class Binding {
   }
 
   void freeResult(Pointer<BytesReturn> result) {
-    // Free the two inner C.malloc allocations before the struct itself.
+    if (_freeResult != null) {
+      // Preferred path: Go frees its own allocations, avoiding cross-allocator
+      // issues (particularly on Windows where Dart's malloc and CGo's malloc
+      // may come from different C runtimes).
+      _freeResult!(result);
+      return;
+    }
+    // Legacy fallback used until natives are rebuilt with OpenPGPFreeResult.
     if (result.ref.message != nullptr) {
       malloc.free(result.ref.message);
     }

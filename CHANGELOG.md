@@ -1,3 +1,10 @@
+## 3.11.1
+- Fix iOS integration tests: pin CI runner to macos-14, add `-d "iPhone 16"` device flag, add 30-minute step timeout, pin flutter-action to v2
+- Fix memory leaks in iOS plugin: removed redundant nil-arg C calls from `init` handler (force_load in podspec already prevents symbol stripping)
+- Fix `callAsync` hanging forever when worker isolate crashes silently: now throws after 30s timeout
+- Add `OpenPGPFreeResult` CGo export to eliminate cross-allocator free on Windows; Dart uses it when available with fallback for older builds
+- Fix `ffi.dart`: add `FreeResultC`/`FreeResultDart` typedefs for `OpenPGPFreeResult`
+
 ## 3.11.0
 - Rebuild all native libs with post-quantum cryptography support (ML-DSA-65 / ML-KEM-768)
 - Unified Windows DLL build into the main native libs workflow (single CI pipeline for all platforms)

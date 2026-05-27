@@ -14,9 +14,6 @@ public class OpenpgpPlugin: NSObject, FlutterPlugin {
     case "getPlatformVersion":
       result("iOS " + UIDevice.current.systemVersion)
     case "init":
-      _ = OpenPGPBridge.OpenPGPEncodeText(nil, nil)
-      _ = OpenPGPBridge.OpenPGPBridgeCall(nil, nil, 0)
-      _ = OpenPGPBridge.OpenPGPDecodeText(nil, 0, nil, 0, 0, 0)
       result("success")
     default:
       result(FlutterMethodNotImplemented)

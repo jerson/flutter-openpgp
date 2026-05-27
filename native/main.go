@@ -71,4 +71,23 @@ func OpenPGPDecodeText(input unsafe.Pointer, size C.int, encoding *C.char, fatal
 	))
 }
 
+// OpenPGPFreeResult frees a BytesReturn struct and its inner fields using the
+// same allocator (C.malloc / C.free) used when the struct was created. Calling
+// this from Dart avoids cross-allocator mismatches on Windows where Dart's
+// package:ffi malloc and Go's CGo malloc may come from different C runtimes.
+//
+//export OpenPGPFreeResult
+func OpenPGPFreeResult(ptr *C.BytesReturn) {
+	if ptr == nil {
+		return
+	}
+	if ptr.message != nil {
+		C.free(ptr.message)
+	}
+	if ptr.error != nil {
+		C.free(unsafe.Pointer(ptr.error))
+	}
+	C.free(unsafe.Pointer(ptr))
+}
+
 func main() {}

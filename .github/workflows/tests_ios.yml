@@ -12,14 +12,14 @@ env:
 
 jobs:
   e2e:
-    runs-on: macos-latest
+    runs-on: macos-14
     steps:
       - uses: futureware-tech/simulator-action@v1
         with:
           model: 'iPhone 16'
           os: iOS
       - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@main
+      - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.x'
           channel: 'stable'
@@ -28,9 +28,10 @@ jobs:
           flutter pub get
           cd example/ios && pod install
       - name: Run integration tests
+        timeout-minutes: 30
         run: |
           cd example
-          output=$(flutter test integration_test/app_test.dart 2>&1) || true
+          output=$(flutter test -d "iPhone 16" integration_test/app_test.dart 2>&1) || true
           echo "$output"
           if echo "$output" | grep -qE 'Some tests failed|❌'; then
             echo 'Integration tests failed'; exit 1

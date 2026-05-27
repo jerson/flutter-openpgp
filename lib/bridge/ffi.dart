@@ -14,6 +14,9 @@ typedef BridgeCallDart = Pointer<BytesReturn> Function(
   int payloadSize,
 );
 
+typedef FreeResultC = Void Function(Pointer<BytesReturn>);
+typedef FreeResultDart = void Function(Pointer<BytesReturn>);
+
 final class BytesReturn extends Struct {
   external Pointer<Void> message;
   @Int32()
