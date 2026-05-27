@@ -98,6 +98,13 @@ extern BytesReturn* OpenPGPBridgeCall(char* name, void* payload, int payloadSize
 extern BytesReturn* OpenPGPEncodeText(char* input, char* encoding);
 extern char* OpenPGPDecodeText(void* input, int size, char* encoding, int fatal, int ignoreBOM, int stream);
 
+// OpenPGPFreeResult frees a BytesReturn struct and its inner fields using the
+// same allocator (C.malloc / C.free) used when the struct was created. Calling
+// this from Dart avoids cross-allocator mismatches on Windows where Dart's
+// package:ffi malloc and Go's CGo malloc may come from different C runtimes.
+//
+extern void OpenPGPFreeResult(BytesReturn* ptr);
+
 #ifdef __cplusplus
 }
 #endif
