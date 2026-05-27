@@ -1,4 +1,4 @@
-## 3.11.1
+## 3.11.2
 - Fix iOS integration tests: pin CI runner to macos-14, add `-d "iPhone 16"` device flag, add 30-minute step timeout, pin flutter-action to v2
 - Fix memory leaks in iOS plugin: removed redundant nil-arg C calls from `init` handler (force_load in podspec already prevents symbol stripping)
 - Fix `callAsync` hanging forever when worker isolate crashes silently: now throws after 30s timeout
