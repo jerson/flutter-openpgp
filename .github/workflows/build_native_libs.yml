@@ -104,6 +104,19 @@ jobs:
           name: macos-dylib
           path: /tmp/libopenpgp_bridge.dylib
 
+      # Wrap the freshly built dylib into the xcframework Swift Package Manager
+      # embeds (macos/openpgp/OpenPGPBridge.xcframework). Committed alongside the
+      # dylib so hosted SPM consumers can resolve the macOS package.
+      - name: Build SPM xcframework from dylib
+        run: |
+          cp /tmp/libopenpgp_bridge.dylib macos/libopenpgp_bridge.dylib
+          ./scripts/build_macos_xcframework.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-spm-xcframework
+          path: macos/openpgp/OpenPGPBridge.xcframework/
+
   # ── Android (all 4 ABIs) ───────────────────────────────────────────────────
   android:
     runs-on: ubuntu-latest
@@ -237,18 +250,18 @@ jobs:
       - name: Install archives into xcframework slots
         run: |
           cp /tmp/ios_device_arm64.a \
-            ios/OpenPGPBridge.xcframework/ios-arm64/OpenPGPBridge.framework/OpenPGPBridge
+            ios/openpgp/OpenPGPBridge.xcframework/ios-arm64/OpenPGPBridge.framework/OpenPGPBridge
           cp /tmp/ios_sim_universal.a \
-            ios/OpenPGPBridge.xcframework/ios-arm64_x86_64-simulator/OpenPGPBridge.framework/OpenPGPBridge
+            ios/openpgp/OpenPGPBridge.xcframework/ios-arm64_x86_64-simulator/OpenPGPBridge.framework/OpenPGPBridge
           cp /tmp/ios_catalyst_universal.a \
-            ios/OpenPGPBridge.xcframework/ios-arm64_x86_64-maccatalyst/OpenPGPBridge.framework/OpenPGPBridge
+            ios/openpgp/OpenPGPBridge.xcframework/ios-arm64_x86_64-maccatalyst/OpenPGPBridge.framework/OpenPGPBridge
 
       - name: Verify PQC symbols
         run: |
           for slice in \
-            ios/OpenPGPBridge.xcframework/ios-arm64/OpenPGPBridge.framework/OpenPGPBridge \
-            ios/OpenPGPBridge.xcframework/ios-arm64_x86_64-simulator/OpenPGPBridge.framework/OpenPGPBridge \
-            ios/OpenPGPBridge.xcframework/ios-arm64_x86_64-maccatalyst/OpenPGPBridge.framework/OpenPGPBridge; do
+            ios/openpgp/OpenPGPBridge.xcframework/ios-arm64/OpenPGPBridge.framework/OpenPGPBridge \
+            ios/openpgp/OpenPGPBridge.xcframework/ios-arm64_x86_64-simulator/OpenPGPBridge.framework/OpenPGPBridge \
+            ios/openpgp/OpenPGPBridge.xcframework/ios-arm64_x86_64-maccatalyst/OpenPGPBridge.framework/OpenPGPBridge; do
             if grep -qa "circl/sign/mldsa" "$slice"; then
               echo "✅ PQC confirmed: $slice"
             else
@@ -259,7 +272,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: ios-xcframework
-          path: ios/OpenPGPBridge.xcframework/
+          path: ios/openpgp/OpenPGPBridge.xcframework/
 
   # ── WASM ───────────────────────────────────────────────────────────────────
   wasm:
@@ -357,13 +370,18 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
+          name: macos-spm-xcframework
+          path: macos/openpgp/OpenPGPBridge.xcframework/
+
+      - uses: actions/download-artifact@v4
+        with:
           name: android-libs
           path: android/src/main/jniLibs/
 
       - uses: actions/download-artifact@v4
         with:
           name: ios-xcframework
-          path: ios/OpenPGPBridge.xcframework/
+          path: ios/openpgp/OpenPGPBridge.xcframework/
 
       - uses: actions/download-artifact@v4
         with:
@@ -385,8 +403,9 @@ jobs:
           git add \
             linux/shared/ \
             macos/libopenpgp_bridge.dylib \
+            macos/openpgp/OpenPGPBridge.xcframework/ \
             android/src/main/jniLibs/ \
-            ios/OpenPGPBridge.xcframework/ \
+            ios/openpgp/OpenPGPBridge.xcframework/ \
             lib/web/assets/openpgp.wasm \
             windows/shared/libopenpgp_bridge.dll \
             windows/shared/libopenpgp_bridge.h
