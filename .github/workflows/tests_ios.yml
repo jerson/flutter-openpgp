@@ -22,7 +22,7 @@ jobs:
       run:
         working-directory: openpgp
     steps:
-      - uses: futureware-tech/simulator-action@v1
+      - uses: futureware-tech/simulator-action@v5
         id: sim
         with:
           model: 'iPhone 16'
@@ -32,7 +32,7 @@ jobs:
           path: openpgp
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'
+          flutter-version: '3.44.0'
           channel: 'stable'
       - name: install deps
         run: |
@@ -45,7 +45,7 @@ jobs:
       # attach. -d pins the exact device simulator-action booted (the runner may
       # host more than one "iPhone 16"). The repo is under openpgp/, so cd accordingly.
       - name: Run integration tests
-        uses: nick-fields/retry@v3
+        uses: nick-fields/retry@v4.0.0
         with:
           timeout_minutes: 7
           max_attempts: 3

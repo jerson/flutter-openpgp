@@ -1,3 +1,6 @@
+## 3.12.1
+- CI: update runner actions and Flutter — futureware-tech/simulator-action v1→v5, nick-fields/retry v3→v4.0.0, subosito/flutter-action pinned to v2, and Flutter pinned to 3.44.0 across all integration-test workflows
+
 ## 3.12.0
 - **BREAKING:** iOS and macOS are now distributed exclusively via Swift Package Manager; the CocoaPods podspecs have been removed. Apps must run `flutter config --enable-swift-package-manager` and use **Flutter 3.41.0+ (Dart SDK 3.11+)**
 - iOS: link the static `OpenPGPBridge.xcframework` as a SwiftPM `binaryTarget`; `OpenPGPBridgeCall` is resolved at runtime via `DynamicLibrary.process()`, so `OpenpgpPlugin.keepBridgeSymbols()` keeps it from being dead-stripped and `-export_dynamic` exports it into the app's dynamic symbol table for `dlsym`
