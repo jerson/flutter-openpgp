@@ -27,12 +27,13 @@ jobs:
       - name: Run integration tests
         run: |
           cd example
-          output=$(xvfb-run flutter test -d linux integration_test/app_test.dart 2>&1) || true
-          echo "$output"
-          if echo "$output" | grep -qE 'Some tests failed|❌'; then
+          # Stream output via tee so progress is visible live and a hang is not a
+          # blind timeout; grep the captured copy to decide pass/fail.
+          xvfb-run flutter test -d linux integration_test/app_test.dart 2>&1 | tee /tmp/flutter_out.txt || true
+          if grep -qE 'Some tests failed|❌' /tmp/flutter_out.txt; then
             echo 'Integration tests failed'; exit 1
           fi
-          if ! echo "$output" | grep -qE 'tests passed|🎉'; then
+          if ! grep -qE 'tests passed|🎉' /tmp/flutter_out.txt; then
             echo 'No tests ran successfully'; exit 1
           fi
           echo 'All integration tests passed'

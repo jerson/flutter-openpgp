@@ -26,8 +26,10 @@ jobs:
       - name: Run integration tests
         run: |
           cd example
-          $output = (flutter test -d windows integration_test/app_test.dart 2>&1) | Out-String
-          Write-Host $output
+          # Stream output via Tee-Object so progress is visible live and a hang is
+          # not a blind timeout; read the captured copy to decide pass/fail.
+          flutter test -d windows integration_test/app_test.dart 2>&1 | Tee-Object -FilePath flutter_out.txt
+          $output = Get-Content flutter_out.txt -Raw
           if ($output -match '❌') { Write-Host 'Integration tests failed'; exit 1 }
           if ($output -notmatch '🎉|tests passed') { Write-Host 'No tests ran successfully'; exit 1 }
           Write-Host 'All integration tests passed'

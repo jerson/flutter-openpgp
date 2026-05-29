@@ -36,8 +36,9 @@ jobs:
           arch: x86_64
           disable-animations: true
           script: |
-            cd example && flutter test integration_test/app_test.dart > /tmp/flutter_out.txt 2>&1 || true
-            cat /tmp/flutter_out.txt
+            # Stream output via tee so progress is visible live and a hang is not a
+            # blind timeout; grep the captured copy to decide pass/fail.
+            cd example && flutter test integration_test/app_test.dart 2>&1 | tee /tmp/flutter_out.txt || true
             grep -qE 'Some tests failed|❌' /tmp/flutter_out.txt && echo 'Integration tests failed' && exit 1 || true
             grep -qE 'tests passed|🎉' /tmp/flutter_out.txt || { echo 'No tests ran successfully'; exit 1; }
             echo 'All integration tests passed'

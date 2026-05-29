@@ -15,6 +15,7 @@ jobs:
     runs-on: macos-14
     steps:
       - uses: futureware-tech/simulator-action@v1
+        id: sim
         with:
           model: 'iPhone 16'
           os: iOS
@@ -32,12 +33,14 @@ jobs:
         timeout-minutes: 30
         run: |
           cd example
-          output=$(flutter test -d "iPhone 16" integration_test/app_test.dart 2>&1) || true
-          echo "$output"
-          if echo "$output" | grep -qE 'Some tests failed|❌'; then
+          # Pin to the exact simulator that simulator-action booted; the runner can
+          # host more than one "iPhone 16" and a name match may target an unbooted
+          # device and hang. Stream output via tee so a hang is visible live.
+          flutter test -d "${{ steps.sim.outputs.udid }}" integration_test/app_test.dart 2>&1 | tee /tmp/flutter_out.txt || true
+          if grep -qE 'Some tests failed|❌' /tmp/flutter_out.txt; then
             echo 'Integration tests failed'; exit 1
           fi
-          if ! echo "$output" | grep -qE 'tests passed|🎉'; then
+          if ! grep -qE 'tests passed|🎉' /tmp/flutter_out.txt; then
             echo 'No tests ran successfully'; exit 1
           fi
           echo 'All integration tests passed'
@@ -56,6 +59,7 @@ jobs:
         working-directory: openpgp
     steps:
       - uses: futureware-tech/simulator-action@v1
+        id: sim
         with:
           model: 'iPhone 16'
           os: iOS
@@ -74,12 +78,14 @@ jobs:
         timeout-minutes: 30
         run: |
           cd example
-          output=$(flutter test -d "iPhone 16" integration_test/app_test.dart 2>&1) || true
-          echo "$output"
-          if echo "$output" | grep -qE 'Some tests failed|❌'; then
+          # Pin to the exact simulator that simulator-action booted; the runner can
+          # host more than one "iPhone 16" and a name match may target an unbooted
+          # device and hang. Stream output via tee so a hang is visible live.
+          flutter test -d "${{ steps.sim.outputs.udid }}" integration_test/app_test.dart 2>&1 | tee /tmp/flutter_out.txt || true
+          if grep -qE 'Some tests failed|❌' /tmp/flutter_out.txt; then
             echo 'Integration tests failed'; exit 1
           fi
-          if ! echo "$output" | grep -qE 'tests passed|🎉'; then
+          if ! grep -qE 'tests passed|🎉' /tmp/flutter_out.txt; then
             echo 'No tests ran successfully'; exit 1
           fi
           echo 'All integration tests passed'
