@@ -29,42 +29,47 @@ jobs:
           flutter config --no-enable-swift-package-manager
           flutter pub get
           cd example/ios && pod install
-      - name: Run integration tests
-        timeout-minutes: 30
-        run: |
-          cd example
-          # Pin to the exact simulator that simulator-action booted; the runner can
-          # host more than one "iPhone 16" and a name match may target an unbooted
-          # device and hang. Stream output via tee so a hang is visible live.
-          flutter test -d "${{ steps.sim.outputs.udid }}" integration_test/app_test.dart 2>&1 | tee /tmp/flutter_out.txt || true
-          if grep -qE 'Some tests failed|❌' /tmp/flutter_out.txt; then
-            echo 'Integration tests failed'; exit 1
-          fi
-          if ! grep -qE 'tests passed|🎉' /tmp/flutter_out.txt; then
-            echo 'No tests ran successfully'; exit 1
-          fi
-          echo 'All integration tests passed'
+      # Flutter intermittently never receives the Dart VM Service URL on the iOS
+      # simulator and hangs forever at "Waiting for VM Service port"
+      # (flutter/flutter#160930). The workaround is to kill the stalled attempt and
+      # retry; on each retry we reboot the booted simulator to clear the stuck
+      # attach. -d pins the exact device simulator-action booted (the runner may
+      # host more than one "iPhone 16").
+      - name: Run integration tests (CocoaPods)
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 12
+          max_attempts: 3
+          retry_wait_seconds: 5
+          on_retry_command: |
+            xcrun simctl terminate "${{ steps.sim.outputs.udid }}" dev.jerson.openpgpExample 2>/dev/null || true
+            xcrun simctl shutdown "${{ steps.sim.outputs.udid }}" 2>/dev/null || true
+            xcrun simctl boot "${{ steps.sim.outputs.udid }}" 2>/dev/null || true
+          command: |
+            cd example
+            flutter test -d "${{ steps.sim.outputs.udid }}" integration_test/app_test.dart 2>&1 | tee /tmp/flutter_out.txt || true
+            if grep -qE 'Some tests failed|❌' /tmp/flutter_out.txt; then echo 'Integration tests failed'; exit 1; fi
+            grep -qE 'tests passed|🎉' /tmp/flutter_out.txt || { echo 'No result (VM Service never connected) — will retry'; exit 1; }
+            echo 'All integration tests passed'
 
-  # Validate that the plugin resolves, compiles, links and embeds through Swift
-  # Package Manager by building the example app for the simulator. This is the
-  # meaningful SPM guarantee for a plugin (and would catch the binaryTarget-path
-  # and package-identity issues we hit). Full runtime behaviour is exercised by
-  # the macOS SPM job (same Dart/FFI bridge) and the iOS CocoaPods job (same app);
-  # integration_test is intentionally not run here because Flutter's experimental
-  # SPM integration cannot discover the Dart VM service on the iOS simulator (the
-  # app builds, links and launches, but `flutter test` hangs at "Waiting for VM
-  # Service port"), which is a test-harness limitation unrelated to the plugin.
+  # Same integration tests, but resolving the native bridge through Swift Package
+  # Manager instead of CocoaPods.
   #
   # Checked out into a directory named after the plugin ("openpgp"): Flutter's SPM
   # integration derives the plugin's SwiftPM package identity from the Dart package
   # root's directory basename, which must equal the plugin name (the repo itself is
   # "flutter-openpgp"). Published (hosted) consumers are unaffected.
-  spm-build:
+  e2e-spm:
     runs-on: macos-14
     defaults:
       run:
         working-directory: openpgp
     steps:
+      - uses: futureware-tech/simulator-action@v1
+        id: sim
+        with:
+          model: 'iPhone 16'
+          os: iOS
       - uses: actions/checkout@v4
         with:
           path: openpgp
@@ -72,13 +77,25 @@ jobs:
         with:
           flutter-version: '3.x'
           channel: 'stable'
-      - name: Build example via Swift Package Manager
+      - name: install deps (Swift Package Manager)
         run: |
           flutter config --enable-swift-package-manager
           flutter pub get
-          cd example
-          # Compiles and links the SPM-resolved plugin (incl. the OpenPGPBridge
-          # binaryTarget) for the simulator; no code signing required.
-          flutter build ios --debug --simulator --no-codesign 2>&1 | tee /tmp/flutter_out.txt
-          grep -q 'Xcode build done' /tmp/flutter_out.txt || { echo 'SPM build failed'; exit 1; }
-          echo 'SPM iOS build/link succeeded'
+      # Same VM Service flake workaround as the CocoaPods job (see above). The repo
+      # is checked out under openpgp/, so the command cd's into openpgp/example.
+      - name: Run integration tests (Swift Package Manager)
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 12
+          max_attempts: 3
+          retry_wait_seconds: 5
+          on_retry_command: |
+            xcrun simctl terminate "${{ steps.sim.outputs.udid }}" dev.jerson.openpgpExample 2>/dev/null || true
+            xcrun simctl shutdown "${{ steps.sim.outputs.udid }}" 2>/dev/null || true
+            xcrun simctl boot "${{ steps.sim.outputs.udid }}" 2>/dev/null || true
+          command: |
+            cd openpgp/example
+            flutter test -d "${{ steps.sim.outputs.udid }}" integration_test/app_test.dart 2>&1 | tee /tmp/flutter_out.txt || true
+            if grep -qE 'Some tests failed|❌' /tmp/flutter_out.txt; then echo 'Integration tests failed'; exit 1; fi
+            grep -qE 'tests passed|🎉' /tmp/flutter_out.txt || { echo 'No result (VM Service never connected) — will retry'; exit 1; }
+            echo 'All integration tests passed'
