@@ -37,12 +37,18 @@ let package = Package(
             linkerSettings: [
                 // The bridge is a static framework whose only entry point
                 // (OpenPGPBridgeCall) is resolved at runtime via
-                // DynamicLibrary.process(). OpenpgpPlugin.keepBridgeSymbols() holds a
-                // reachable reference so the symbol survives dead-stripping; -ObjC
-                // additionally retains any Objective-C categories from the archive.
-                // unsafeFlags are permitted here because Flutter consumes plugin
+                // DynamicLibrary.process() == dlsym(RTLD_DEFAULT, ...). Two flags are
+                // needed so that lookup succeeds, replacing the podspec's -force_load:
+                //   * OpenpgpPlugin.keepBridgeSymbols() holds a reachable reference so
+                //     the linker pulls the symbol (and its object) out of the static
+                //     archive instead of dead-stripping it.
+                //   * -export_dynamic places the linked global symbols into the app's
+                //     dynamic symbol table; without it the symbol exists in the binary
+                //     but dlsym(RTLD_DEFAULT) cannot find it ("symbol not found").
+                // -ObjC additionally retains any Objective-C categories from the
+                // archive. unsafeFlags are permitted because Flutter consumes plugin
                 // packages as local path dependencies.
-                .unsafeFlags(["-Xlinker", "-ObjC"])
+                .unsafeFlags(["-Xlinker", "-ObjC", "-Xlinker", "-export_dynamic"])
             ]
         )
     ]
