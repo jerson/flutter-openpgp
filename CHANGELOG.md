@@ -1,3 +1,9 @@
+## 3.12.2
+- CI: bump `actions/checkout` v4 → v6.0.2 across every workflow
+- CI (iOS): deterministically select the newest installed iOS runtime's iPhone (the runner ships multiple runtimes, so "iPhone 16" alone matched more than one device); add `wait_for_boot`; drop the `nick-fields/retry` wrapper and ASCII-only result matching so the job mirrors the other platforms
+- CI (web): replace the build-only smoke test with real integration tests run in headless Chrome via `chromedriver` + `flutter drive` (the `Generate` test is skipped on web — RSA-2048 keygen in the Go WASM build exceeds the 30s operation timeout on CI runners)
+- Example: remove leftover CocoaPods integration from the iOS and macOS projects; they are now Swift Package Manager only (the macOS app keeps the `[Custom] Embed libopenpgp_bridge.dylib` build phase, since SPM links but does not embed the bare dylib)
+
 ## 3.12.1
 - CI: update runner actions and Flutter — futureware-tech/simulator-action v1→v5, nick-fields/retry v3→v4.0.0, subosito/flutter-action pinned to v2, and Flutter pinned to 3.44.0 across all integration-test workflows
 
