@@ -3,8 +3,26 @@ import UIKit
 import OpenPGPBridge
 
 public class OpenpgpPlugin: NSObject, FlutterPlugin {
+  // Retains the Go bridge entry point so the linker keeps the symbol in the final
+  // app binary. `OpenPGPBridgeCall` is resolved at runtime via
+  // DynamicLibrary.process() == dlsym(RTLD_DEFAULT, "OpenPGPBridgeCall") (see
+  // lib/bridge/binding.dart); nothing calls it at compile time, so without a hard
+  // reference the linker dead-strips it and the lookup fails with "symbol not found".
+  //
+  // This is a *public static* (not a discarded local) on purpose: the optimizer
+  // cannot prove it is unused, so it must emit the address load, producing a
+  // relocation to OpenPGPBridgeCall that survives dead-stripping. The earlier
+  // discarded-value form was elided, which is why SPM builds failed the lookup.
+  // Combined with -export_dynamic (see Package.swift) this replaces the CocoaPods
+  // -force_load, whose archive path is not addressable under SwiftPM.
+  public static var bridgeEntryPoint: UnsafeRawPointer?
+
   public static func register(with registrar: FlutterPluginRegistrar) {
-    keepBridgeSymbols()
+    bridgeEntryPoint = unsafeBitCast(
+      OpenPGPBridgeCall as @convention(c) (
+        UnsafeMutablePointer<CChar>?, UnsafeMutableRawPointer?, Int32
+      ) -> UnsafeMutablePointer<BytesReturn>?,
+      to: UnsafeRawPointer.self)
     let channel = FlutterMethodChannel(name: "openpgp", binaryMessenger: registrar.messenger())
     let instance = OpenpgpPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
@@ -19,23 +37,5 @@ public class OpenpgpPlugin: NSObject, FlutterPlugin {
     default:
       result(FlutterMethodNotImplemented)
     }
-  }
-
-  // The Go bridge is shipped as a *static* xcframework and its only entry point,
-  // `OpenPGPBridgeCall`, is resolved at runtime from the host process via
-  // `DynamicLibrary.process()` (see lib/bridge/binding.dart). Because no Swift/ObjC
-  // code calls it at compile time, the linker would otherwise dead-strip the symbol
-  // and `dlsym(RTLD_DEFAULT, "OpenPGPBridgeCall")` would fail.
-  //
-  // `register(with:)` is invoked by the generated plugin registrant, so taking the
-  // address of the symbol here keeps it (and its object file) in the final app
-  // binary. This replaces the CocoaPods `-force_load` linker flag for the Swift
-  // Package Manager build, where the static archive's path is not addressable.
-  @inline(never)
-  private static func keepBridgeSymbols() {
-    let entry: @convention(c) (
-      UnsafeMutablePointer<CChar>?, UnsafeMutableRawPointer?, Int32
-    ) -> UnsafeMutablePointer<BytesReturn>? = OpenPGPBridgeCall
-    _ = unsafeBitCast(entry, to: UnsafeRawPointer.self)
   }
 }

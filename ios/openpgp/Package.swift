@@ -39,9 +39,9 @@ let package = Package(
                 // (OpenPGPBridgeCall) is resolved at runtime via
                 // DynamicLibrary.process() == dlsym(RTLD_DEFAULT, ...). Two flags are
                 // needed so that lookup succeeds, replacing the podspec's -force_load:
-                //   * OpenpgpPlugin.keepBridgeSymbols() holds a reachable reference so
-                //     the linker pulls the symbol (and its object) out of the static
-                //     archive instead of dead-stripping it.
+                //   * OpenpgpPlugin stores the symbol's address in a public static so
+                //     the linker pulls it (and its object) out of the static archive
+                //     instead of dead-stripping it.
                 //   * -export_dynamic places the linked global symbols into the app's
                 //     dynamic symbol table; without it the symbol exists in the binary
                 //     but dlsym(RTLD_DEFAULT) cannot find it ("symbol not found").
