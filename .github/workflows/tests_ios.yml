@@ -56,7 +56,9 @@ jobs:
             xcrun simctl boot "${{ steps.sim.outputs.udid }}" 2>/dev/null || true
           command: |
             cd openpgp/example
-            flutter test --verbose -d "${{ steps.sim.outputs.udid }}" integration_test/app_test.dart 2>&1 | tee /tmp/flutter_out.txt || true
-            if grep -qE 'Some tests failed|❌' /tmp/flutter_out.txt; then echo 'Integration tests failed'; exit 1; fi
-            grep -qE 'tests passed|🎉' /tmp/flutter_out.txt || { echo 'No result (VM Service never connected) — will retry'; exit 1; }
+            flutter test -d "${{ steps.sim.outputs.udid }}" integration_test/app_test.dart 2>&1 | tee /tmp/flutter_out.txt || true
+            # ASCII-only matching: emoji (❌/🎉) passed through the retry action's
+            # command input gets mangled and matches spuriously.
+            if grep -qE 'Some tests failed|[0-9]+ failed' /tmp/flutter_out.txt; then echo 'Integration tests failed'; exit 1; fi
+            grep -qE 'All tests passed|[0-9]+ tests passed' /tmp/flutter_out.txt || { echo 'No result (VM Service never connected) - will retry'; exit 1; }
             echo 'All integration tests passed'
