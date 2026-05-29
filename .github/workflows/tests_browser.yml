@@ -14,16 +14,37 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.2
+      # Provides a chromedriver matching the runner's preinstalled Chrome, which
+      # flutter drive needs to run integration tests against headless Chrome.
+      - uses: nanasess/setup-chromedriver@v2.4.0
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.44.0'
           channel: 'stable'
       - name: install deps
-        run: flutter pub get
-      - name: Build web
+        run: |
+          flutter config --enable-web
+          flutter pub get
+      - name: Run integration tests
         run: |
           cd example
-          flutter config --enable-web
-          flutter build web
-          echo 'Web build succeeded'
+          # chromedriver drives a headless Chrome; wait for it to accept requests
+          # before launching the test so flutter drive does not race startup.
+          chromedriver --port=4444 &
+          for i in $(seq 1 15); do curl -sf http://localhost:4444/status >/dev/null && break; sleep 1; done
+          # Stream output via tee so progress is visible live and a hang is not a
+          # blind timeout; grep the captured copy to decide pass/fail. Same shape as
+          # the other platform workflows. -d web-server runs Chrome headless.
+          flutter drive \
+            --driver=test_driver/integration_test.dart \
+            --target=integration_test/app_test.dart \
+            -d web-server \
+            --browser-name=chrome 2>&1 | tee /tmp/flutter_out.txt || true
+          if grep -qE 'Some tests failed|❌' /tmp/flutter_out.txt; then
+            echo 'Integration tests failed'; exit 1
+          fi
+          if ! grep -qE 'tests passed|🎉' /tmp/flutter_out.txt; then
+            echo 'No tests ran successfully'; exit 1
+          fi
+          echo 'All integration tests passed'

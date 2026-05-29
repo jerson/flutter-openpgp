@@ -22,14 +22,36 @@ jobs:
       run:
         working-directory: openpgp
     steps:
-      - uses: futureware-tech/simulator-action@v5
-        id: sim
-        with:
-          model: 'iPhone 16'
-          os: iOS
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.2
         with:
           path: openpgp
+      # The runner ships several iOS runtimes, so "iPhone 16" alone matches more
+      # than one device and simulator-action just warns and picks an arbitrary one.
+      # Resolve the newest installed iOS runtime and take its iPhone (preferring
+      # iPhone 16) so we deterministically test on the latest available iOS.
+      - name: Select latest iOS simulator
+        id: simselect
+        run: |
+          udid=$(xcrun simctl list devices available --json | jq -r '
+            .devices
+            | to_entries
+            | map(select(.key | test("SimRuntime.iOS-[0-9]")))
+            | sort_by(.key | capture("iOS-(?<a>[0-9]+)-(?<b>[0-9]+)") | [(.a|tonumber), (.b|tonumber)])
+            | last.value
+            | (map(select(.name == "iPhone 16")) + map(select(.name | test("iPhone"))))
+            | .[0].udid // empty')
+          if [ -z "$udid" ]; then
+            echo "No available iOS iPhone simulator found:"; xcrun simctl list devices available; exit 1
+          fi
+          echo "Selected simulator:"; xcrun simctl list devices available | grep -i "$udid" || true
+          echo "udid=$udid" >> "$GITHUB_OUTPUT"
+      - uses: futureware-tech/simulator-action@v5
+        with:
+          udid: ${{ steps.simselect.outputs.udid }}
+          # Block until the simulator is fully booted so the flutter attach below
+          # does not race a half-booted device (a known trigger for the VM Service
+          # hang, flutter/flutter#160930).
+          wait_for_boot: true
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.44.0'
@@ -38,27 +60,17 @@ jobs:
         run: |
           flutter config --enable-swift-package-manager
           flutter pub get
-      # Flutter intermittently never receives the Dart VM Service URL on the iOS
-      # simulator and hangs forever at "Waiting for VM Service port"
-      # (flutter/flutter#160930). The workaround is to kill the stalled attempt and
-      # retry; on each retry we reboot the booted simulator to clear the stuck
-      # attach. -d pins the exact device simulator-action booted (the runner may
-      # host more than one "iPhone 16"). The repo is under openpgp/, so cd accordingly.
       - name: Run integration tests
-        uses: nick-fields/retry@v4.0.0
-        with:
-          timeout_minutes: 7
-          max_attempts: 3
-          retry_wait_seconds: 5
-          on_retry_command: |
-            xcrun simctl terminate "${{ steps.sim.outputs.udid }}" dev.jerson.openpgpExample 2>/dev/null || true
-            xcrun simctl shutdown "${{ steps.sim.outputs.udid }}" 2>/dev/null || true
-            xcrun simctl boot "${{ steps.sim.outputs.udid }}" 2>/dev/null || true
-          command: |
-            cd openpgp/example
-            flutter test -d "${{ steps.sim.outputs.udid }}" integration_test/app_test.dart 2>&1 | tee /tmp/flutter_out.txt || true
-            # ASCII-only matching: emoji (❌/🎉) passed through the retry action's
-            # command input gets mangled and matches spuriously.
-            if grep -qE 'Some tests failed|[0-9]+ failed' /tmp/flutter_out.txt; then echo 'Integration tests failed'; exit 1; fi
-            grep -qE 'All tests passed|[0-9]+ tests passed' /tmp/flutter_out.txt || { echo 'No result (VM Service never connected) - will retry'; exit 1; }
-            echo 'All integration tests passed'
+        run: |
+          cd example
+          # Stream output via tee so progress is visible live and a hang is not a
+          # blind timeout; grep the captured copy to decide pass/fail. Same shape as
+          # the Linux/macOS workflows now that the iOS retry wrapper is gone.
+          flutter test -d "${{ steps.simselect.outputs.udid }}" integration_test/app_test.dart 2>&1 | tee /tmp/flutter_out.txt || true
+          if grep -qE 'Some tests failed|❌' /tmp/flutter_out.txt; then
+            echo 'Integration tests failed'; exit 1
+          fi
+          if ! grep -qE 'tests passed|🎉' /tmp/flutter_out.txt; then
+            echo 'No tests ran successfully'; exit 1
+          fi
+          echo 'All integration tests passed'
