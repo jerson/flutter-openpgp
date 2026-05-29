@@ -3,7 +3,7 @@
 # Run `pod lib lint openpgp.podspec' to validate before publishing.
 #
 
-xcframework_path = File.join(__dir__, "OpenPGPBridge.xcframework").gsub(/ /, '\ ')
+xcframework_path = File.join(__dir__, "openpgp", "OpenPGPBridge.xcframework").gsub(/ /, '\ ')
 Pod::Spec.new do |s|
   s.name             = 'openpgp'
   s.version          = '0.7.0'
@@ -15,12 +15,13 @@ Pod::Spec.new do |s|
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Gerson Alexander Pardo Gamez' => 'jeral17@gmail.com' }
   s.source           = { :path => '.' }
-  s.source_files =  'Classes/**/*'
+  # Source lives under the Swift Package layout so CocoaPods and SPM share one copy.
+  s.source_files =  'openpgp/Sources/openpgp/**/*'
 
   s.dependency 'Flutter'
   s.platform = :ios, '12.0'
   
-  s.vendored_frameworks = 'OpenPGPBridge.xcframework'
+  s.vendored_frameworks = 'openpgp/OpenPGPBridge.xcframework'
   s.static_framework = true
   s.xcconfig = {
     'OTHER_LDFLAGS[sdk=iphoneos*]' => "$(inherited) -ObjC -force_load #{xcframework_path}/ios-arm64/OpenPGPBridge.framework/OpenPGPBridge",

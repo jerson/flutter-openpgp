@@ -19,11 +19,44 @@ jobs:
         with:
           flutter-version: '3.x'
           channel: 'stable'
-      - name: install deps
+      - name: install deps (CocoaPods)
         run: |
           flutter config --enable-macos-desktop
+          flutter config --no-enable-swift-package-manager
           flutter pub get
           cd example/macos && pod install
+      - name: Run integration tests
+        run: |
+          cd example
+          output=$(flutter test -d macos integration_test/app_test.dart 2>&1) || true
+          echo "$output"
+          if echo "$output" | grep -qE 'Some tests failed|❌'; then
+            echo 'Integration tests failed'; exit 1
+          fi
+          if ! echo "$output" | grep -qE 'tests passed|🎉'; then
+            echo 'No tests ran successfully'; exit 1
+          fi
+          echo 'All integration tests passed'
+      - run: "cd example && flutter test test/app_test.dart"
+
+  # Same integration tests, but resolving the native bridge through Swift Package
+  # Manager instead of CocoaPods. The macOS bridge ships as a dylib, so the
+  # xcframework SPM embeds is generated here from libopenpgp_bridge.dylib.
+  e2e-spm:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@main
+        with:
+          flutter-version: '3.x'
+          channel: 'stable'
+      - name: Build macOS bridge xcframework for SPM
+        run: ./scripts/build_macos_xcframework.sh
+      - name: install deps (Swift Package Manager)
+        run: |
+          flutter config --enable-macos-desktop
+          flutter config --enable-swift-package-manager
+          flutter pub get
       - name: Run integration tests
         run: |
           cd example

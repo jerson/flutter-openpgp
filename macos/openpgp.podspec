@@ -13,7 +13,8 @@ library for use OpenPGP.
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Gerson Alexander Pardo Gamez' => 'jeral17@gmail.com' }
   s.source           = { :path => '.' }
-  s.source_files     = 'Classes/**/*'
+  # Source lives under the Swift Package layout so CocoaPods and SPM share one copy.
+  s.source_files     = 'openpgp/Sources/openpgp/**/*'
   s.dependency 'FlutterMacOS'
   s.platform = :osx, '10.11'
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }

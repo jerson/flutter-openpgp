@@ -1,3 +1,11 @@
+## 3.12.0
+- Add Swift Package Manager support for iOS and macOS alongside the existing CocoaPods podspecs (`ios/openpgp/Package.swift`, `macos/openpgp/Package.swift`); Flutter uses SPM when enabled and falls back to CocoaPods otherwise
+- iOS: link the static `OpenPGPBridge.xcframework` as a SwiftPM `binaryTarget`; keep `OpenPGPBridgeCall` from being dead-stripped via a reachable reference in `OpenpgpPlugin` (SPM equivalent of the podspec `-force_load`)
+- macOS: wrap `libopenpgp_bridge.dylib` into an xcframework via `scripts/build_macos_xcframework.sh` (run automatically by `make upgrade` on macOS) so SPM can embed and code-sign it
+- Relocate plugin sources to the Swift Package layout (`<platform>/openpgp/Sources/openpgp/`), shared by both podspec and Package.swift
+- Add SPM-enabled iOS and macOS integration test jobs in CI
+- Require Flutter 3.41.0+ (Dart SDK 3.11+) for Swift Package Manager workflows
+
 ## 3.11.2
 - Fix iOS integration tests: pin CI runner to macos-14, add `-d "iPhone 16"` device flag, add 30-minute step timeout, pin flutter-action to v2
 - Fix memory leaks in iOS plugin: removed redundant nil-arg C calls from `init` handler (force_load in podspec already prevents symbol stripping)

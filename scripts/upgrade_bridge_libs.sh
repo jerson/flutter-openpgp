@@ -10,7 +10,7 @@
 REPO="jerson/openpgp-mobile"
 NAME="libopenpgp_bridge"
 PLATFORMS=("android" "darwin" "ios_xcframework" "wasm" "linux" "linux" "windows")
-OUTPUT_DIRS=("android/src/main" "macos" "ios" "lib/web/assets" "linux/shared/x86_64" "linux/shared/aarch64" "windows/shared")
+OUTPUT_DIRS=("android/src/main" "macos" "ios/openpgp" "lib/web/assets" "linux/shared/x86_64" "linux/shared/aarch64" "windows/shared")
 OUTPUT_SUB_DIRS=("" "" "" "" "./amd64" "./arm64" "./amd64")
 OUTPUT_STRIP_DIRS=(1 1 1 1 2 2 2)
 
@@ -59,5 +59,15 @@ do
   echo "--------------------------------------------"
 done
 #
+
+# Wrap the freshly downloaded macOS dylib into an xcframework for Swift Package
+# Manager. Only possible on macOS (needs xcodebuild); CocoaPods builds use the
+# loose dylib regardless, so this is skipped elsewhere.
+if [ "$(uname)" = "Darwin" ]; then
+  echo "Building macOS xcframework for Swift Package Manager"
+  "$(dirname "$0")/build_macos_xcframework.sh"
+  echo "--------------------------------------------"
+fi
+
 echo "All updated"
 
