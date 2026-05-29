@@ -75,13 +75,15 @@ jobs:
           flutter config --enable-swift-package-manager
           flutter pub get
       - name: Run integration tests
-        timeout-minutes: 30
+        timeout-minutes: 15
         run: |
           cd example
           # Pin to the exact simulator that simulator-action booted; the runner can
           # host more than one "iPhone 16" and a name match may target an unbooted
           # device and hang. Stream output via tee so a hang is visible live.
-          flutter test -d "${{ steps.sim.outputs.udid }}" integration_test/app_test.dart 2>&1 | tee /tmp/flutter_out.txt || true
+          # --verbose surfaces the install/launch/VM-service-connect phase so a
+          # post-build stall is diagnosable rather than silent.
+          flutter test --verbose -d "${{ steps.sim.outputs.udid }}" integration_test/app_test.dart 2>&1 | tee /tmp/flutter_out.txt || true
           if grep -qE 'Some tests failed|❌' /tmp/flutter_out.txt; then
             echo 'Integration tests failed'; exit 1
           fi
