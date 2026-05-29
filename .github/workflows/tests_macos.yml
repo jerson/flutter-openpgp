@@ -42,10 +42,20 @@ jobs:
   # Same integration tests, but resolving the native bridge through Swift Package
   # Manager instead of CocoaPods. The macOS bridge ships as a dylib, so the
   # xcframework SPM embeds is generated here from libopenpgp_bridge.dylib.
+  #
+  # Checked out into a directory named after the plugin ("openpgp"): Flutter's SPM
+  # integration derives the plugin's SwiftPM package identity from the Dart package
+  # root's directory basename, which must equal the plugin name (the repo itself is
+  # "flutter-openpgp"). Published (hosted) consumers are unaffected.
   e2e-spm:
     runs-on: macos-14
+    defaults:
+      run:
+        working-directory: openpgp
     steps:
       - uses: actions/checkout@v4
+        with:
+          path: openpgp
       - uses: subosito/flutter-action@main
         with:
           flutter-version: '3.x'

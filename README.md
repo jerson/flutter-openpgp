@@ -382,6 +382,14 @@ it is disabled, the existing CocoaPods podspecs are used. Both paths embed the s
 prebuilt Go bridge, so encryption, signing and post-quantum operations behave
 identically.
 
+> **Note for `path:`/`git:` (non-hosted) dependencies:** Flutter's SPM integration
+> derives a plugin's package identity from the Dart-package root directory name, which
+> must equal the plugin name. If you depend on this plugin from a checkout whose folder
+> is not named `openpgp` (for example the repository folder `flutter-openpgp`), SPM
+> fails with `unable to override package 'openpgp' ... identity 'flutter-openpgp'`.
+> Use it from pub.dev (hosted), or check it out into a folder named `openpgp`. This does
+> not affect normal `pub.dev` installs.
+
 #### For plugin contributors
 
 The Swift packages live next to the podspecs and share a single copy of the plugin
