@@ -2,8 +2,8 @@
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 //
 // Swift Package Manager support for the `openpgp` Flutter plugin (iOS).
-// The CocoaPods podspec (../openpgp.podspec) is kept in parallel; Flutter uses
-// this package when SPM is enabled and falls back to the podspec otherwise.
+// The plugin is distributed exclusively via Swift Package Manager (no podspec);
+// consuming apps must enable SPM and use Flutter 3.41+.
 
 import PackageDescription
 

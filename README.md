@@ -335,7 +335,7 @@ No additional setup required.
 
 ### iOS
 
-No additional setup required.
+Requires Swift Package Manager (Flutter 3.41+). See [Swift Package Manager (iOS \& macOS)](#swift-package-manager-ios--macos).
 
 ### Web
 
@@ -352,7 +352,7 @@ ref: https://github.com/jerson/flutter-openpgp/blob/master/example/pubspec.yaml
 
 ### MacOS
 
-No additional setup required.
+Requires Swift Package Manager (Flutter 3.41+). See [Swift Package Manager (iOS \& macOS)](#swift-package-manager-ios--macos).
 
 ### Linux
 
@@ -364,68 +364,61 @@ No additional setup required.
 
 ### Swift Package Manager (iOS & macOS)
 
-This plugin ships both CocoaPods podspecs and Swift Package Manager packages, so it
-works whether or not your app uses SPM. Swift Package Manager support requires
-**Flutter 3.41.0 or higher**.
+The iOS and macOS plugins are distributed **exclusively via Swift Package Manager** —
+there are no CocoaPods podspecs. This requires **Flutter 3.41.0 or higher** with Swift
+Package Manager enabled.
 
 #### For app developers
 
-No changes are required for the plugin. If you want your app to resolve native
-dependencies through SPM instead of CocoaPods, enable it once:
+Swift Package Manager is off by default, so enable it once:
 
 ```bash
 flutter config --enable-swift-package-manager
 ```
 
-When SPM is enabled, Flutter consumes this plugin via its `Package.swift` files; when
-it is disabled, the existing CocoaPods podspecs are used. Both paths embed the same
-prebuilt Go bridge, so encryption, signing and post-quantum operations behave
-identically.
+Then `flutter pub get` and build/run as usual — the prebuilt Go bridge is linked and
+embedded automatically. If SPM is left disabled, Flutter stays in CocoaPods mode and
+will not find this plugin's iOS/macOS implementation.
 
-> **Note for `path:`/`git:` (non-hosted) dependencies:** Flutter's SPM integration
-> derives a plugin's package identity from the Dart-package root directory name, which
-> must equal the plugin name. If you depend on this plugin from a checkout whose folder
-> is not named `openpgp` (for example the repository folder `flutter-openpgp`), SPM
-> fails with `unable to override package 'openpgp' ... identity 'flutter-openpgp'`.
-> Use it from pub.dev (hosted), or check it out into a folder named `openpgp`. This does
-> not affect normal `pub.dev` installs.
+> **Note for `path:`/`git:` (non-hosted) dependencies:** Flutter derives a plugin's
+> SwiftPM package identity from the Dart-package root directory name, which must equal
+> the plugin name. If you depend on this plugin from a checkout whose folder is not
+> named `openpgp` (for example the repository folder `flutter-openpgp`), SPM fails with
+> `unable to override package 'openpgp' ... identity 'flutter-openpgp'`. Use it from
+> pub.dev (hosted), or check it out into a folder named `openpgp`. Normal `pub.dev`
+> installs are unaffected.
 
 #### For plugin contributors
 
-The Swift packages live next to the podspecs and share a single copy of the plugin
-source:
-
 ```
 ios/
-  openpgp.podspec
   openpgp/
     Package.swift
     Sources/openpgp/OpenpgpPlugin.swift
-    OpenPGPBridge.xcframework          # prebuilt static bridge (fetched by make upgrade)
+    OpenPGPBridge.xcframework          # prebuilt static bridge (committed by Build Native Libs)
 macos/
-  openpgp.podspec
-  libopenpgp_bridge.dylib              # prebuilt dynamic bridge (fetched by make upgrade)
+  libopenpgp_bridge.dylib              # prebuilt dynamic bridge (build input)
   openpgp/
     Package.swift
     Sources/openpgp/OpenpgpPlugin.swift
-    OpenPGPBridge.xcframework          # generated from the dylib for SPM (see below)
+    OpenPGPBridge.xcframework          # built from the dylib, committed for SPM
 ```
 
 The xcframework must sit *inside* each `openpgp/` package directory (not in the
 platform root): Flutter copies the SwiftPM package into an ephemeral `.packages/`
 location at build time, so the `binaryTarget` path has to be package-relative.
 
-- **iOS** links the prebuilt static `OpenPGPBridge.xcframework` as a SwiftPM
-  `binaryTarget`. Because the Go entry point `OpenPGPBridgeCall` is resolved at
-  runtime via `DynamicLibrary.process()`, `OpenpgpPlugin.keepBridgeSymbols()` holds a
-  reachable reference to it so the linker does not strip it (the SPM equivalent of the
-  podspec's `-force_load`).
-- **macOS** ships a dynamic `libopenpgp_bridge.dylib`. SwiftPM cannot embed a loose
-  dylib, so it is wrapped into `macos/openpgp/OpenPGPBridge.xcframework` by
-  `scripts/build_macos_xcframework.sh`. This step needs Xcode and therefore only runs
-  on macOS; `make upgrade` runs it automatically after downloading the dylib. The
-  generated xcframework must be committed for SPM users on other platforms to resolve
-  the package.
+- **iOS** links the static `OpenPGPBridge.xcframework` as a SwiftPM `binaryTarget`. The
+  Go entry point `OpenPGPBridgeCall` is resolved at runtime via
+  `DynamicLibrary.process()`, so the iOS `Package.swift` (a) keeps a reachable
+  reference via `OpenpgpPlugin.keepBridgeSymbols()` so the linker does not strip it, and
+  (b) passes `-export_dynamic` so the symbol lands in the app's dynamic symbol table for
+  `dlsym`.
+- **macOS** ships a dynamic `libopenpgp_bridge.dylib`; SwiftPM cannot embed a loose
+  dylib, so `scripts/build_macos_xcframework.sh` wraps it into
+  `macos/openpgp/OpenPGPBridge.xcframework`. The Build Native Libs workflow rebuilds
+  every platform's bridge and commits them all (including this xcframework), so the
+  committed artifacts are exactly what consumers resolve.
 
 ## Example
 

@@ -11,44 +11,12 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 jobs:
+  # Swift Package Manager only. Checked out into a directory named after the plugin
+  # ("openpgp") so Flutter's SPM package identity (derived from the Dart package
+  # root basename) matches the plugin name. Uses the committed
+  # macos/openpgp/OpenPGPBridge.xcframework (built from the dylib by
+  # build_native_libs), i.e. exactly what hosted consumers resolve.
   e2e:
-    runs-on: macos-14
-    steps:
-      - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@main
-        with:
-          flutter-version: '3.x'
-          channel: 'stable'
-      - name: install deps (CocoaPods)
-        run: |
-          flutter config --enable-macos-desktop
-          flutter config --no-enable-swift-package-manager
-          flutter pub get
-          cd example/macos && pod install
-      - name: Run integration tests
-        run: |
-          cd example
-          # Stream output via tee so progress is visible live and a hang is not a
-          # blind timeout; grep the captured copy to decide pass/fail.
-          flutter test -d macos integration_test/app_test.dart 2>&1 | tee /tmp/flutter_out.txt || true
-          if grep -qE 'Some tests failed|❌' /tmp/flutter_out.txt; then
-            echo 'Integration tests failed'; exit 1
-          fi
-          if ! grep -qE 'tests passed|🎉' /tmp/flutter_out.txt; then
-            echo 'No tests ran successfully'; exit 1
-          fi
-          echo 'All integration tests passed'
-      - run: "cd example && flutter test test/app_test.dart"
-
-  # Same integration tests, but resolving the native bridge through Swift Package
-  # Manager instead of CocoaPods. The macOS bridge ships as a dylib, so the
-  # xcframework SPM embeds is generated here from libopenpgp_bridge.dylib.
-  #
-  # Checked out into a directory named after the plugin ("openpgp"): Flutter's SPM
-  # integration derives the plugin's SwiftPM package identity from the Dart package
-  # root's directory basename, which must equal the plugin name (the repo itself is
-  # "flutter-openpgp"). Published (hosted) consumers are unaffected.
-  e2e-spm:
     runs-on: macos-14
     defaults:
       run:
@@ -61,9 +29,7 @@ jobs:
         with:
           flutter-version: '3.x'
           channel: 'stable'
-      - name: Build macOS bridge xcframework for SPM
-        run: ./scripts/build_macos_xcframework.sh
-      - name: install deps (Swift Package Manager)
+      - name: install deps
         run: |
           flutter config --enable-macos-desktop
           flutter config --enable-swift-package-manager

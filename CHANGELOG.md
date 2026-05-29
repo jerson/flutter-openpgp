@@ -1,10 +1,10 @@
 ## 3.12.0
-- Add Swift Package Manager support for iOS and macOS alongside the existing CocoaPods podspecs (`ios/openpgp/Package.swift`, `macos/openpgp/Package.swift`); Flutter uses SPM when enabled and falls back to CocoaPods otherwise
-- iOS: link the static `OpenPGPBridge.xcframework` as a SwiftPM `binaryTarget`; keep `OpenPGPBridgeCall` from being dead-stripped via a reachable reference in `OpenpgpPlugin` (SPM equivalent of the podspec `-force_load`)
-- macOS: wrap `libopenpgp_bridge.dylib` into an xcframework via `scripts/build_macos_xcframework.sh` (run automatically by `make upgrade` on macOS) so SPM can embed and code-sign it
-- Relocate plugin sources to the Swift Package layout (`<platform>/openpgp/Sources/openpgp/`), shared by both podspec and Package.swift
-- Add SPM-enabled iOS and macOS integration test jobs in CI
-- Require Flutter 3.41.0+ (Dart SDK 3.11+) for Swift Package Manager workflows
+- **BREAKING:** iOS and macOS are now distributed exclusively via Swift Package Manager; the CocoaPods podspecs have been removed. Apps must run `flutter config --enable-swift-package-manager` and use **Flutter 3.41.0+ (Dart SDK 3.11+)**
+- iOS: link the static `OpenPGPBridge.xcframework` as a SwiftPM `binaryTarget`; `OpenPGPBridgeCall` is resolved at runtime via `DynamicLibrary.process()`, so `OpenpgpPlugin.keepBridgeSymbols()` keeps it from being dead-stripped and `-export_dynamic` exports it into the app's dynamic symbol table for `dlsym`
+- macOS: wrap `libopenpgp_bridge.dylib` into `macos/openpgp/OpenPGPBridge.xcframework` (via `scripts/build_macos_xcframework.sh`) so SPM can embed and code-sign it; the Build Native Libs workflow rebuilds and commits it alongside the other binaries
+- Relocate plugin sources to the Swift Package layout (`<platform>/openpgp/Sources/openpgp/`) with each `OpenPGPBridge.xcframework` inside its package directory (Flutter copies SwiftPM packages to an ephemeral location, so `binaryTarget` paths must be package-relative)
+- CI: SPM-only iOS and macOS integration tests; the iOS job retries past Flutter's intermittent simulator "Waiting for VM Service" hang (flutter/flutter#160930) by rebooting the simulator between attempts
+- Set the example app `version` so iOS builds no longer warn about missing `CFBundleShortVersionString`/`CFBundleVersion`
 
 ## 3.11.2
 - Fix iOS integration tests: pin CI runner to macos-14, add `-d "iPhone 16"` device flag, add 30-minute step timeout, pin flutter-action to v2

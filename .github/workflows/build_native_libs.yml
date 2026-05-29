@@ -246,7 +246,7 @@ jobs:
             -output /tmp/ios_catalyst_universal.a
 
       # The .framework binary is just the .a archive renamed — copy directly
-      # into the existing xcframework slots so the podspec paths stay intact.
+      # into the existing xcframework slots so the committed paths stay intact.
       - name: Install archives into xcframework slots
         run: |
           cp /tmp/ios_device_arm64.a \
