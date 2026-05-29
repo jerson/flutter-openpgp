@@ -91,3 +91,13 @@ jobs:
             echo 'No tests ran successfully'; exit 1
           fi
           echo 'All integration tests passed'
+      - name: Diagnostics (crash reports + device log)
+        if: always()
+        run: |
+          echo '=== Crash reports (~/Library/Logs/DiagnosticReports) ==='
+          ls -la ~/Library/Logs/DiagnosticReports/ 2>/dev/null || true
+          for f in ~/Library/Logs/DiagnosticReports/*.ips; do
+            echo "--- $f ---"; head -150 "$f" 2>/dev/null || true
+          done
+          echo '=== Runner device syslog (last 12m) ==='
+          xcrun simctl spawn "${{ steps.sim.outputs.udid }}" log show --last 12m --predicate 'process == "Runner"' 2>/dev/null | tail -300 || true
