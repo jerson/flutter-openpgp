@@ -33,7 +33,6 @@ class _GenerateState extends State<Generate> {
               result: _keyPair.privateKey,
               onPressed: () async {
                 var keyOptions = OpenPGP.KeyOptions()
-                  ..rsaBits = 2048
                   ..algorithm = OpenPGP.Algorithm.EDDSA;
                 var keyPair = await OpenPGP.OpenPGP.generate(
                     options: OpenPGP.Options()

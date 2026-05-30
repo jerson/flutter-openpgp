@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -473,11 +472,6 @@ void main() {
     group('Generate', () {
       final parent = find.byKey(ValueKey("generate"));
 
-      // Skipped on web: generate requests an RSA-2048 subkey, and RSA key
-      // generation in the Go WASM build is far slower than native, exceeding the
-      // web plugin's 30s operation timeout on CI runners. Every other crypto
-      // operation above is exercised on web; key generation stays covered on the
-      // native platforms.
       testWidgets('Default', (WidgetTester tester) async {
         final instance = app.MyApp();
         await tester.pumpWidget(instance);
@@ -500,7 +494,7 @@ void main() {
         expect(resultSelector, findsOneWidget);
         var result = resultSelector.evaluate().single.widget as Text;
         expect(result.data != "", equals(true));
-      }, timeout: Timeout(Duration(minutes: 5)), skip: kIsWeb);
+      }, timeout: Timeout(Duration(minutes: 5)));
     });
   });
 }
