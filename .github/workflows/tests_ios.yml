@@ -63,14 +63,25 @@ jobs:
       - name: Run integration tests
         run: |
           cd example
-          # Stream output via tee so progress is visible live and a hang is not a
-          # blind timeout; grep the captured copy to decide pass/fail. Same shape as
-          # the Linux/macOS workflows now that the iOS retry wrapper is gone.
-          flutter test -d "${{ steps.simselect.outputs.udid }}" integration_test/app_test.dart 2>&1 | tee /tmp/flutter_out.txt || true
-          if grep -qE 'Some tests failed|❌' /tmp/flutter_out.txt; then
-            echo 'Integration tests failed'; exit 1
-          fi
-          if ! grep -qE 'tests passed|🎉' /tmp/flutter_out.txt; then
-            echo 'No tests ran successfully'; exit 1
-          fi
-          echo 'All integration tests passed'
+          # iOS integration tests occasionally hang on the VM-Service connection
+          # (flutter/flutter#160930). Retry up to 3 times with a 15-minute cap per
+          # attempt; only retry on a hang (no output patterns matched), never on a
+          # genuine test failure.
+          for attempt in 1 2 3; do
+            rm -f /tmp/flutter_out.txt
+            timeout 900 flutter test -d "${{ steps.simselect.outputs.udid }}" \
+              integration_test/app_test.dart 2>&1 | tee /tmp/flutter_out.txt || true
+            if grep -qE 'tests passed|🎉' /tmp/flutter_out.txt; then
+              echo 'All integration tests passed'
+              exit 0
+            fi
+            if grep -qE 'Some tests failed|❌' /tmp/flutter_out.txt; then
+              echo 'Integration tests failed'
+              exit 1
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              echo "Attempt $attempt: no test output detected (likely VM-Service hang), retrying..."
+            fi
+          done
+          echo 'All 3 attempts produced no test output (persistent VM-Service hang)'
+          exit 1

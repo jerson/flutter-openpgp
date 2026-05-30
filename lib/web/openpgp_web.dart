@@ -47,7 +47,9 @@ class OpenpgpPlugin {
     worker.onmessage = onMessage.toJS;
   }
 
-  static const Duration _timeout = Duration(seconds: 30);
+  // 120 s ceiling gives debug-mode Go WASM (which is far slower than native)
+  // room to complete key-generation on slow CI runners without hiding real hangs.
+  static const Duration _timeout = Duration(seconds: 120);
 
   Future<Uint8List> bridgeCall(String name, Uint8List? /*!*/ request) {
     _counter++;
