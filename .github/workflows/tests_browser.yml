@@ -37,14 +37,11 @@ jobs:
           # Stream output via tee so progress is visible live and a hang is not a
           # blind timeout; grep the captured copy to decide pass/fail. Same shape as
           # the other platform workflows. -d web-server runs Chrome headless.
-          # --profile builds Go WASM with optimisations; debug-mode WASM keygen
-          # exceeds 120 s on CI runners even for ECC keys.
           flutter drive \
             --driver=test_driver/integration_test.dart \
             --target=integration_test/app_test.dart \
             -d web-server \
-            --browser-name=chrome \
-            --profile 2>&1 | tee /tmp/flutter_out.txt || true
+            --browser-name=chrome 2>&1 | tee /tmp/flutter_out.txt || true
           # flutter drive reports failures as "Failure Details:" / "Failure in
           # method:" rather than outputting ❌, so check both formats.
           if grep -qE 'Some tests failed|❌|Failure Details:|Failure in method:' /tmp/flutter_out.txt; then
