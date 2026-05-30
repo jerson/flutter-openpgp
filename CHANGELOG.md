@@ -1,3 +1,8 @@
+## 3.12.3
+- Fix (Windows): example `Generate` was requesting an RSA-2048 encryption subkey alongside an EdDSA primary key; switched to plain EdDSA+ECDH, which eliminates the 30 s FFI timeout on slow CI runners
+- Fix (iOS CI): add a 3-attempt retry loop (7 min per attempt) around `flutter test` to recover from the intermittent VM-Service hang (flutter/flutter#160930); `timeout-minutes: 30` on every job caps run cost
+- Fix (web CI): bump web plugin operation timeout 30 s → 120 s; fix `flutter drive` failure-detection grep to catch `"Failure Details:"` in addition to `❌`; `Generate` remains skipped on web (debug-mode Go WASM keygen exceeds 120 s on CI runners even for ECC keys; 9 other crypto operations still run as real web coverage)
+
 ## 3.12.2
 - CI: bump `actions/checkout` v4 → v6.0.2 across every workflow
 - CI (iOS): deterministically select the newest installed iOS runtime's iPhone (the runner ships multiple runtimes, so "iPhone 16" alone matched more than one device); add `wait_for_boot`; drop the `nick-fields/retry` wrapper and ASCII-only result matching so the job mirrors the other platforms
