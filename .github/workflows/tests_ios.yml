@@ -18,6 +18,7 @@ jobs:
   # "flutter-openpgp"). Hosted (pub.dev) consumers are unaffected.
   e2e:
     runs-on: macos-14
+    timeout-minutes: 30
     defaults:
       run:
         working-directory: openpgp
@@ -69,7 +70,7 @@ jobs:
           # genuine test failure.
           for attempt in 1 2 3; do
             rm -f /tmp/flutter_out.txt
-            timeout 900 flutter test -d "${{ steps.simselect.outputs.udid }}" \
+            timeout 420 flutter test -d "${{ steps.simselect.outputs.udid }}" \
               integration_test/app_test.dart 2>&1 | tee /tmp/flutter_out.txt || true
             if grep -qE 'tests passed|🎉' /tmp/flutter_out.txt; then
               echo 'All integration tests passed'
